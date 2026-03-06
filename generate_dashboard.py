@@ -12,7 +12,7 @@ with open("prompt_template.md", "r", encoding="utf-8") as f:
 print(f"Claude API 호출 중... ({filename})")
 
 message = client.messages.create(
-    model="claude-opus-4-6",
+    model="claude-sonnet-4-6",
     max_tokens=8192,
     messages=[
         {"role": "user", "content": prompt}
