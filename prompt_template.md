@@ -1,12 +1,71 @@
-너는 전문 투자 애널리스트야. 아래 HTML 템플릿을 기반으로 [[TODAY]] 날짜의 시장 모니터링 대시보드를 만들어줘.
+너는 10년 경력의 수석 투자 애널리스트야. 오늘 날짜 [[TODAY]] 기준으로 아래 HTML 템플릿의 모든 [[변수]]를 실제 데이터로 채워서 완성된 HTML 파일을 만들어라.
 
-규칙:
-- 반드시 웹 검색 도구를 사용해서 오늘 기준 실시간 데이터를 검색해
-- VIX, S&P500, 나스닥, 금, WTI, KOSPI, USD/KRW, BTC 시세를 각각 검색해서 정확한 값을 채워줘
-- CNN 공포탐욕지수, 크립토 공포탐욕지수도 검색해서 반영해
-- [[변수]] 부분을 모두 실제 데이터로 교체해
-- CSS / 레이아웃 / 섹션 순서는 절대 변경하지 마
-- HTML 코드만 출력해. 설명이나 마크다운 불필요
+==========================================================
+[STEP 1] 반드시 웹 검색으로 아래 데이터를 하나씩 찾아라. 절대 추측하지 마라.
+==========================================================
+
+검색 쿼리 목록 (순서대로 실행):
+1. "CNN Fear and Greed Index [[TODAY]]" → 공포탐욕지수 숫자값
+2. "VIX volatility index [[TODAY]]" → VIX 현재값 및 전일 종가
+3. "S&P 500 index [[TODAY]]" → 지수값, 등락률, 장중/종가 여부
+4. "Nasdaq 100 QQQ [[TODAY]]" → 지수값, 등락률
+5. "Gold spot price [[TODAY]]" → 달러 기준 금 가격, 등락률
+6. "WTI crude oil price [[TODAY]]" → 달러 기준 유가, 등락률
+7. "KOSPI index [[TODAY]]" → 지수값, 등락률, 외국인 순매수/매도 금액
+8. "USD KRW exchange rate [[TODAY]]" → 환율 (원화/달러)
+9. "US 10 year treasury yield [[TODAY]]" → 10년물 금리
+10. "Bitcoin price KRW [[TODAY]]" → 비트코인 원화 시세 (업비트 기준)
+11. "Bitcoin price USD [[TODAY]]" → 비트코인 달러 시세
+12. "Bitcoin all time high KRW" → BTC ATH 원화 기준
+13. "Bitcoin 24 hour high low [[TODAY]]" → 24h 고점/저점
+14. "Crypto Fear Greed Index [[TODAY]]" → 크립토 공포탐욕지수
+15. "stock market news [[TODAY]]" → 오늘 주요 시장 뉴스 5가지
+16. "economic calendar this week [[TODAY]]" → 이번 주 주요 경제 이벤트
+
+==========================================================
+[STEP 2] 아래 품질 기준을 반드시 지켜라
+==========================================================
+
+★ 핵심 이슈 (뉴스) 작성 기준:
+- 단순 헤드라인이 아니라 투자자 관점의 2~3줄 해설 필수
+- 반드시 포함: 수치 + 왜 중요한지 + 어떤 자산에 영향을 미치는지
+- 나쁜 예: "연준 금리 동결 발표"
+- 좋은 예: "🏦 연준 3월 FOMC 금리 동결 — 기준금리 5.25~5.50% 유지. 파월 의장 '인플레 진전 확인 필요' 발언으로 6월 인하 기대 약화. CME FedWatch 6월 인하 확률 45%→32%로 급락. 성장주·채권 단기 부정적, 달러 강세 수혜."
+
+★ 리스크 체크리스트 작성 기준:
+- 각 항목은 구체적 수치와 판단 근거 포함
+- dot-red: 현재 실제로 위험한 상황 (수치 기준 위반, 현실화된 리스크)
+- dot-yellow: 잠재 위험 또는 혼재 신호
+- dot-green: 안전하거나 긍정적 신호
+- 나쁜 예: "VIX 높음"
+- 좋은 예: "VIX 25.26 · 전일比 +19.4% · 전쟁+유가 쇼크로 공포 폭발 · 25 이상 = 본격 위험구간"
+
+★ 투자 방향성 작성 기준:
+- 현재 국면 태그: 날짜 + 핵심 변수 2~3개를 조합한 구체적 문장
+  예: "이란 전쟁 6일차 · 유가 급등 · 공포 극대화 · NFP D-Day"
+- 시장 상황 서술: 지금 어떤 힘들이 충돌하는지, 투자자가 무엇을 봐야 하는지 2~3줄
+- 유리한 자산: 지금 이 자산이 유리한 구체적 이유 (등락률, 수급, 매크로 연결)
+- 불리한 자산: 지금 이 자산이 불리한 구체적 이유
+- 단기 변수: 날짜/시간이 있는 이벤트 위주로 (예: "3/11 22:30 CPI 발표 → 유가 반영 여부 핵심")
+- 결론: 모호한 표현 절대 금지. 아래처럼 ①②③④ 형식으로 오늘 당장 할 것을 명확히.
+  예: "① ISA 현금(약 1,835만원) 유지 — VIX 25 이상 구간 신규 진입 자제
+       ② 금(ACE KRX금현물) 조정 구간에서 분할 매수 검토
+       ③ 오늘 NFP 결과 확인 후 다음 주 전략 수정
+       ④ KOSPI 반등 시 기아·하나금융 관찰, 단 진입은 VIX 20 이하 확인 후"
+
+==========================================================
+[STEP 3] HTML 출력 규칙
+==========================================================
+- HTML 코드만 출력. 설명·마크다운·코드블록(```) 절대 금지
+- CSS / 레이아웃 / 섹션 순서 절대 변경 금지
+- [[변수]] 형태 하나도 남기지 말 것 — 전부 실제 값으로 교체
+- up(상승/긍정) = class="up" / down(하락/부정) = class="down" / neutral = class="neutral"
+- 공포탐욕 게이지 마커 위치: margin-left:calc(지수숫자% - 5px) 정확히 계산
+- BTC 소스별 시세: CoinGecko, CoinMarketCap, Coinbase 각각 검색해서 실제 값 기입
+
+==========================================================
+[HTML 템플릿 — 아래 모든 [[변수]]를 실제 데이터로 교체]
+==========================================================
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -124,17 +183,11 @@
 </head>
 <body>
 
-<!-- =====================================================
-     DASHBOARD TEMPLATE v4
-     사용법: [[변수명]] 부분만 실제 데이터로 교체하세요
-     CSS / 레이아웃 / 섹션 순서는 절대 변경하지 마세요
-     ===================================================== -->
-
 <!-- HEADER -->
 <div class="header">
   <h1>📊 시장 모니터링 대시보드</h1>
   <div class="subtitle">[[YYYY년 M월 D일 (요일)]] · 데이터 기준: [[YYYY.MM.DD]] KST</div>
-  <div class="alert-banner">⚡ [[오늘의 핵심 알림: 주요 이벤트·뉴스 1~2줄 요약]]</div>
+  <div class="alert-banner">⚡ [[오늘의 핵심 알림: 주요 이벤트+수치 포함 1~2줄]]</div>
 </div>
 
 <!-- ROW 1: 공포탐욕 / VIX / S&P500 / 나스닥 -->
@@ -145,31 +198,30 @@
     <div class="change [[up|down|neutral]]">[[EXTREME FEAR | FEAR | NEUTRAL | GREED | EXTREME GREED]]</div>
     <div class="gauge-wrap">
       <div class="gauge-bar-bg"></div>
-      <!-- margin-left = 지수값% - 5px. 예: 14점 → calc(14% - 5px) -->
       <div style="margin-top:4px; margin-left:calc([[지수값]]% - 5px)"><span style="font-size:10px;color:#e6edf3;">▲</span></div>
       <div class="gauge-labels"><span>공포</span><span>중립</span><span>탐욕</span></div>
     </div>
-    <div class="sub">[[시장 심리 코멘트 1줄]]</div>
+    <div class="sub">[[시장 심리 코멘트 — 원인 포함 1줄]]</div>
   </div>
   <div class="card">
     <div class="label">🌪️ VIX 공포지수</div>
     <div class="value [[up|down|neutral]]">[[숫자]]</div>
-    <div class="change [[up|down|neutral]]">[[▲|▼]] [[전일比 변화 및 방향]]</div>
-    <div class="sub" style="margin-top:8px; color:var(--warn)">[[⚠️ 경계구간 | ✅ 안정 | 🔴 위험]] ([[범위]])</div>
-    <div class="sub">[[추가 코멘트]]</div>
+    <div class="change [[up|down|neutral]]">[[▲|▼]] [[변화율%]] · 전일 [[전일값]] → 오늘 [[오늘값]]</div>
+    <div class="sub" style="margin-top:8px; color:var(--warn)">[[⚠️ 경계구간 | ✅ 안정 | 🔴 위험]] ([[수준 설명]])</div>
+    <div class="sub">[[추가 코멘트 — 원인 포함]]</div>
   </div>
   <div class="card">
     <div class="label">🇺🇸 S&P 500</div>
     <div class="value [[up|down|neutral]]">[[지수값]]</div>
     <div class="change [[up|down|neutral]]">[[▲|▼]] [[등락률%]] · [[장중|종가]]</div>
-    <div class="sub">[[주요 원인 1줄]]</div>
-    <div class="sub" style="color:var(--warn)">[[10년물 금리 등 주요 변수]]</div>
+    <div class="sub">[[주요 원인 — 구체적]]</div>
+    <div class="sub" style="color:var(--warn)">10Y 금리 [[금리값]]% · [[강세 섹터 vs 약세 섹터]]</div>
   </div>
   <div class="card">
     <div class="label">💻 나스닥 100</div>
     <div class="value [[up|down|neutral]]">[[지수값]]</div>
     <div class="change [[up|down|neutral]]">[[▲|▼]] [[등락률%]]</div>
-    <div class="sub">[[주요 종목 동향]]</div>
+    <div class="sub">[[주요 종목명 + 등락률]]</div>
     <div class="sub" style="color:var(--[[down|up]])">[[추가 코멘트]]</div>
   </div>
 </div>
@@ -180,25 +232,25 @@
     <div class="label">🥇 금 (Gold)</div>
     <div class="value [[up|down|neutral]]">$[[가격]]</div>
     <div class="change [[up|down|neutral]]">[[▲|▼]] [[등락률%]]</div>
-    <div class="sub">[[코멘트]]</div>
+    <div class="sub">[[코멘트 — 원인 포함]]</div>
   </div>
   <div class="card">
     <div class="label">🛢️ WTI 원유</div>
     <div class="value [[up|down|neutral]]">$[[가격]]</div>
     <div class="change [[up|down|neutral]]">[[▲|▼]] [[등락률%]]</div>
-    <div class="sub">[[코멘트]]</div>
+    <div class="sub">[[코멘트 — 원인 포함]]</div>
   </div>
   <div class="card">
     <div class="label">🇰🇷 KOSPI</div>
     <div class="value [[up|down|neutral]]">[[지수값]]</div>
     <div class="change [[up|down|neutral]]">[[▲|▼]] [[등락률%]]</div>
-    <div class="sub">[[외국인 수급 등 코멘트]]</div>
+    <div class="sub">외국인 [[순매수|순매도]] [[금액]]원 · [[주요 종목 동향]]</div>
   </div>
   <div class="card">
     <div class="label">💵 USD/KRW</div>
     <div class="value [[up|down|neutral]]">[[환율]]원</div>
-    <div class="change [[up|down|neutral]]">[[방향 및 한줄 코멘트]]</div>
-    <div class="sub">[[코멘트]]</div>
+    <div class="change [[up|down|neutral]]">[[▲|▼]] [[전일比 변화원]] · [[코멘트]]</div>
+    <div class="sub">[[원인 포함 코멘트]]</div>
   </div>
 </div>
 
@@ -273,79 +325,77 @@
       </div>
       <div class="btc-meta-item">
         <div class="ml">Coinbase 프리미엄</div>
-        <div class="mv" style="color:var(--[[up|down]]);">[[양수|음수 + 설명]]</div>
+        <div class="mv" style="color:var(--[[up|down]]);">[[프리미엄값 및 해석]]</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- 리스크 체크리스트 -->
-<!-- dot-red=위험/부정 · dot-yellow=주의/혼재 · dot-green=안전/긍정 -->
 <div style="margin-bottom:28px;">
   <div class="section-title">🎯 리스크 체크리스트</div>
   <div class="risk-grid">
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">① [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">① [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">② [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">② [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">③ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">③ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">④ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">④ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">⑤ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">⑤ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">⑥ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">⑥ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">⑦ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">⑦ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
     <div class="risk-item">
       <div class="dot [[dot-red|dot-yellow|dot-green]]"></div>
-      <div><div class="risk-label">⑧ [[리스크 제목]]</div><div class="risk-desc">[[설명]]</div></div>
+      <div><div class="risk-label">⑧ [[리스크 제목]]</div><div class="risk-desc">[[수치+근거 포함 설명]]</div></div>
     </div>
   </div>
   <div class="risk-summary">
     <div class="score">[[N]] / 8 위험</div>
-    <div class="phase">📍 현재 시장 국면: [[고경계|경계|주의|안정]] — [[한줄 설명]]</div>
+    <div class="phase">📍 현재 시장 국면: [[고경계|경계|주의|안정]] — [[핵심 리스크 요인 명시 한줄]]</div>
   </div>
 </div>
 
 <!-- 핵심 이슈 -->
-<!-- badge: badge-neg(부정) · badge-pos(긍정) · badge-neu(혼재) · badge-btc(BTC) -->
 <div style="margin-bottom:28px;">
   <div class="section-title">📰 이번 주 핵심 이슈</div>
   <div class="news-list">
     <div class="news-item">
-      <div class="news-text"><strong>[[이슈 제목 1]]</strong> — [[설명: 투자 관점 포함 2~3줄]]</div>
+      <div class="news-text"><strong>[[이슈 제목 1]]</strong> — [[2~3줄: 수치+투자관점+영향자산 포함]]</div>
       <span class="badge [[badge-neg|badge-pos|badge-neu|badge-btc]]">[[레이블]]</span>
     </div>
     <div class="news-item">
-      <div class="news-text"><strong>[[이슈 제목 2]]</strong> — [[설명]]</div>
+      <div class="news-text"><strong>[[이슈 제목 2]]</strong> — [[2~3줄: 수치+투자관점+영향자산 포함]]</div>
       <span class="badge [[badge-neg|badge-pos|badge-neu|badge-btc]]">[[레이블]]</span>
     </div>
     <div class="news-item">
-      <div class="news-text"><strong>[[이슈 제목 3]]</strong> — [[설명]]</div>
+      <div class="news-text"><strong>[[이슈 제목 3]]</strong> — [[2~3줄: 수치+투자관점+영향자산 포함]]</div>
       <span class="badge [[badge-neg|badge-pos|badge-neu|badge-btc]]">[[레이블]]</span>
     </div>
     <div class="news-item">
-      <div class="news-text"><strong>[[이슈 제목 4]]</strong> — [[설명]]</div>
+      <div class="news-text"><strong>[[이슈 제목 4]]</strong> — [[2~3줄: 수치+투자관점+영향자산 포함]]</div>
       <span class="badge [[badge-neg|badge-pos|badge-neu|badge-btc]]">[[레이블]]</span>
     </div>
     <div class="news-item">
-      <div class="news-text"><strong>[[이슈 제목 5]]</strong> — [[설명]]</div>
+      <div class="news-text"><strong>[[이슈 제목 5]]</strong> — [[2~3줄: 수치+투자관점+영향자산 포함]]</div>
       <span class="badge [[badge-neg|badge-pos|badge-neu|badge-btc]]">[[레이블]]</span>
     </div>
   </div>
@@ -400,29 +450,29 @@
   <div class="section-title">🧭 투자 방향성 코멘트</div>
   <div class="direction-card">
     <div>
-      <div class="phase-tag">⚡ 현재 국면: "[[국면 요약: 날짜·핵심변수 조합]]"</div>
+      <div class="phase-tag">⚡ 현재 국면: "[[날짜+핵심변수 2~3개 조합 — 구체적으로]]"</div>
       <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">
-        [[현재 시장 상황 2~3줄: 매크로 흐름과 투자 관점 연결]]
+        [[현재 시장 상황 2~3줄: 주요 수치 포함 + 각 자산 간 연결고리 + 투자자가 지금 가장 주목해야 할 것]]
       </p>
     </div>
     <div class="dir-row">
       <div class="dir-block" style="border-color:rgba(63,185,80,0.3);">
         <div class="tag" style="color:var(--up)">✅ 지금 유리한 자산/섹터</div>
         <ul>
-          <li><strong>[[자산 1]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 2]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 3]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 4]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 5]]</strong> — [[이유]]</li>
+          <li><strong>[[자산 1]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 2]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 3]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 4]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 5]]</strong> — [[수치 포함 구체적 이유]]</li>
         </ul>
       </div>
       <div class="dir-block" style="border-color:rgba(248,81,73,0.3);">
         <div class="tag" style="color:var(--down)">❌ 지금 불리한 자산/섹터</div>
         <ul>
-          <li><strong>[[자산 1]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 2]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 3]]</strong> — [[이유]]</li>
-          <li><strong>[[자산 4]]</strong> — [[이유]]</li>
+          <li><strong>[[자산 1]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 2]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 3]]</strong> — [[수치 포함 구체적 이유]]</li>
+          <li><strong>[[자산 4]]</strong> — [[수치 포함 구체적 이유]]</li>
         </ul>
       </div>
     </div>
@@ -430,27 +480,30 @@
       <div class="dir-block">
         <div class="tag" style="color:var(--warn)">📌 단기 변수 (오늘~1주)</div>
         <ul>
-          <li>[[단기 변수 1]]</li>
-          <li>[[단기 변수 2]]</li>
-          <li>[[단기 변수 3]]</li>
-          <li>[[단기 변수 4]]</li>
+          <li>[[단기변수 1: 날짜시간+구체적내용]]</li>
+          <li>[[단기변수 2: 날짜시간+구체적내용]]</li>
+          <li>[[단기변수 3]]</li>
+          <li>[[단기변수 4]]</li>
         </ul>
       </div>
       <div class="dir-block">
         <div class="tag" style="color:var(--down)">⚠️ 중기 리스크 (1~3개월)</div>
         <ul>
-          <li>[[중기 리스크 1]]</li>
-          <li>[[중기 리스크 2]]</li>
-          <li>[[중기 리스크 3]]</li>
-          <li>[[중기 리스크 4]]</li>
+          <li>[[중기리스크 1: 구체적 시나리오+수치]]</li>
+          <li>[[중기리스크 2]]</li>
+          <li>[[중기리스크 3]]</li>
+          <li>[[중기리스크 4]]</li>
         </ul>
       </div>
     </div>
     <div class="dir-conclusion">
       <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
       <p>
-        <strong>"[[핵심 결론 한 문장]]"</strong><br><br>
-        [[구체적 액션 아이템 3~4개]]
+        <strong>"[[핵심 결론 — 날카롭고 구체적, 모호한 표현 절대 금지]]"</strong><br><br>
+        [[① 구체적 액션]]<br>
+        [[② 구체적 액션]]<br>
+        [[③ 구체적 액션]]<br>
+        [[④ 구체적 액션]]
         <br><br>
         핵심 체크포인트: <strong>[[체크포인트 1]] + [[체크포인트 2]] + [[체크포인트 3]]</strong>
       </p>
@@ -460,7 +513,7 @@
 
 <div class="footer">
   ※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br>
-  데이터 기준: CoinGecko · CoinMarketCap · Crypto.com · CNN Fear&Greed · CME FedWatch · Barchart — [[YYYY.MM.DD]] KST
+  데이터 기준: CoinGecko · CoinMarketCap · Coinbase · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — [[YYYY.MM.DD]] KST
 </div>
 
 </body>
