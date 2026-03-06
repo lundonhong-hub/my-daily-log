@@ -54,27 +54,39 @@ jobs:
         run: |
           python - <<EOF
           import smtplib
+          import os
           from email.mime.multipart import MIMEMultipart
           from email.mime.text import MIMEText
-          import os
+          from email.mime.application import MIMEApplication
 
           sender = os.environ["NAVER_EMAIL"]
           password = os.environ["NAVER_PASSWORD"]
           filename = os.environ["FILENAME"]
 
-          with open(filename, "r", encoding="utf-8") as f:
-              html_content = f.read()
-
-          msg = MIMEMultipart("alternative")
+          # 1. 메일 객체 생성 (혼합형 구성)
+          msg = MIMEMultipart("mixed")
           msg["Subject"] = f"📊 시장 대시보드 - {filename}"
           msg["From"] = sender
           msg["To"] = sender
 
-          msg.attach(MIMEText(html_content, "html"))
+          # 2. 간단한 본문 추가 (본문이 비어있으면 스팸 처리될 수 있음)
+          body = f"생성된 대시보드 파일({filename})을 첨부합니다. 다운로드하여 확인하세요."
+          msg.attach(MIMEText(body, "plain", "utf-8"))
 
-          with smtplib.SMTP_SSL("smtp.naver.com", 465) as smtp:
-              smtp.login(sender, password)
-              smtp.sendmail(sender, sender, msg.as_string())
-
-          print("이메일 발송 완료!")
+          # 3. HTML 파일 첨부 로직
+          try:
+              with open(filename, "rb") as f:
+                  attachment = MIMEApplication(f.read())
+                  attachment.add_header('Content-Disposition', 'attachment', filename=filename)
+                  msg.attach(attachment)
+              
+              # 4. SMTP 서버 접속 및 발송
+              with smtplib.SMTP_SSL("smtp.naver.com", 465) as smtp:
+                  smtp.login(sender, password)
+                  smtp.sendmail(sender, sender, msg.as_string())
+              print(f"[{filename}] 첨부파일 이메일 발송 완료!")
+              
+          except Exception as e:
+              print(f"발송 실패: {e}")
+              exit(1)
           EOF
