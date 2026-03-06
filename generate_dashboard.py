@@ -14,8 +14,14 @@ print(f"Claude API 호출 중... (모델: claude-sonnet-4-6, 파일: {filename})
 
 # 사용자가 지정한 모델 명칭으로 호출
 message = client.messages.create(
-    model="claude-sonnet-4-6", 
+    model="claude-sonnet-4-6",
     max_tokens=8192,
+    tools=[
+        {
+            "type": "web_search_20250305",
+            "name": "web_search"
+        }
+    ],
     messages=[
         {"role": "user", "content": prompt}
     ]
