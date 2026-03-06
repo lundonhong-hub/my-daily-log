@@ -45,3 +45,36 @@ jobs:
           git add .
           git diff --quiet && git diff --staged --quiet || \
             (git commit -m "Add ${{ env.FILENAME }}" && git push)
+
+      - name: 이메일 발송
+        env:
+          NAVER_EMAIL: ${{ secrets.NAVER_EMAIL }}
+          NAVER_PASSWORD: ${{ secrets.NAVER_PASSWORD }}
+          FILENAME: ${{ env.FILENAME }}
+        run: |
+          python - <<EOF
+          import smtplib
+          from email.mime.multipart import MIMEMultipart
+          from email.mime.text import MIMEText
+          import os
+
+          sender = os.environ["NAVER_EMAIL"]
+          password = os.environ["NAVER_PASSWORD"]
+          filename = os.environ["FILENAME"]
+
+          with open(filename, "r", encoding="utf-8") as f:
+              html_content = f.read()
+
+          msg = MIMEMultipart("alternative")
+          msg["Subject"] = f"📊 시장 대시보드 - {filename}"
+          msg["From"] = sender
+          msg["To"] = sender
+
+          msg.attach(MIMEText(html_content, "html"))
+
+          with smtplib.SMTP_SSL("smtp.naver.com", 465) as smtp:
+              smtp.login(sender, password)
+              smtp.sendmail(sender, sender, msg.as_string())
+
+          print("이메일 발송 완료!")
+          EOF
