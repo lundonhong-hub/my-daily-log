@@ -22,24 +22,26 @@ jobs:
         run: |
           export TZ='Asia/Seoul'
           TODAY=$(date +'%Y%m%d')
+          # 1. 실제 파일은 index.html로 고정
+          echo "FILENAME=index.html" >> $GITHUB_ENV
+          echo "TODAY=${TODAY}" >> $GITHUB_ENV
+          # 2. 메일 제목용 식별자 (예: dashboard_20260307_1.html)
           HOUR=$(date +'%H')
           if [ "$HOUR" -lt "09" ]; then NUM="1";
           elif [ "$HOUR" -lt "15" ]; then NUM="2";
           elif [ "$HOUR" -lt "21" ]; then NUM="3";
           else NUM="4";
           fi
-          # 1. 실제 생성될 파일명은 index.html로 고정
-          echo "FILENAME=index.html" >> $GITHUB_ENV
-          # 2. 메일 제목이나 커밋 메시지에 쓸 식별용 이름
           echo "MAIL_TITLE=dashboard_${TODAY}_${NUM}.html" >> $GITHUB_ENV
-          # 3. 대시보드 상단에 기입할 일시 정보
+          # 3. 대시보드 상단 기입용 시간
           echo "UPDATE_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
       - name: Claude API로 대시보드 생성
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FILENAME: ${{ env.FILENAME }}
-          UPDATE_TIME: ${{ env.UPDATE_TIME }} # 파이썬 스크립트에 시간 전달
+          TODAY: ${{ env.TODAY }}
+          UPDATE_TIME: ${{ env.UPDATE_TIME }}
         run: python generate_dashboard.py
 
       - name: GitHub에 저장
@@ -47,7 +49,6 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
           git add index.html
-          # 식별용 이름을 커밋 메시지에 넣어서 관리가 편하게 합니다.
           git commit -m "Update dashboard: ${{ env.MAIL_TITLE }}" || echo "No changes to commit"
           git push
 
@@ -56,7 +57,7 @@ jobs:
           NAVER_EMAIL: ${{ secrets.NAVER_EMAIL }}
           NAVER_PASSWORD: ${{ secrets.NAVER_PASSWORD }}
           FILENAME: ${{ env.FILENAME }}
-          MAIL_TITLE: ${{ env.MAIL_TITLE }} # 메일 제목용 변수 추가
+          MAIL_TITLE: ${{ env.MAIL_TITLE }}
         run: |
           python - <<EOF
           import smtplib
@@ -71,7 +72,6 @@ jobs:
           mail_title = os.environ["MAIL_TITLE"]
 
           msg = MIMEMultipart("mixed")
-          # 제목에는 날짜와 번호가 포함된 이름을 사용하여 구분력을 높입니다.
           msg["Subject"] = f"📊 시장 대시보드 - {mail_title}"
           msg["From"] = sender
           msg["To"] = sender
@@ -82,7 +82,6 @@ jobs:
           try:
               with open(filename, "rb") as f:
                   attachment = MIMEApplication(f.read())
-                  # 첨부파일 이름은 index.html로 나갑니다.
                   attachment.add_header('Content-Disposition', 'attachment', filename=filename)
                   msg.attach(attachment)
               
@@ -90,7 +89,6 @@ jobs:
                   smtp.login(sender, password)
                   smtp.sendmail(sender, sender, msg.as_string())
               print(f"[{mail_title}] 이메일 발송 완료!")
-              
           except Exception as e:
               print(f"발송 실패: {e}")
               exit(1)
