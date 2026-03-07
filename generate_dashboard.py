@@ -191,7 +191,7 @@ while turn < max_turns:
 
     kwargs = dict(
         model="claude-sonnet-4-6",
-        max_tokens=12000,
+        max_tokens=16000,
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
         messages=messages
     )
