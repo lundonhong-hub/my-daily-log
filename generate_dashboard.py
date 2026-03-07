@@ -19,7 +19,7 @@ messages = [{"role": "user", "content": prompt}]
 while True:
     response = client.messages.create(
         model="claude-sonnet-4-6",
-        max_tokens=16000,  # HTML 전체 출력에 충분한 토큰
+        max_tokens=8000,  # HTML 전체 출력에 충분한 토큰
         tools=[{
             "type": "web_search_20250305",
             "name": "web_search"
