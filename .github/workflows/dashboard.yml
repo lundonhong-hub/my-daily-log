@@ -50,6 +50,7 @@ jobs:
           git config --global user.email "action@github.com"
           git add index.html
           git commit -m "Update dashboard: ${{ env.MAIL_TITLE }}" || echo "No changes to commit"
+          git pull --rebase origin main || true
           git push
 
       - name: 이메일 발송
