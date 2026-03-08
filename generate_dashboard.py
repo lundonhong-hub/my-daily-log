@@ -154,11 +154,9 @@ with open("prompt_template.md", "r", encoding="utf-8") as f:
 
 if "[SPLIT]" in full_prompt:
     parts = full_prompt.split("[SPLIT]", 1)
-    # 캐싱 보장: system 파트는 항상 동일해야 함 → 날짜 변수를 고정 placeholder로 치환
+    
     system_content = parts[0].strip()
-    system_content = system_content.replace("[[날짜]]", "DATE_PLACEHOLDER")
-    system_content = system_content.replace("[[YYYY.MM.DD]]", "DATE_PLACEHOLDER")
-    system_content = system_content.replace("[[YYYY년 M월 D일 (요일)]]", "DATE_PLACEHOLDER")
+    
     user_template  = parts[1].strip()
 else:
     system_content = None
