@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시장 모니터링 대시보드 | 2026년 3월 18일</title>
+<title>시장 모니터링 대시보드 | 2026년 3월 19일</title>
 <style>
   :root {
     --bg: #0d1117; --card: #161b22; --border: #21262d;
@@ -42,8 +42,6 @@
   .dot-red { background: var(--down); box-shadow: 0 0 6px rgba(248,81,73,0.6); }
   .dot-yellow { background: var(--warn); box-shadow: 0 0 6px rgba(210,153,34,0.6); }
   .dot-green { background: var(--up); box-shadow: 0 0 6px rgba(63,185,80,0.6); }
-  .risk-label { font-size: 0.78rem; font-weight: 600; color: var(--text); }
-  .risk-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
   .risk-summary { margin-top: 14px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 10px; padding: 12px 16px; text-align: center; }
   .risk-summary .score { font-size: 1.8rem; font-weight: 800; color: var(--down); }
   .risk-summary .phase { font-size: 0.9rem; color: var(--warn); font-weight: 600; margin-top: 2px; }
@@ -76,94 +74,94 @@
 </style>
 </head>
 <body>
-<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-03-18 06:22:15 KST</div>
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-03-19 06:20:58 KST</div>
 <div class="header">
   <h1>📊 시장 모니터링 대시보드</h1>
-  <div class="subtitle">2026년 3월 18일 (수요일) · 데이터 기준: 2026.03.18 KST</div>
-  <div class="alert-banner">⚡ FOMC 결과 발표 D-Day (한국시간 03/19 새벽 3시) · WTI $93 재돌파 · 이란 분쟁 3주차 · CNN 공포지수 26 (FEAR) · BTC $74,648 횡보</div>
+  <div class="subtitle">2026년 3월 19일 (목) · 데이터 기준: 2026.03.19 KST</div>
+  <div class="alert-banner">⚡ FOMC 금리 3.5~3.75% 동결 · 점도표 2026년 1회 인하 유지 · WTI $94.86 · S&P500 16주 최저 · Micron Q2 EPS $12.20 대폭 어닝 서프라이즈 · BTC -4.47% ₩107,725,439</div>
 </div>
 <div class="grid-4">
   <div class="card">
     <div class="label">😨 공포탐욕지수 (CNN)</div>
-    <div class="value down">26</div>
-    <div class="change down">FEAR</div>
+    <div class="value down">22</div>
+    <div class="change down">EXTREME FEAR</div>
     <div class="gauge-wrap">
       <div class="gauge-bar-bg"></div>
-      <div style="margin-top:4px; margin-left:calc(26% - 5px)"><span style="font-size:10px;color:#e6edf3;">▲</span></div>
+      <div style="margin-top:4px; margin-left:calc(22% - 5px)"><span style="font-size:10px;color:#e6edf3;">▲</span></div>
       <div class="gauge-labels"><span>공포</span><span>중립</span><span>탐욕</span></div>
     </div>
-    <div class="sub">이란 전쟁·고유가·정부 셧다운 복합 충격 · 1개월 전 51(중립)에서 급락 · 극도공포 경계선(25) 근접</div>
+    <div class="sub">FOMC 동결 + 유가 급등 + 이란 전쟁 지속 → 3주 연속 하락세, 1개월 전 51(중립)에서 급락</div>
   </div>
   <div class="card">
     <div class="label">🌪️ VIX 공포지수</div>
-    <div class="value down">27.00</div>
-    <div class="change down">▲ 지속 상승 · 전일 약 26 → 오늘 27</div>
-    <div class="sub" style="margin-top:8px; color:var(--warn)">⚠️ 경계구간 (25 이상 = 본격 위험)</div>
-    <div class="sub">이란 전쟁 장기화 · 정부 셧다운 5주차 · BLS 데이터 공백으로 Fed 판단 불확실 → 변동성 구조적 확대</div>
+    <div class="value down">23.40</div>
+    <div class="change down">▲ +4.60% · 전일 22.37 → 오늘 23.40</div>
+    <div class="sub" style="margin-top:8px; color:var(--warn)">⚠️ 경계구간 (20 이상 경계, 25 이상 위험)</div>
+    <div class="sub">FOMC 매파적 점도표 + WTI $98 터치 후 하락 조정 · 인플레 재점화 우려</div>
   </div>
   <div class="card">
     <div class="label">🇺🇸 S&P 500</div>
-    <div class="value up">6,741.72</div>
-    <div class="change up">▲ +0.63% · 전일 종가(3/17)</div>
-    <div class="sub">St. Patrick's Day 반등 · 유가 일시 후퇴 + Nvidia GTC 호재 + Meta 비용효율화 기대감</div>
-    <div class="sub" style="color:var(--warn)">10Y 금리 4.21% · 에너지·반도체 강세 / 소비재·항공 약세</div>
+    <div class="value down">6,672.95</div>
+    <div class="change down">▼ -0.64% · 장중</div>
+    <div class="sub">FOMC 동결 후 파월 "인플레 진전 기대 이하" 발언 → 16주 최저치 근접</div>
+    <div class="sub" style="color:var(--warn)">10Y 금리 4.222% · 에너지·유틸리티 강세 / 성장주·소비재 약세</div>
   </div>
   <div class="card">
     <div class="label">💻 나스닥 100</div>
-    <div class="value up">22,526.29</div>
-    <div class="change up">▲ +0.69%</div>
-    <div class="sub">Nvidia +1.63% ($183.19) · Meta +2.33% ($627.45) · Nebius +13% (Meta AI 인프라 $270억 딜)</div>
-    <div class="sub" style="color:var(--warn)">3주 연속 하락 후 기술적 반등 · 이란 리스크 해소 전까지 상단 제한</div>
+    <div class="value down">22,340.82</div>
+    <div class="change down">▼ -0.62%</div>
+    <div class="sub">NVDA GTC 이후 차익실현 · META -0.8% · 고금리 지속 우려로 밸류에이션 압박</div>
+    <div class="sub" style="color:var(--down)">MU 어닝 서프라이즈(EPS $12.20 vs 예상 $9.31) → 시간외 강세 기대</div>
   </div>
 </div>
 <div class="grid-4" style="margin-bottom:28px;">
   <div class="card">
     <div class="label">🥇 금 (Gold)</div>
-    <div class="value up">$3,030</div>
-    <div class="change up">▲ +0.8% 추정</div>
-    <div class="sub">이란 전쟁 장기화·정부 셧다운 불확실성·달러 강세 속에서도 안전자산 수요 강하게 유지 · 역사적 신고가 구간</div>
+    <div class="value down">$5,006.89</div>
+    <div class="change down">▼ -0.02%</div>
+    <div class="sub">달러 강세 압박 vs 지정학 안전자산 수요 충돌 · 횡보세 지속 · 52주 범위 $2,970~$5,626</div>
   </div>
   <div class="card">
     <div class="label">🛢️ WTI 원유</div>
-    <div class="value neutral">$93.38</div>
-    <div class="change down">▼ 전일比 소폭 반락 (3/16 $100 돌파 후 조정)</div>
-    <div class="sub">이란 Kharg Island 공격 우려 후 $100 돌파 → $93대 진정 · 호르무즈 해협 통항 리스크 지속 · 에너지 섹터 강세 유지</div>
+    <div class="value down">$94.86</div>
+    <div class="change down">▼ -3.17%</div>
+    <div class="sub">이란 전쟁 호르무즈 봉쇄 우려 지속 · $98 고점 터치 후 조정 · 52주 $54~$113 범위</div>
   </div>
   <div class="card">
     <div class="label">🇰🇷 KOSPI</div>
-    <div class="value up">2,580</div>
-    <div class="change up">▲ +0.5% 추정</div>
-    <div class="sub">외국인 순매도 지속 · 글로벌 위험자산 반등 수혜 · 에너지·방산 강세 / 반도체·자동차 혼조 · 환율 부담 상존</div>
+    <div class="value up">5,925.03</div>
+    <div class="change up">▲ +5.04%</div>
+    <div class="sub">외국인 순매수 유입 · 반도체(MU 어닝 기대) + 방산주 강세 · 전일 종가 기준</div>
   </div>
   <div class="card">
     <div class="label">💵 USD/KRW</div>
-    <div class="value down">1,485원</div>
-    <div class="change down">▲ 달러 강세 · 원화 약세 압력</div>
-    <div class="sub">이란 분쟁 안전자산 달러 수요 + 韓 외국인 순매도 복합 · FOMC 결과 전 관망세 · 1,490 저항선 주목</div>
+    <div class="value neutral">1,489.92원</div>
+    <div class="change neutral">▲ +0.58 · 달러 소폭 강세 유지</div>
+    <div class="sub">FOMC 동결 + 매파 점도표 → 달러 지지 · 장중 1,486~1,495 밴드 내 등락</div>
   </div>
 </div>
 <div style="margin-bottom:28px;">
-  <div class="section-title">₿ Bitcoin 현재 시세 &nbsp;<span style="font-size:0.75rem; color:var(--muted); font-weight:400;">2026.03.18 KST 기준</span></div>
+  <div class="section-title">₿ Bitcoin 현재 시세 &nbsp;<span style="font-size:0.75rem; color:var(--muted); font-weight:400;">2026.03.19 KST 기준</span></div>
   <div class="btc-main">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px; margin-bottom:20px;">
       <div>
         <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px;">BTC / KRW · 업비트 기준</div>
-        <div class="btc-price-hero">₩110,971,866</div>
+        <div class="btc-price-hero">₩107,725,439</div>
         <div style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
-          <span style="font-size:1rem; color:#aaa;">≈ <strong style="color:#e6edf3;">$74,648</strong> USD</span>
-          <span style="font-size:1rem; color:var(--up); font-weight:700;">▲ +0.40% (전일比)</span>
+          <span style="font-size:1rem; color:#aaa;">≈ <strong style="color:#e6edf3;">$71,329</strong> USD</span>
+          <span style="font-size:1rem; color:var(--down); font-weight:700;">▼ -4.47% (전일比)</span>
         </div>
-        <div style="margin-top:8px; font-size:0.78rem; color:var(--muted);">전일 ₩110,529,747 → 오늘 ₩110,971,866</div>
+        <div style="margin-top:8px; font-size:0.78rem; color:var(--muted);">전일 ₩112,766,083 → 오늘 ₩107,725,439</div>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
         <div style="background:rgba(248,81,73,0.12); border:1px solid rgba(248,81,73,0.3); border-radius:8px; padding:8px 14px; text-align:center;">
           <div style="font-size:0.68rem; color:var(--muted);">ATH 대비</div>
-          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">-37.61%</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">-39.43%</div>
           <div style="font-size:0.68rem; color:var(--muted);">ATH ₩177,854,395</div>
         </div>
         <div style="background:rgba(210,153,34,0.12); border:1px solid rgba(210,153,34,0.3); border-radius:8px; padding:8px 14px; text-align:center;">
           <div style="font-size:0.68rem; color:var(--muted);">공포탐욕지수</div>
-          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">28</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">26</div>
           <div style="font-size:0.68rem; color:var(--down); font-weight:600;">공포</div>
         </div>
       </div>
@@ -173,56 +171,56 @@
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
         <div style="text-align:center;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">CoinGecko</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩110,850,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+0.38% 24h</div>
+          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩107,700,000</div>
+          <div style="font-size:0.68rem; color:var(--down);">-4.45% 24h</div>
         </div>
         <div style="text-align:center; border-left:1px solid #2d3a5a; border-right:1px solid #2d3a5a;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">CoinMarketCap</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩110,920,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+0.40% 24h</div>
+          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩107,650,000</div>
+          <div style="font-size:0.68rem; color:var(--down);">-4.50% 24h</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">Coinbase</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩110,780,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+0.35% 24h</div>
+          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩107,580,000</div>
+          <div style="font-size:0.68rem; color:var(--down);">-4.52% 24h</div>
         </div>
       </div>
       <div style="margin-top:10px; font-size:0.72rem; color:var(--muted); text-align:center;">※ 소스별 집계 방식 차이로 시세 편차 발생 · 업비트 실시간 확인 권장</div>
     </div>
     <div class="btc-meta">
-      <div class="btc-meta-item"><div class="ml">24h 고점</div><div class="mv" style="color:var(--up);">₩113,342,311</div></div>
-      <div class="btc-meta-item"><div class="ml">24h 저점</div><div class="mv" style="color:var(--down);">₩109,229,689</div></div>
+      <div class="btc-meta-item"><div class="ml">24h 고점</div><div class="mv" style="color:var(--up);">₩111,187,595</div></div>
+      <div class="btc-meta-item"><div class="ml">24h 저점</div><div class="mv" style="color:var(--down);">₩106,300,334</div></div>
       <div class="btc-meta-item"><div class="ml">7일 고점</div><div class="mv" style="color:#f0b429;">₩111,569,333</div></div>
-      <div class="btc-meta-item"><div class="ml">전월 대비</div><div class="mv" style="color:var(--up);">+9.32%</div></div>
-      <div class="btc-meta-item"><div class="ml">Coinbase 프리미엄</div><div class="mv" style="color:var(--down);">-0.17% · 해외 매도 우위</div></div>
+      <div class="btc-meta-item"><div class="ml">전월 대비</div><div class="mv" style="color:var(--up);">+5.08%</div></div>
+      <div class="btc-meta-item"><div class="ml">Coinbase 프리미엄</div><div class="mv" style="color:var(--down);">-0.13% · 기관 매도 우위</div></div>
     </div>
   </div>
 </div>
 <div style="margin-bottom:28px;">
   <div class="section-title">🎯 리스크 체크리스트</div>
   <div class="risk-grid">
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">① 이란 전쟁 장기화 리스크</div><div class="risk-desc">미국-이스라엘 vs 이란 무력충돌 3주차 지속 · WTI 한때 $100 돌파 · 호르무즈 해협 봉쇄 시 글로벌 공급망 붕괴 우려 · 스태그플레이션 시나리오 현실화 중</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">② 미국 정부 셧다운 5주차</div><div class="risk-desc">DHS 예산안 교착으로 부분 셧다운 지속 · BLS PPI 데이터 지연 발표 예정(3/18) · 항공 인프라 마비 우려 · Fed 데이터 공백 → 통화정책 판단 불확실</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">③ VIX 27 · 경계구간 돌입</div><div class="risk-desc">VIX 27 수준 · 25 이상 = 본격 위험구간 · SKEW지수 137.76 (옵션시장 꼬리위험 급증) · 투자자들 풋옵션·금으로 하방헤지 확대</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">④ CNN 공포탐욕 26 · 극도공포 임박</div><div class="risk-desc">CNN F&G 26 (FEAR) · 1주전 33, 1개월전 51 대비 급락 · 극도공포 기준선(25) 불과 1포인트 위 · 패닉셀 트리거 가능성 상존</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">⑤ 유가 고공행진 · 인플레 재점화</div><div class="risk-desc">WTI $93 수준 유지 · 3/16 일시 $100 돌파 · 소비자 가스비 급등으로 소비심리 위축(UMich 55.5, 전월比 -1.9%) · Fed 금리인하 기대 재후퇴</div></div></div>
-    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑥ FOMC 결과 불확실성</div><div class="risk-desc">3/18 결과 발표(한국시간 새벽 3시) · 금리 동결 유력하나 점도표 수정 주목 · 파월 기자회견에서 이란발 인플레 언급 수위 · 10Y 금리 4.21% — 방향성 분기점</div></div></div>
-    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑦ BTC ATH 대비 -37.61% · 약세장 구조</div><div class="risk-desc">BTC $74,648 · ATH $120,700 대비 37.61% 하락 · 크립토 공포지수 28 (공포) · 전일比 +0.4%로 미약한 반등 · $70,000 지지선 이탈 시 패닉 가속화</div></div></div>
-    <div class="risk-item"><div class="dot dot-green"></div><div><div class="risk-label">⑧ 기술주 반등 신호 · Nvidia GTC 호재</div><div class="risk-desc">Nvidia GTC 컨퍼런스 개최 · 젠슨황 "2027년까지 AI칩 $1조 매출" 선언 · 반도체 ETF +1.7% · Meta AI 인프라 $270억 딜 → 빅테크 AI 모멘텀 유지</div></div></div>
+    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">① 이란 전쟁 & 유가 충격</div><div class="risk-desc">WTI $94.86 · 주간 고점 $98 터치 · 호르무즈 해협 봉쇄 우려 · 1M 내재변동성 51% → 공급 차질 장기화 시 $110+ 경고</div></div></div>
+    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">② 연준 매파 스탠스 강화</div><div class="risk-desc">기준금리 3.5~3.75% 동결 · 점도표 2026년 1회 인하 유지 · 파월 "인플레 진전 기대 이하" 발언 · 6월 인하 확률 급락 · 성장주 밸류에이션 압박</div></div></div>
+    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">③ CNN 공포탐욕 극도공포 구간</div><div class="risk-desc">현재 22 (Extreme Fear) · 1개월 전 51(중립) 대비 -29pt 급락 · S&P500 16주 최저 · 3주 연속 손실 · 심리 극도 위축</div></div></div>
+    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">④ 스태그플레이션 리스크 현실화</div><div class="risk-desc">Q4 2025 GDP +0.7% (예상 1.5% 대폭 하회) · PCE 인플레 2026년 2.7% 상향 · 유가 에너지 쇼크 동반 → 1973년식 오일쇼크 시나리오 우려</div></div></div>
+    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑤ BTC -4.47% 하락, ATH -39.43%</div><div class="risk-desc">₩107,725,439 · 24h 고점 ₩111,187,595에서 급락 · 크립토 공포탐욕 26(Fear) · FOMC 동결 + 리스크오프로 알트코인 동반 매도</div></div></div>
+    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑥ VIX 23.40 · 경계구간 진입</div><div class="risk-desc">전일 22.37 → 23.40 (+4.60%) · 20~25 경계구간 · 25 돌파 시 본격 위험구간 진입 예정 · 유가·FOMC 이중 충격으로 지속 상승 중</div></div></div>
+    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑦ 연준 의장 교체 불확실성</div><div class="risk-desc">파월 임기 2026.5.15 만료 · 후임 케빈 워시 지명 · 상원 인준 지연 가능성 · 법원 압력 공방 지속 → 정책 불확실성 확대</div></div></div>
+    <div class="risk-item"><div class="dot dot-green"></div><div><div class="risk-label">⑧ Micron 어닝 서프라이즈</div><div class="risk-desc">Q2 EPS $12.20 (예상 $9.31 대폭 상회) · 매출 $23.86B vs 예상 $20.07B · Q3 가이던스 $33.5B · AI 메모리 수요 폭발 → 반도체·AI 섹터 긍정적</div></div></div>
   </div>
   <div class="risk-summary">
-    <div class="score">5 / 8 위험</div>
-    <div class="phase">📍 현재 시장 국면: 고경계 — 이란 전쟁·고유가·정부 셧다운 3중 악재 속 FOMC 결과 대기 · 기술적 반등 vs 구조적 하방 압력 충돌</div>
+    <div class="score">6 / 8 위험</div>
+    <div class="phase">📍 현재 시장 국면: 고경계 — 이란 전쟁·유가 쇼크·FOMC 매파 동결 삼중 압박 · 스태그플레이션 우려 현실화</div>
   </div>
 </div>
 <div style="margin-bottom:28px;">
   <div class="section-title">📰 이번 주 핵심 이슈</div>
   <div class="news-list">
-    <div class="news-item"><div class="news-text"><strong>🏦 FOMC 3월 회의 — 금리 동결 유력, 점도표·파월 발언이 핵심</strong> — 3/17~3/18 FOMC 진행 중, 기준금리 동결 거의 확실. 관건은 이란발 에너지 쇼크를 반영한 2026년 말 점도표 수정 여부 · 파월 기자회견에서 "인플레 재점화 우려" 강도에 따라 성장주·채권 단기 방향 결정 · 10Y 금리 4.21%, 2Y 3.665% → 장단기 스프레드 경제침체 경보 구간 근접.</div><span class="badge badge-neg">FOMC 고위험</span></div>
-    <div class="news-item"><div class="news-text"><strong>🛢️ 미-이스라엘 vs 이란 전쟁 3주차 — WTI $100 돌파 후 $93 조정</strong> — 3/16 WTI 일시 $100 돌파로 2024년 이후 최고치 갱신, 이후 $93대 진정. 이란 최고 안보 책임자 피살·UAE 천연가스전 공격 보도로 호르무즈 해협 봉쇄 공포 지속 · 에너지 섹터 강세·항공·소비재 약세 유지 · 1973년 오일쇼크 스태그플레이션 시나리오 현실 위험 구간.</div><span class="badge badge-neg">지정학 위험</span></div>
-    <div class="news-item"><div class="news-text"><strong>🤖 Nvidia GTC 2026 컨퍼런스 개막 — 젠슨황 AI칩 '$1조 매출' 선언</strong> — Nvidia 연간 GTC 컨퍼런스 3/16 개막, 젠슨황 CEO '2027년까지 AI칩으로 $1조 달성' 발언으로 시장 환호 · Nvidia +1.63% ($183.19), 반도체 ETF(VanEck) +1.7% · Meta $270억 AI 인프라 딜(Nebius +13%), Meta +2.33% ($627.45) · AI 투자 사이클 가속화 → 빅테크 성장주 단기 상승 모멘텀 유지.</div><span class="badge badge-pos">AI 강세재료</span></div>
-    <div class="news-item"><div class="news-text"><strong>🏛️ 미국 정부 셧다운 5주차 — BLS PPI 데이터 지연·항공 마비 경고</strong> — DHS 예산 교착으로 셧다운 5주차 돌입 · BLS PPI 발표 3/18로 지연 (인플레 스파이크 시 Fed 금리인하 기대 붕괴·증시 급락 트리거) · TSA 인력 이탈 가속으로 주요 공항 마비 우려 · 4월 연장 시 2026 Q2 기술적 경기침체 확률 급등 · Delta 항공 +6.6% 이례적 반등은 수요 강세 신호.</div><span class="badge badge-neg">정책 리스크</span></div>
-    <div class="news-item"><div class="news-text"><strong>₿ BTC $74,648 공포 속 횡보 — 크립토 공포지수 28(공포) · 월간 +9.32%</strong> — BTC 24h +0.4%로 미약한 반등 · ATH($177,854,395 KRW) 대비 -37.61% 약세장 구조 유지 · 그러나 전월比 +9.32%로 상대적 강세 · 크립토 공포지수 28 (공포구간), 전일比 23→28 소폭 개선 · $70,000 지지선 수호 여부 + FOMC 결과가 단기 방향 결정 변수.</div><span class="badge badge-btc">BTC 주목</span></div>
+    <div class="news-item"><div class="news-text"><strong>🏦 FOMC 3월 금리 동결 — 점도표 2026년 1회 인하 유지</strong> — 기준금리 3.5~3.75% 만장일치 유지. 파월 "인플레 진전 기대 이하, 에너지 쇼크 불확실성 크다" 발언으로 성장주·채권 동반 하락. 6월 인하 기대 사실상 소멸, CME FedWatch 1회 인하 확률 현재 최대치. 달러 강세·장기금리 상승 압박 지속.</div><span class="badge badge-neg">매파 동결</span></div>
+    <div class="news-item"><div class="news-text"><strong>🛢️ WTI 이란 전쟁 쇼크 — 호르무즈 봉쇄 우려로 $98 터치</strong> — 미군의 이란 에너지 시설 타격 후 WTI 주간 고점 $98 돌파. 세계 최대 천연가스 필드 피격 보도. 52주 고점 $113 재도전 가능성 열림. 에너지·방산주 강세, 소비재·항공·화학 섹터 직격탄. 인플레 재점화 + 경기 둔화 동시 압박.</div><span class="badge badge-neg">지정학</span></div>
+    <div class="news-item"><div class="news-text"><strong>💾 Micron Q2 역대급 어닝 서프라이즈 — EPS $12.20 vs 예상 $9.31</strong> — 매출 $23.86B(+196% YoY), 예상 $20.07B 대폭 초과. Q3 가이던스 $33.5B(+200%+ YoY), AI HBM 수요 폭발적 지속. 클라우드 메모리 매출 +160% $7.75B. 단, 시간외 주가는 소폭 하락 — 초고기대치 부분 선반영 해소 움직임.</div><span class="badge badge-pos">어닝 서프</span></div>
+    <div class="news-item"><div class="news-text"><strong>🤖 Nvidia GTC 2026 컨퍼런스 — Vera Rubin·차세대 AI 로드맵 공개</strong> — 젠슨 황 CEO, 차세대 GPU Feynman·AI 에이전트·로보틱스 비전 공개. Micron HBM4 Vera Rubin 플랫폼용 양산 개시 발표. 네트워킹 매출 +267% YoY $11B 돌파. AI 인프라 투자 사이클 가속화 → 반도체·AI 클라우드 수혜 지속.</div><span class="badge badge-pos">AI 수혜</span></div>
+    <div class="news-item"><div class="news-text"><strong>📉 S&P500 16주 최저 · 3주 연속 손실 · 스태그플레이션 공포</strong> — S&P500 6,624 → 6,672 구간 하락. Q4 2025 GDP +0.7%(예상 1.5% 대폭 하회), PCE 2.7% 상향, 유가 급등 삼중 부담. 소비자심리지수 55.5(미시간대)로 추락. 1973년식 스태그플레이션 재현 우려 → 현금·방어주·금·에너지주 피난처 부상.</div><span class="badge badge-neg">경기경보</span></div>
   </div>
 </div>
 <div style="margin-bottom:28px;">
@@ -231,11 +229,11 @@
     <table class="cal-table">
       <thead><tr><th>날짜/시간</th><th>이벤트</th><th>예상치 / 이전값</th><th>중요도</th></tr></thead>
       <tbody>
-        <tr><td style="color:var(--down); font-weight:700;">3/18 (수) 새벽 3:00 KST</td><td>🔥 FOMC 금리 결정 + 점도표 + 파월 기자회견</td><td>동결 4.25~4.50% / 이전 4.25~4.50%</td><td class="imp-high">★★★</td></tr>
-        <tr><td>3/18 (수) 미 장중</td><td>🔥 미국 PPI (2월, 지연 발표) — 셧다운으로 BLS 발표 지연</td><td>예상 +0.3%MoM / 이전 +0.4%</td><td class="imp-high">★★★</td></tr>
-        <tr><td>3/19 (목) 21:30 KST</td><td>미국 주간 신규 실업수당 청구건수</td><td>예상 22.5만 / 이전 22.0만</td><td class="imp-med">★★☆</td></tr>
-        <tr><td>3/19 (목) 21:30 KST</td><td>미국 주택착공·건축허가 (2월)</td><td>예상 140만건 / 이전 136.6만건</td><td class="imp-med">★★☆</td></tr>
-        <tr><td>3/20 (금) 종일</td><td>이란 분쟁 추가 전개 상황 (호르무즈 해협 통항 모니터링)</td><td>- / WTI $93.38</td><td class="imp-low">★☆☆</td></tr>
+        <tr><td style="color:var(--down); font-weight:700;">3/18(수) 결과</td><td>🔥 FOMC 금리결정 + 파월 기자회견</td><td>동결 3.5~3.75% / 이전 동결</td><td class="imp-high">★★★</td></tr>
+        <tr><td>3/18(수) 결과</td><td>🔥 Micron(MU) Q2 FY26 실적발표</td><td>EPS $12.20 / 예상 $9.31</td><td class="imp-high">★★★</td></tr>
+        <tr><td>3/19(목) 오늘</td><td>🇯🇵 BOJ 금리결정 (일본은행 정책회의)</td><td>동결 예상 0.5% / 이전 0.5%</td><td class="imp-med">★★☆</td></tr>
+        <tr><td>3/19(목) 오늘</td><td>🇦🇺 호주 고용지표 발표</td><td>+3만명 / 이전 +4.4만명</td><td class="imp-med">★★☆</td></tr>
+        <tr><td>3/20(금)</td><td>🇺🇸 미국 기존주택판매 · 소비자기대지수</td><td>390만채 / 이전 402만채</td><td class="imp-low">★☆☆</td></tr>
       </tbody>
     </table>
   </div>
@@ -244,27 +242,27 @@
   <div class="section-title">🧭 투자 방향성 코멘트</div>
   <div class="direction-card">
     <div>
-      <div class="phase-tag">⚡ 현재 국면: "FOMC D-Day · 이란 전쟁 3주차 · 고유가 $93 · 정부 셧다운 5주차"</div>
-      <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">오늘 시장은 세 가지 힘이 충돌하고 있다. ①이란 전쟁발 유가 쇼크(WTI $93~$100)가 스태그플레이션 공포를 자극하는 동시에, ②Nvidia GTC 컨퍼런스와 Meta AI 딜($270억)이 기술주 저가매수 심리를 자극해 S&P 500은 전일比 +0.63% 반등에 성공했다. ③그러나 FOMC 결과(한국시간 3/19 새벽 3시) 전까지는 방향성 확정이 불가하며, 점도표 매파 수정 + 파월 인플레 경고 시 즉각적 하방 위험이 현실화될 수 있다. VIX 27·CNN 공포 26으로 본격 공포 구간 진입 직전이다.</p>
+      <div class="phase-tag">⚡ 현재 국면: "3/19 — FOMC 매파 동결 후폭풍 · WTI $95 · Micron 서프라이즈 · BTC 공포 구간"</div>
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">연준의 3.5~3.75% 동결과 파월의 매파적 발언이 성장주를 짓누르는 가운데, 이란 전쟁發 유가 쇼크(WTI $95)가 인플레 재점화 우려를 자극하며 스태그플레이션 공포가 현실화 되고 있다. S&P500은 16주 최저치로 밀렸고, CNN 공포탐욕지수는 22(극도공포)까지 추락했다. 반면 Micron의 역대급 어닝 서프라이즈(EPS $12.20)와 Nvidia GTC 로드맵은 AI 반도체 수요 구조적 성장을 재확인시켜, 에너지·방산·AI 반도체 간 극명한 주도권 교체가 진행 중이다.</p>
     </div>
     <div class="dir-row">
       <div class="dir-block" style="border-color:rgba(63,185,80,0.3);">
         <div class="tag" style="color:var(--up)">✅ 지금 유리한 자산/섹터</div>
         <ul>
-          <li><strong>금(Gold)</strong> — $3,030대 역사적 신고가 구간 · 전쟁·셧다운·인플레 3중 안전자산 수요 · 달러 강세에도 강하게 지지</li>
-          <li><strong>에너지 섹터 (XLE)</strong> — WTI $93 유지로 미국 에너지 기업 실적 급등 · Dow Inc. +4% · 글로벌 에너지 ETF 강세 지속</li>
-          <li><strong>방산 섹터 (ITA/LMT)</strong> — 이란 전쟁 확전 우려 → 미국·이스라엘 방산 예산 확대 기대 · 지정학 리스크 헤지 수단</li>
-          <li><strong>Nvidia / 반도체 (SOXX)</strong> — GTC 컨퍼런스 '$1조 AI칩 매출' 선언 · 단기 모멘텀 강화 · 반도체 ETF +1.7%</li>
-          <li><strong>단기 미국 국채 (SHY/2Y)</strong> — 2Y 금리 3.665% · Fed 동결 환경에서 단기채 안전성 확보 · 변동성 헤지 포지션</li>
+          <li><strong>에너지주 (XLE)</strong> — WTI $94.86, 이란 전쟁 장기화 → 에너지 섹터 YTD +9.5% · 수급 공급 감소 구조적 수혜</li>
+          <li><strong>방산주 (LMT·RTX·NOC)</strong> — 트럼프 FY2027 국방예산 $1.5조 제안 · 글로벌 방산비 $2.6조 예상 · 전쟁 특수 직접 수혜</li>
+          <li><strong>AI 반도체 (MU·NVDA)</strong> — Micron EPS $12.20 서프라이즈 · Q3 가이던스 $33.5B · HBM4 양산 개시 · AI 메모리 슈퍼사이클 구조적</li>
+          <li><strong>금 (Gold Spot)</strong> — $5,006 횡보 중 · 지정학 안전자산 수요 + 스태그플레이션 헤지 · 추가 하락 제한적</li>
+          <li><strong>달러·단기채 (USD·T-Bill)</strong> — FOMC 동결 + 매파 스탠스 → 달러 지지 · USD/KRW 1,490 근접 · 단기채 수익률 매력 유지</li>
         </ul>
       </div>
       <div class="dir-block" style="border-color:rgba(248,81,73,0.3);">
         <div class="tag" style="color:var(--down)">❌ 지금 불리한 자산/섹터</div>
         <ul>
-          <li><strong>항공·여행 섹터</strong> — 셧다운 TSA 마비 우려 + 고유가 항공연료비 압박 · 소비심리 위축(UMich 55.5) · 구조적 이중 역풍</li>
-          <li><strong>장기채 (TLT/20Y)</strong> — 인플레 재점화 우려 · 10Y 4.21% 상단 압력 · FOMC 점도표 매파 수정 시 즉각 가격 하락</li>
-          <li><strong>소비재·리테일 (XLP)</strong> — 가스비 급등→가처분소득 감소 · UMich 소비자기대지수 -4.4% · 스태그플레이션 직격</li>
-          <li><strong>BTC / 알트코인</strong> — ATH 대비 -37.61% 약세 구조 · 크립토 공포 28 · FOMC 매파 해석 시 위험자산 동반 하락 가능성</li>
+          <li><strong>성장주·나스닥 레버리지</strong> — 10Y 금리 4.22% · 고금리 지속 · 밸류에이션 재할인 · 6월 인하 기대 소멸로 압박 지속</li>
+          <li><strong>소비재·항공·화학</strong> — 유가 급등 원가 압박 · 소비자심리 55.5(저점) · 스태그플레이션 수요 감소 직격</li>
+          <li><strong>비트코인·알트코인</strong> — BTC -4.47% ₩107.7M · 크립토 공포탐욕 26(공포) · ATH 대비 -39.43% · 리스크오프 환경 지속</li>
+          <li><strong>장기채 (TLT)</strong> — 인플레 재점화 + 유가 쇼크 → 장기금리 상승 압박 · 채권 가격 하락 위험</li>
         </ul>
       </div>
     </div>
@@ -272,39 +270,38 @@
       <div class="dir-block">
         <div class="tag" style="color:var(--warn)">📌 단기 변수 (오늘~1주)</div>
         <ul>
-          <li>3/18(수) 새벽 3:00 KST — FOMC 금리 결정 + 파월 기자회견 · 점도표 수정 폭이 성장주·채권 방향 결정 · 동결 확실, 관건은 '인플레 우려' 강도</li>
-          <li>3/18(수) 미 장중 — 지연 발표 PPI (2월) · 인플레 스파이크 시(예상치 상회) S&P 급락 트리거 · 정부 셧다운 정상화 여부도 동시 체크</li>
-          <li>이란 분쟁 추가 전개 — 이스라엘의 Kharg Island 타격 여부 · 호르무즈 해협 통항 차단 시 WTI $110 돌파 가능, 전 자산시장 충격</li>
-          <li>Nvidia GTC 3/18~20 지속 — 젠슨황 추가 제품 발표(Blackwell Ultra 등) · 반도체·AI 섹터 모멘텀 유지 여부</li>
+          <li>3/19(목) 오늘 — BOJ 금리결정: 동결 예상 · 엔화 방향성 → 아시아 증시 영향</li>
+          <li>3/19(목) 오늘 — Micron 시간외 주가 반응 확인 · 서프라이즈에도 소폭 하락 → 선반영 vs 추가 상승 분기점</li>
+          <li>3/20(금) — 미국 기존주택판매 · 소비자기대지수 → 스태그플레이션 확인 여부</li>
+          <li>이란 군사 동향 주시 — 추가 미군 타격 or 이란 반격 → WTI $100 재돌파 트리거</li>
         </ul>
       </div>
       <div class="dir-block">
         <div class="tag" style="color:var(--down)">⚠️ 중기 리스크 (1~3개월)</div>
         <ul>
-          <li>이란 전쟁 확전 → WTI $120 돌파 · 1973년 오일쇼크 재현 시 S&P 500 -20~40% 하락 · 스태그플레이션 본격 진입</li>
-          <li>정부 셧다운 4월 연장 → Q2 GDP 성장률 마이너스 전환 · BLS·Census 데이터 공백 장기화로 Fed 정책 오류 리스크 급증</li>
-          <li>파월 임기 종료(2026년 5월) + 트럼프 신임 Fed 의장 지명 불확실성 → 중앙은행 독립성 훼손 우려로 달러·채권 신뢰 흔들릴 수 있음</li>
-          <li>AI 투자 수익화 지연 리스크 → CAPE 비율 고공 행진 · 빅테크 실적 미달 시 나스닥 밸류에이션 급격 재조정 가능</li>
+          <li>스태그플레이션 심화 — GDP 둔화 + 유가 지속 고공 시 연준 딜레마 장기화 · S&P500 6,000선 테스트 가능성</li>
+          <li>연준 의장 교체 혼란 — 파월 5월 임기만료 · 워시 인준 지연 시 정책 불확실성 폭발 · 달러·채권 변동성 확대</li>
+          <li>AI 메모리 사이클 고점 논쟁 — MU 주가 급등 이후 2026년 말 공급 증가 우려 · 반도체 밸류에이션 재점검</li>
+          <li>이란 전쟁 확전 시나리오 — 호르무즈 완전 봉쇄 → WTI $120+ · 글로벌 경기침체 트리거 현실화 위험</li>
         </ul>
       </div>
     </div>
     <div class="dir-conclusion">
       <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
       <p>
-        <strong>"FOMC 발표 전 신규 공격적 포지션 절대 금지 — 결과 확인 후 점도표 방향에 따라 24시간 내 즉각 대응하라."</strong><br><br>
-        ① FOMC 결과 전(오늘 자정까지): 기존 포지션 유지, 신규 매수·매도 자제 · 보유 성장주·BTC 비중이 포트폴리오 20% 초과 시 일부 차익실현으로 현금 비중 확보<br>
-        ② FOMC 점도표 비둘기(인하 유지): 성장주(QQQ)·BTC 비중 확대 신호 · Nvidia·Meta 중심 반도체·AI 섹터 매수 검토 · 금 보유 유지<br>
-        ③ FOMC 점도표 매파(인하 축소 or 인상 시사): 장기채(TLT) 추가 손절 · 금·에너지·방산 비중 확대 · 현금 비중 30% 이상 유지 · BTC $70,000 지지선 이탈 감시<br>
-        ④ PPI 발표(3/18) 인플레 급등 시: 에너지·금 헤지 포지션으로 즉시 전환 · 소비재·항공 공매도 또는 풋옵션 검토 · WTI $100 재돌파 여부 30분 내 체크
-        <br><br>
-        핵심 체크포인트: <strong>FOMC 점도표 2026년 인하 횟수 + PPI MoM 수치 + 이란 호르무즈 통항 뉴스</strong>
+        <strong>"FOMC 매파·유가 쇼크·스태그플레이션 삼중 압박 속 공포 극대화 구간 — 섣부른 저가매수 금지, 에너지·방산·AI반도체 압축 집중과 현금 방어 병행"</strong><br><br>
+        ① 성장주·나스닥 레버리지 비중 즉시 축소 (10Y 금리 4.22%, 6월 인하 기대 소멸) — 포지션 20~30% 현금화<br>
+        ② Micron(MU) 시간외 반응 확인 후 AI 반도체 분할 매수 검토 — 어닝 서프라이즈 확인, 하락 시 $430 지지선 테스트 구간 진입 기회<br>
+        ③ WTI $95~100 구간 에너지·방산 ETF(XLE·ITA) 소량 편입 유지 — 이란 전쟁 장기화 헤지 + 수혜 동시 확보<br>
+        ④ BTC 추가 매수 자제 · ₩100,000,000(1억원) 지지선 이탈 여부 체크 — 크립토 공포탐욕 26·리스크오프 환경에서 무리한 물타기 금지<br><br>
+        핵심 체크포인트: <strong>WTI $100 재돌파 여부</strong> + <strong>BOJ 금리결정 엔화 반응</strong> + <strong>MU 시간외 주가 $430 지지 확인</strong>
       </p>
     </div>
   </div>
 </div>
 <div class="footer">
   ※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br>
-  데이터 기준: CoinGecko · CoinMarketCap · Coinbase · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.03.18 KST
+  데이터 기준: CoinGecko · CoinMarketCap · Coinbase · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.03.19 KST
 </div>
 </body>
 </html>
