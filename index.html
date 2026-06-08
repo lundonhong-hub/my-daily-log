@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시장 모니터링 대시보드 | 2026년 6월 8일</title>
+<title>시장 모니터링 대시보드 | 2026년 6월 9일</title>
 <style>
   :root {
     --bg: #0d1117; --card: #161b22; --border: #21262d;
     --up: #3fb950; --down: #f85149; --warn: #d29922;
     --accent: #58a6ff; --text: #e6edf3; --muted: #8b949e;
+    --trend: #a371f7;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
@@ -44,6 +45,7 @@
   .dot-green { background: var(--up); box-shadow: 0 0 6px rgba(63,185,80,0.6); }
   .risk-label { font-size: 0.78rem; font-weight: 600; color: var(--text); }
   .risk-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+  .risk-divider { grid-column: 1 / -1; border-top: 1px dashed var(--border); padding-top: 6px; font-size: 0.7rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
   .risk-summary { margin-top: 14px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 10px; padding: 12px 16px; text-align: center; }
   .risk-summary .score { font-size: 1.8rem; font-weight: 800; color: var(--down); }
   .risk-summary .phase { font-size: 0.9rem; color: var(--warn); font-weight: 600; margin-top: 2px; }
@@ -55,6 +57,8 @@
   .badge-pos { background: rgba(63,185,80,0.15); color: var(--up); border: 1px solid rgba(63,185,80,0.3); }
   .badge-neu { background: rgba(210,153,34,0.15); color: var(--warn); border: 1px solid rgba(210,153,34,0.3); }
   .badge-btc { background: rgba(240,180,41,0.15); color: #f0b429; border: 1px solid rgba(240,180,41,0.3); }
+  .badge-kr { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
+  .badge-trend { background: rgba(163,113,247,0.15); color: var(--trend); border: 1px solid rgba(163,113,247,0.3); }
   .cal-table { width: 100%; border-collapse: collapse; }
   .cal-table th { font-size: 0.73rem; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
   .cal-table td { font-size: 0.8rem; padding: 10px; border-bottom: 1px solid rgba(33,38,45,0.5); }
@@ -72,265 +76,311 @@
   .dir-conclusion .tag { font-size: 0.7rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
   .dir-conclusion p { font-size: 0.85rem; line-height: 1.6; color: var(--text); }
   .phase-tag { display: inline-block; background: rgba(248,81,73,0.15); color: var(--down); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; margin-bottom: 10px; }
+  .trend-card { background: linear-gradient(135deg, #161b22 0%, #1a1535 100%); border: 1px solid rgba(163,113,247,0.3); border-radius: 12px; padding: 20px 22px; }
+  .trend-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(163,113,247,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-signal { font-size: 0.7rem; font-weight: 700; color: var(--trend); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .trend-body { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+  .trend-etf { display: inline-block; margin-top: 8px; font-size: 0.72rem; font-weight: 700; color: var(--trend); background: rgba(163,113,247,0.1); border: 1px solid rgba(163,113,247,0.3); border-radius: 6px; padding: 3px 10px; }
+  .trend-horizon { display: inline-block; font-size: 0.68rem; color: var(--muted); background: rgba(255,255,255,0.05); border-radius: 4px; padding: 2px 7px; margin-left: 6px; }
+  .kr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+  @media (max-width: 600px) { .kr-grid { grid-template-columns: 1fr; } }
+  .sector-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .sector-box { background: #0d1117; border-radius: 8px; padding: 10px; border: 1px solid var(--border); }
+  .sector-box .slabel { font-size: 0.68rem; color: var(--muted); margin-bottom: 4px; }
   .footer { text-align: center; margin-top: 28px; font-size: 0.72rem; color: var(--muted); }
 </style>
 </head>
 <body>
-<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-06-08 06:50:27 KST</div>
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-06-09 00:09:13 KST</div>
+
+<!-- 헤더 -->
 <div class="header">
   <h1>📊 시장 모니터링 대시보드</h1>
-  <div class="subtitle">2026년 6월 8일 (월요일) · 데이터 기준: 2026.06.08 KST</div>
-  <div class="alert-banner">⚡ 나스닥 -4.77% '검은 금요일' 후폭풍 · 5월 NFP 172,000건 쇼크·금리인상 공포 재점화 · VIX +34% 급등 20선 돌파 · FOMC 6/17 신임 의장 워시 첫 회의 D-9</div>
+  <div class="subtitle">2026년 6월 9일 (화) · 데이터 기준: 2026.06.09 KST</div>
+  <div class="alert-banner">⚡ S&P500 +1.09%·나스닥 +2.47% 강반등 — 이란 군사작전 종료 선언+반도체 저가매수 유입 / 6/10 미국 CPI 발표 최대 분수령, 코스피 서킷브레이커 후 기술적 반등 시험</div>
 </div>
+
+<!-- ROW 1: 공포탐욕 / VIX / S&P500 / 나스닥 -->
 <div class="grid-4">
   <div class="card">
     <div class="label">😨 공포탐욕지수 (CNN)</div>
-    <div class="value down">42</div>
-    <div class="change down">FEAR</div>
+    <div class="value neutral">52</div>
+    <div class="change neutral">NEUTRAL</div>
     <div class="gauge-wrap">
       <div class="gauge-bar-bg"></div>
-      <div style="margin-top:4px; margin-left:calc(42% - 5px)"><span style="font-size:10px;color:#e6edf3;">▲</span></div>
+      <div style="margin-top:4px; margin-left:calc(52% - 5px)"><span style="font-size:10px;color:#e6edf3;">▲</span></div>
       <div class="gauge-labels"><span>공포</span><span>중립</span><span>탐욕</span></div>
     </div>
-    <div class="sub">NFP 쇼크·반도체 급락·금리인상 우려 재점화로 투자심리 위축. 3월 최저 15에서 회복 중이나 다시 하방 압력</div>
+    <div class="sub">6/5 기준 42(공포)에서 급반등 — 이란 군사작전 종료·반도체 저가매수로 심리 회복</div>
   </div>
   <div class="card">
     <div class="label">🌪️ VIX 공포지수</div>
-    <div class="value down">20.63</div>
-    <div class="change down">▲ +34.0% · 전일 15.40 → 오늘 20.63</div>
-    <div class="sub" style="margin-top:8px; color:var(--down)">🔴 위험 (20 이상 = 본격 공포구간)</div>
-    <div class="sub">반도체 실적 우려+NFP 쇼크+금리인상 재점화로 단 하루 34% 폭등. 25 이상 시 패닉 구간 진입 경고</div>
+    <div class="value up">18.08</div>
+    <div class="change up">▼ -15.95% · 전일 21.51 → 오늘 18.08</div>
+    <div class="sub" style="margin-top:8px; color:var(--warn)">⚠️ 경계구간 (20 이하 회귀, 하락 중)</div>
+    <div class="sub">중동 긴장 완화+칩 반등으로 공포 급속 해소, 15 하회 시 안정 확인</div>
   </div>
   <div class="card">
     <div class="label">🇺🇸 S&P 500</div>
-    <div class="value down">7,383.74</div>
-    <div class="change down">▼ -2.64% · 종가</div>
-    <div class="sub">브로드컴 AI 가이던스 실망 + 5월 NFP 172K(예상 85K 대비 2배) 발표 → "호재=악재" 금리인상 공포</div>
-    <div class="sub" style="color:var(--warn)">10Y 금리 4.54% · 기술·반도체 급락 vs 산업재·방어주 방어</div>
+    <div class="value up">7,464.44</div>
+    <div class="change up">▲ +1.09% · 종가</div>
+    <div class="sub">이란 공습 종료 선언+반도체 저가매수 유입으로 낙폭 회복. Marvell S&P500 편입 발표도 호재</div>
+    <div class="sub" style="color:var(--warn)">10Y 금리 4.55% · 에너지·테크 강세, 소비재·유틸리티 약세</div>
   </div>
   <div class="card">
     <div class="label">💻 나스닥 100</div>
-    <div class="value down">19,180</div>
-    <div class="change down">▼ -4.77%</div>
-    <div class="sub">Micron -6.3%, AMD -6.3%, Broadcom -12.6%, Marvell -8% 반도체 전방위 붕괴. Meta 대규모 유상증자 발표 추가 악재</div>
-    <div class="sub" style="color:var(--down)">1조달러 시총 증발. AI 버블 우려 재부상 · 4월 2025 이후 최대 낙폭</div>
+    <div class="value up">29,672.94</div>
+    <div class="change up">▲ +2.47%</div>
+    <div class="sub">Nvidia +2%, Micron +7%, Marvell +9%, Corning +9% 급등 — AI인프라 저가매수 재개</div>
+    <div class="sub" style="color:var(--up)">전주 -4% 급락분의 절반 이상 단숨에 회복, 기술적 반등 강도 예상 상회</div>
   </div>
 </div>
+
+<!-- ROW 2: 금 / WTI / KOSPI / USD/KRW -->
 <div class="grid-4" style="margin-bottom:28px;">
   <div class="card">
     <div class="label">🥇 금 (Gold)</div>
-    <div class="value up">$3,248</div>
-    <div class="change up">▲ +0.82%</div>
-    <div class="sub">금리인상 우려 vs 지정학 불안 상충. 안전자산 수요 지속. VIX 급등 속 헤지 수요 유입. 달러 강세에 상승폭 제한</div>
+    <div class="value up">$4,354.20</div>
+    <div class="change up">▲ +0.39%</div>
+    <div class="sub">중동 긴장 부분 완화에도 인플레 헤지 수요 유지 — 안전자산 매력 여전히 강함</div>
   </div>
   <div class="card">
     <div class="label">🛢️ WTI 원유</div>
-    <div class="value down">$88.50</div>
-    <div class="change down">▼ -7.82%</div>
-    <div class="sub">미-이란 종전 MOU 잠정 합의 보도에 호르무즈 해협 재개 기대 급부상. $90 지지선 이탈 후 $80대 진입. OPEC+ 대응 주시</div>
+    <div class="value up">$91.84</div>
+    <div class="change up">▲ +1.44%</div>
+    <div class="sub">이란-이스라엘 재점화 우려 잔존 + 중동 공급 리스크 프리미엄 유지. 95달러 저항선 주목</div>
   </div>
   <div class="card">
     <div class="label">🇰🇷 KOSPI</div>
-    <div class="value down">8,160.59</div>
-    <div class="change down">▼ -5.54% · -478.8pt</div>
-    <div class="sub">외국인 순매도 5조6,075억 · 삼성전자 -6.40%, SK하이닉스 -9.92% 반도체 쌍두마차 급락 주도</div>
+    <div class="value up">7,596.68</div>
+    <div class="change up">▲ +1.50% (추정)</div>
+    <div class="sub">외국인 순매도 5,000억(추정) · 기관 순매도 2,000억(추정)</div>
   </div>
   <div class="card">
     <div class="label">💵 USD/KRW</div>
-    <div class="value down">1,539원</div>
-    <div class="change down">▲ +15원 · 원화 급약세</div>
-    <div class="sub">외국인 대규모 순매도 + 달러 강세 복합 작용. 장중 1,550원 위협. 수입 물가·외국인 수급에 이중 부담</div>
+    <div class="value up">1,527.38원</div>
+    <div class="change up">▼ -5.69원</div>
+    <div class="sub">원화 소폭 강세 전환 — 글로벌 위험선호 회복에 달러 매도. 외국인 귀환 수급 기대감 반영</div>
   </div>
 </div>
+
+<!-- BTC 섹션 -->
 <div style="margin-bottom:28px;">
-  <div class="section-title">₿ Bitcoin 현재 시세 &nbsp;<span style="font-size:0.75rem; color:var(--muted); font-weight:400;">2026.06.08 KST 기준</span></div>
+  <div class="section-title">₿ Bitcoin 현재 시세 &nbsp;<span style="font-size:0.75rem; color:var(--muted); font-weight:400;">2026.06.09 KST 기준</span></div>
   <div class="btc-main">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px; margin-bottom:20px;">
       <div>
-        <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px;">BTC / KRW · 업비트 기준</div>
-        <div class="btc-price-hero">₩96,227,600</div>
+        <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px;">BTC / KRW · CoinGecko 기준</div>
+        <div class="btc-price-hero">₩97,784,221</div>
         <div style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
-          <span style="font-size:1rem; color:#aaa;">≈ <strong style="color:#e6edf3;">$61,706</strong> USD</span>
-          <span style="font-size:1rem; color:var(--up); font-weight:700;">▲ +1.45% (전일比)</span>
+          <span style="font-size:1rem; color:#aaa;">≈ <strong style="color:#e6edf3;">$63,995</strong> USD</span>
+          <span style="font-size:1rem; color:var(--up); font-weight:700;">▲ +3.61% (전일比)</span>
         </div>
-        <div style="margin-top:8px; font-size:0.78rem; color:var(--muted);">전일 ₩94,852,242 → 오늘 ₩96,227,600</div>
+        <div style="margin-top:8px; font-size:0.78rem; color:var(--muted);">전일 ₩94,377,204 → 오늘 ₩97,784,221</div>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
         <div style="background:rgba(248,81,73,0.12); border:1px solid rgba(248,81,73,0.3); border-radius:8px; padding:8px 14px; text-align:center;">
           <div style="font-size:0.68rem; color:var(--muted);">ATH 대비</div>
-          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">-45.9%</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">-45.02%</div>
           <div style="font-size:0.68rem; color:var(--muted);">ATH ₩177,854,395</div>
         </div>
         <div style="background:rgba(210,153,34,0.12); border:1px solid rgba(210,153,34,0.3); border-radius:8px; padding:8px 14px; text-align:center;">
-          <div style="font-size:0.68rem; color:var(--muted);">공포탐욕지수</div>
-          <div style="font-size:1.3rem; font-weight:800; color:var(--down);">12</div>
-          <div style="font-size:0.68rem; color:var(--down); font-weight:600;">극도공포</div>
+          <div style="font-size:0.68rem; color:var(--muted);">크립토 공포탐욕</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--warn);">8</div>
+          <div style="font-size:0.68rem; color:var(--warn); font-weight:600;">극도공포</div>
         </div>
       </div>
-    </div>
-    <div style="background:rgba(0,0,0,0.25); border:1px solid #2d3a5a; border-radius:10px; padding:14px 16px; margin-bottom:16px;">
-      <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">📡 소스별 현재 시세 비교</div>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
-        <div style="text-align:center;">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">CoinGecko</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩96,110,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+1.38% 24h</div>
-        </div>
-        <div style="text-align:center; border-left:1px solid #2d3a5a; border-right:1px solid #2d3a5a;">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">CoinMarketCap</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩96,050,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+1.31% 24h</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px;">Coinbase</div>
-          <div style="font-size:1rem; font-weight:700; color:#f0b429;">₩95,880,000</div>
-          <div style="font-size:0.68rem; color:var(--up);">+1.27% 24h</div>
-        </div>
-      </div>
-      <div style="margin-top:10px; font-size:0.72rem; color:var(--muted); text-align:center;">※ 소스별 집계 방식 차이로 시세 편차 발생 · 업비트 실시간 확인 권장</div>
     </div>
     <div class="btc-meta">
-      <div class="btc-meta-item"><div class="ml">24h 고점</div><div class="mv" style="color:var(--up);">₩97,927,211</div></div>
-      <div class="btc-meta-item"><div class="ml">24h 저점</div><div class="mv" style="color:var(--down);">₩94,238,918</div></div>
-      <div class="btc-meta-item"><div class="ml">7일 고점</div><div class="mv" style="color:#f0b429;">₩110,931,856</div></div>
-      <div class="btc-meta-item"><div class="ml">전월 대비</div><div class="mv" style="color:var(--down);">-22.96%</div></div>
-      <div class="btc-meta-item"><div class="ml">Coinbase 프리미엄</div><div class="mv" style="color:var(--down);">-0.36% · 미국 매도 우위</div></div>
-    </div>
-  </div>
-</div>
-<div style="margin-bottom:28px;">
-  <div class="section-title">🎯 리스크 체크리스트</div>
-  <div class="risk-grid">
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">① VIX 급등 / 변동성 폭발</div><div class="risk-desc">VIX 20.63 · 하루 +34% 폭등 · 20선 돌파 = 본격 공포구간 진입 · NFP 쇼크+반도체 급락 복합 트리거. 25 이상 시 패닉셀 가속 경보</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">② 연준 금리인상 재점화 리스크</div><div class="risk-desc">5월 NFP 172,000건 (예상 85,000의 2배) · 10년물 금리 4.54%로 급등 · 6/17 신임 의장 워시 첫 FOMC 앞두고 인상 가능성 시장 재반영. 금리인상 확률 급등</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">③ AI·반도체 버블 붕괴 우려</div><div class="risk-desc">Broadcom AI 가이던스 동결 충격 → 1조달러 시총 증발 · Nasdaq-100 -4.77% · MU -6.3%, AMD -6.3%, MRVL -8% · "AI 인프라 버블" 회의론 확산</div></div></div>
-    <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">④ 코스피 외국인 대규모 이탈</div><div class="risk-desc">외국인 단 하루 5조6,075억원 순매도 · 삼성전자 -6.40%, SK하이닉스 -9.92% · 원/달러 1,550원 위협 · 반도체 쏠림 코스피 구조적 취약성 노출</div></div></div>
-    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑤ 미-이란 종전 협상 불확실성</div><div class="risk-desc">MOU 잠정 합의 보도에 WTI -7.82% 급락($88.5) · 그러나 핵개발 제재 협상 이견 지속 · JPMorgan "호르무즈 6월 재개 가능" 시나리오 vs 재충돌 리스크 공존</div></div></div>
-    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑥ 크립토 극도공포 (지수 12)</div><div class="risk-desc">BTC 크립토 공포탐욕 12 (극도공포) · 전월比 -22.96% · AI 인프라 투자로 투기 자본 이탈 · ETF 순유출 기록 행진 · $61,000선 지지 여부 관건</div></div></div>
-    <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">⑦ 신임 연준 의장 불확실성</div><div class="risk-desc">6/17 Kevin Warsh 첫 FOMC 기자회견 예정 · 2018년 파월 첫 기자회견 때 시장 급락 선례 · 워시의 매파적 성향 + 금리인상 언급 가능성 → 단기 변동성 증폭 우려</div></div></div>
-    <div class="risk-item"><div class="dot dot-green"></div><div><div class="risk-label">⑧ 한국 수출 펀더멘털 견고</div><div class="risk-desc">4월 수출 859억달러(+48% YoY) · 반도체 수출 319억달러(+174% YoY) · 코스피 선행 PER 7.1배 저평가 유지 · AI HBM 수요 '26~'27년 지속 전망</div></div></div>
-  </div>
-  <div class="risk-summary">
-    <div class="score">5 / 8 위험</div>
-    <div class="phase">📍 현재 시장 국면: 고경계 — NFP 쇼크+AI 버블 의심+VIX 20 돌파, 단기 변동성 극대화 국면</div>
-  </div>
-</div>
-<div style="margin-bottom:28px;">
-  <div class="section-title">🇰🇷 한국 주식시장 심층 분석</div>
-  <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:14px;">
-    <div class="card">
-      <div class="label">🇰🇷 KOSPI 상세</div>
-      <div class="value down">8,160.59</div>
-      <div class="change down">▼ -5.54% · -478.8pt</div>
-      <div class="sub" style="margin-top:8px;">외국인 순매도 <strong style="color:var(--down);">5조6,075억</strong> · 기관 순매도 1조2,137억</div>
-      <div class="sub">거래대금 약 30조 · 장중 8,038pt까지 밀려 '8천피' 붕괴 위협 · 오후 낙폭 일부 만회. 52주 고점 대비 -3.9%</div>
-    </div>
-    <div class="card">
-      <div class="label">📊 KOSDAQ 상세</div>
-      <div class="value down">1,002.44</div>
-      <div class="change down">▼ -4.50% · -47.3pt</div>
-      <div class="sub" style="margin-top:8px;">외국인 순매수 <strong style="color:var(--up);">5,095억</strong> · 기관 순매도 2,590억</div>
-      <div class="sub">바이오·2차전지 차익실현 지속. 1,000pt 심리적 지지선 위협. AI 관련 중소형주 낙폭 과대 반등 기대 혼재</div>
-    </div>
-  </div>
-  <div class="card" style="margin-bottom:14px;">
-    <div style="font-size:0.78rem; font-weight:700; color:var(--accent); margin-bottom:10px;">📈 오늘의 섹터 동향</div>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
-      <div style="background:#0d1117; border-radius:8px; padding:10px; border:1px solid var(--border);">
-        <div style="font-size:0.68rem; color:var(--muted); margin-bottom:4px;">강세 섹터</div>
-        <div style="font-size:0.8rem; color:var(--up); font-weight:600;">조선 +1.2%</div>
-        <div style="font-size:0.8rem; color:var(--up);">전력기기 +0.8%</div>
-        <div style="font-size:0.8rem; color:var(--up);">방산 +0.5%</div>
+      <div class="btc-meta-item">
+        <div class="ml">24h 고점</div>
+        <div class="mv" style="color:var(--up);">₩98,995,316</div>
       </div>
-      <div style="background:#0d1117; border-radius:8px; padding:10px; border:1px solid var(--border);">
-        <div style="font-size:0.68rem; color:var(--muted); margin-bottom:4px;">약세 섹터</div>
-        <div style="font-size:0.8rem; color:var(--down); font-weight:600;">반도체 -7.8%</div>
-        <div style="font-size:0.8rem; color:var(--down);">IT부품 -4.2%</div>
-        <div style="font-size:0.8rem; color:var(--down);">2차전지 -3.1%</div>
+      <div class="btc-meta-item">
+        <div class="ml">24h 저점</div>
+        <div class="mv" style="color:var(--down);">₩95,442,700</div>
       </div>
-      <div style="background:#0d1117; border-radius:8px; padding:10px; border:1px solid var(--border);">
-        <div style="font-size:0.68rem; color:var(--muted); margin-bottom:4px;">주요 종목 동향</div>
-        <div style="font-size:0.78rem; color:var(--text);">삼성전자 -6.40% · SK하이닉스 -9.92% · LG에너지솔루션 -5.34% · HD현대중공업 +3.21% · 삼성전기 +6.44%</div>
+      <div class="btc-meta-item">
+        <div class="ml">7일 고점</div>
+        <div class="mv" style="color:#f0b429;">₩107,833,892</div>
       </div>
-    </div>
-  </div>
-  <div class="card" style="margin-bottom:14px;">
-    <div style="font-size:0.78rem; font-weight:700; color:var(--warn); margin-bottom:10px;">⚠️ 한국 증시 예상 리스크</div>
-    <div class="risk-grid">
-      <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">① 환율 리스크</div><div class="risk-desc">USD/KRW 1,539원 · 장중 1,550원 위협 · 외국인 순매도+달러 강세 이중 압박 · 원화 약세 = 외국인 환차손 확대 → 추가 이탈 악순환 가능. 1,550원 돌파 시 심리적 저항 붕괴</div></div></div>
-      <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">② 반도체/수출 리스크</div><div class="risk-desc">삼성전자 -6.40%, SK하이닉스 -9.92% · Broadcom AI 가이던스 동결 → HBM 수요 둔화 우려 전이 · 반도체 수출 +174% YoY로 펀더멘털 견조하나 단기 심리 악화. 미-중 기술규제 재강화 리스크 잠재</div></div></div>
-      <div class="risk-item"><div class="dot dot-red"></div><div><div class="risk-label">③ 외국인 수급 리스크</div><div class="risk-desc">단 하루 5조6,075억 순매도 · 5월 누적 매도 규모 대규모 · VIX 20 돌파+원화 약세 복합으로 이탈 가속. 코스닥 외국인 순매수 5,095억으로 차별화되나 코스피 수급 공백 심각</div></div></div>
-      <div class="risk-item"><div class="dot dot-yellow"></div><div><div class="risk-label">④ 매크로 연계 리스크</div><div class="risk-desc">미 10년물 4.54% 급등 · 한국은행 금리인상 시사 기정사실화 · 달러 강세=코스피 PER 압박. 단 코스피 선행 PER 7.1배로 저평가, 이익 상향 지속 시 하방 경직성 유효</div></div></div>
-    </div>
-  </div>
-  <div style="background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.25); border-radius:12px; padding:16px 18px;">
-    <div style="font-size:0.78rem; font-weight:700; color:var(--accent); margin-bottom:10px;">📋 한국 주식 투자자 향후 준비사항</div>
-    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px;">
-      <div>
-        <div style="font-size:0.7rem; color:var(--warn); font-weight:700; margin-bottom:6px;">📌 단기 주목 이벤트 (1~2주)</div>
-        <div style="font-size:0.78rem; color:var(--text); line-height:1.7;">• 6/10(수) 미국 5월 CPI 발표 → 4.54% 금리 향방 결정, 코스피 직결<br>• 6/11(목) ECB 금리결정 + 미 PPI → 글로벌 긴축 기조 확인<br>• 6/17(화) FOMC 신임 의장 워시 첫 기자회견 → 매파 발언 시 추가 급락 위험<br>• 삼성전자·SK하이닉스 2Q 가이던스 + 브로드컴 後 HBM 수요 재평가</div>
+      <div class="btc-meta-item">
+        <div class="ml">전월 대비</div>
+        <div class="mv" style="color:var(--down);">-20.38%</div>
       </div>
-      <div>
-        <div style="font-size:0.7rem; color:var(--down); font-weight:700; margin-bottom:6px;">🛡️ 지금 챙겨야 할 포지션</div>
-        <div style="font-size:0.78rem; color:var(--text); line-height:1.7;">• 반도체 비중 단기 축소, 조선·전력기기·방산으로 섹터 로테이션<br>• USD/KRW 1,550원 돌파 여부 모니터링 → 환헤지 강화 또는 달러 자산 편입 검토<br>• 코스피 8,000pt 지지 확인 전 신규 매수 자제, 분할 저가매수 전략 유지<br>• KOSDAQ 바이오·소부장 낙폭 과대 종목 선별 저가 접근 가능</div>
-      </div>
-    </div>
-    <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted); line-height:1.7;">
-      💡 <strong style="color:var(--text);">최신 정보:</strong> 코스피 5일 5.54% 급락(8,160.59), 외국인 5.6조 매도 · 삼전 -6.4%, SK하이닉스 -9.9% 쌍두마차 붕괴 · 원달러 1,539원 장중 1,550원 위협 (한국경제, 조세일보, Investing.com 6/5~6/8)
     </div>
   </div>
 </div>
 
+<!-- 리스크 체크리스트: 글로벌 5 + 한국 3 -->
+<div style="margin-bottom:28px;">
+  <div class="section-title">🎯 리스크 체크리스트</div>
+  <div class="risk-grid">
+    <!-- 글로벌 5개 -->
+    <div class="risk-divider">🌐 글로벌</div>
+    <div class="risk-item">
+      <div class="dot dot-red"></div>
+      <div><div class="risk-label">① 미국 인플레·금리 하이킹 리스크</div><div class="risk-desc">5월 CPI 헤드라인 +4.2% YoY 전망(Wells Fargo), 에너지 YoY +18% 급등. 연준 금리 인하 가능성 0%·인상 확률 상승 → 10Y 금리 4.55% 고착화. 성장주·채권 전반에 직격탄</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-yellow"></div>
+      <div><div class="risk-label">② 중동 분쟁 재점화 리스크</div><div class="risk-desc">이란 군사작전 공식 종료 선언에도 레바논 헤즈볼라 교전 지속. 이란 "적대 행위 계속 시 더 강력 대응" 경고 → WTI 90달러대 유지. 협상 교착 보도 시 유가 100달러 재시험 가능</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-red"></div>
+      <div><div class="risk-label">③ AI·반도체 실적 기대 과잉 리스크</div><div class="risk-desc">Broadcom AI칩 아웃룩 미상향 → 나스닥 -4%(6/5) 급락, 시총 1조달러 증발. 6/10 Oracle 실적이 AI인프라 투자 지속 여부 가늠자. 오라클 실망 시 반도체 재하락 경보</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-yellow"></div>
+      <div><div class="risk-label">④ VIX 변동성 재상승 잠재 리스크</div><div class="risk-desc">VIX 18.08로 진정됐으나 전주 21까지 급등한 전례. CPI·Oracle 이벤트 충격 시 20 재돌파 가능. 25 이상 = 본격 위험구간 재진입 경보 수준</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-green"></div>
+      <div><div class="risk-label">⑤ 미국 고용·경제 펀더멘털</div><div class="risk-desc">5월 비농업 취업자 +17.2만명(예상 +8만 대폭 상회), 월드컵 특수 포함. 경기침체 리스크 낮음. 단, 고용 강세 = 금리 인하 원천봉쇄. 소비 지속 여부가 하반기 성장의 핵심 변수</div></div>
+    </div>
+    <!-- 한국 3개 -->
+    <div class="risk-divider">🇰🇷 한국</div>
+    <div class="risk-item">
+      <div class="dot dot-yellow"></div>
+      <div><div class="risk-label">⑥ 환율 리스크</div><div class="risk-desc">USD/KRW 1,527.38원 (전일比 -5.69원). 중동 완화+달러 약세로 소폭 개선. 그러나 1,500원 이상 고환율 구조 지속 → 수입물가 상승 압력, 외국인 원화 투자 매력 저하. 1,550원 재돌파 시 자본유출 경보</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-red"></div>
+      <div><div class="risk-label">⑦ 반도체/수출 리스크</div><div class="risk-desc">삼성전자·SK하이닉스 6/8 각각 -6.4%/-9.9% 급락 후 기술적 반등 시험 중. 코스닥 서킷브레이커 발동(6/8). 반도체 수출 4월 역대 최대(320억달러, +171%)는 긍정적이나 Broadcom 쇼크 여파로 수출 지속성 의구심 잔존</div></div>
+    </div>
+    <div class="risk-item">
+      <div class="dot dot-red"></div>
+      <div><div class="risk-label">⑧ 외국인 수급 리스크</div><div class="risk-desc">6/8 KOSPI 외국인 5조6,075억원 순매도·기관 1조2,137억원 순매도(역대급). 개인이 6조6,804억원 받아내며 지수 방어. 외국인 이탈이 단기 귀환 vs. 추세 이탈 갈림길 — 5일 연속 순매수 확인 전까지 경계 유지</div></div>
+    </div>
+  </div>
+  <div class="risk-summary">
+    <div class="score">5 / 8 위험</div>
+    <div class="phase">📍 현재 시장 국면: 고경계 — 글로벌 반등 속 한국 수급 붕괴+인플레 재점화 리스크 혼재, CPI 발표 전 방향성 미정</div>
+  </div>
+</div>
+
+<!-- 한국 수급 현황 (숫자 중심, 텍스트 중복 금지) -->
+<div style="margin-bottom:28px;">
+  <div class="section-title">🇰🇷 한국 수급 현황</div>
+  <div class="kr-grid">
+    <div class="card">
+      <div class="label">KOSPI 수급</div>
+      <div class="value up">7,596.68</div>
+      <div class="change up">▲ +1.50%(추정) · +112.27pt</div>
+      <div class="sub" style="margin-top:8px;">외국인 <strong style="color:var(--down);">-5,000억(추정)</strong> · 기관 <strong style="color:var(--down);">-2,000억(추정)</strong> · 개인 +6,800억(추정)</div>
+      <div class="sub">거래대금 약 18조(추정) · 52주 고점(8,933.62)比 -14.9%</div>
+    </div>
+    <div class="card">
+      <div class="label">KOSDAQ 수급</div>
+      <div class="value up">924.75</div>
+      <div class="change up">▲ +1.47%(추정) · +13.36pt</div>
+      <div class="sub" style="margin-top:8px;">외국인 <strong style="color:var(--up);">+500억(추정)</strong> · 기관 <strong style="color:var(--down);">-800억(추정)</strong> · 개인 +300억(추정)</div>
+      <div class="sub">전일 서킷브레이커 발동(6/8) 후 기술적 반등 — 올해 최고 1,229pt比 -24.7%</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size:0.78rem; font-weight:700; color:var(--accent); margin-bottom:10px;">📈 오늘의 섹터 동향</div>
+    <div class="sector-row">
+      <div class="sector-box">
+        <div class="slabel">강세 섹터</div>
+        <div style="font-size:0.8rem; color:var(--up); font-weight:600;">조선·방산 +3.2%</div>
+        <div style="font-size:0.8rem; color:var(--up);">전력기기 +2.8%</div>
+        <div style="font-size:0.8rem; color:var(--up);">반도체장비 +2.1%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">약세 섹터</div>
+        <div style="font-size:0.8rem; color:var(--down); font-weight:600;">바이오·제약 -1.2%</div>
+        <div style="font-size:0.8rem; color:var(--down);">2차전지 -0.9%</div>
+        <div style="font-size:0.8rem; color:var(--down);">소비재·유통 -0.7%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">주요 종목</div>
+        <div style="font-size:0.78rem; color:var(--text);">삼성전자 +1.8% / SK하이닉스 +2.3% / HD현대중공업 +3.5% / 삼성전기 +2.6%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 핵심 이슈: 글로벌 3 + 한국 2 (뱃지로 구분) -->
 <div style="margin-bottom:28px;">
   <div class="section-title">📰 이번 주 핵심 이슈</div>
   <div class="news-list">
-    <div class="news-item"><div class="news-text"><strong>🔥 NFP 쇼크 — 5월 비농업 고용 172,000건 (예상의 2배)</strong> — 예상치 85,000을 두 배 이상 상회하는 172,000건 발표. 10년물 금리 4.54% 급등, 나스닥 -4.77% 주간 최악 낙폭. 연준 금리인상 가능성 재부상 → 성장주·채권 단기 부정적, 달러·단기채 유리. 6/17 워시 첫 FOMC가 향후 방향 결정</div><span class="badge badge-neg">충격 악재</span></div>
-    <div class="news-item"><div class="news-text"><strong>💥 브로드컴 AI 가이던스 동결 → 반도체 1조달러 증발</strong> — AVGO 3Q AI칩 목표 동결로 실망 매도 -12.6%. MU -6.3%, AMD -6.3%, MRVL -8% 연쇄 급락. 코스피 삼성전자 -6.4%, SK하이닉스 -9.9% 직격. AI 버블 회의론 재확산 → 반도체·AI 인프라 단기 부정적, 낙폭 과대 여부 재점검 필요</div><span class="badge badge-neg">섹터 충격</span></div>
-    <div class="news-item"><div class="news-text"><strong>🕊️ 미-이란 종전 MOU 잠정 합의 보도 → WTI -7.82% 급락</strong> — 호르무즈 재개 기대에 WTI $88.5로 폭락. $90 지지선 붕괴 후 $80대 진입. JPMorgan "6월 해협 재개 가능" 전망. 단 핵협상 이견 잔존 → 에너지주 단기 부정적, 항공·운송·소비재 긍정적. 유가 하락 = 인플레 완화 기대 상충</div><span class="badge badge-neu">혼재 신호</span></div>
-    <div class="news-item"><div class="news-text"><strong>🏦 신임 연준 의장 Kevin Warsh 6/17 첫 FOMC 기자회견</strong> — 2018년 파월 첫 회견 때 시장 급락 선례 반복 우려. 워시의 매파 성향 + 172K NFP 환경 → 금리인상 시그널 발신 가능성 시장 경계. 금리 동결 vs 인상 기로에서 발언 하나에 나스닥 ±3% 충격 예상. 성장주·채권 단기 관망 필요</div><span class="badge badge-neg">고위험 이벤트</span></div>
-    <div class="news-item"><div class="news-text"><strong>📊 Meta·Alphabet 대규모 유상증자 — AI 인프라 자금 조달 러시</strong> — Alphabet $800억, Meta 추가 수십억달러 규모 주식 매각 발표. 단기 주가 희석 효과로 빅테크 매도 압력. 장기적으로는 AI 인프라 투자 집행 → 엔비디아·AMD 수요 유지. 투기 자본이 BTC에서 AI 인프라로 이동 → 크립토 극도공포 12 연결</div><span class="badge badge-neu">양날의 검</span></div>
+    <!-- 글로벌 3개 -->
+    <div class="news-item"><div class="news-text"><strong>🇺🇸 나스닥 +2.47% 강반등 — AI칩 저가매수 재개·Marvell S&P500 편입</strong> — 전주 Broadcom 쇼크(-4%)로 시총 1조달러 증발 후 단 하루 만에 절반 이상 회복. Marvell +9%(S&P500 6/22 편입 확정), Micron +7%, Corning +9%(아마존 광섬유 수조달러 계약). AI 인프라 투자 불꽃 재점화 신호 → 반도체·데이터센터 장비 섹터 단기 수혜</div><span class="badge badge-pos">글로벌</span></div>
+    <div class="news-item"><div class="news-text"><strong>🇺🇸 5월 NFP +17.2만명 서프라이즈 — 연준 금리 인하 완전 소멸·인상 확률 부상</strong> — 예상(+8만)의 2배 이상 초과. 월드컵 특수(레저·숙박 +7만, 정부인프라 +5만) 포함. "연준 금리 인하는 올해 불가, 인상 가능성 배제 불가" 시장 컨센서스 급변 → 성장주·장기채 부정적, 단기채·달러 강세. 6/10 CPI가 인상 확률 최종 가늠자</div><span class="badge badge-neg">글로벌</span></div>
+    <div class="news-item"><div class="news-text"><strong>🌐 이란-이스라엘 군사긴장 — 이란 작전 종료 선언에도 레바논 교전 지속</strong> — 이란 외무부 "이스라엘 대상 군사작전 종료" 공식 발표. 트럼프 "협상 진전 낙관" 신호. 그러나 레바논 헤즈볼라 교전 미종식, 이란 "추가 도발 시 강경 대응" 경고 유지 → WTI 91달러대 안착, 에너지 인플레 프리미엄 단기 유지. 협상 최종 타결 시 유가 10달러 급락 역풍 주의</div><span class="badge badge-neu">글로벌</span></div>
+    <!-- 한국 2개 -->
+    <div class="news-item"><div class="news-text"><strong>🇰🇷 젠슨 황 방한 — 엔비디아 새만금 AI 데이터센터 건립 확정·현대차그룹 협력</strong> — 젠슨 황 CEO 현대차 양재 사옥 방문. 정의선 회장의 새만금 AI밸리 투자 제안에 "새만금에 엔비디아 데이터센터 짓겠다" 공식 수락. "한국은 AI 톱 국가, 로봇도 만들기 때문에 AI공장이 필수" 강조 → AI인프라·전력기기·냉각장비·로봇 관련주 선행 모멘텀 유입 기대</div><span class="badge badge-pos">한국</span></div>
+    <div class="news-item"><div class="news-text"><strong>🇰🇷 스페이스X IPO 대비 — ACE 미국우주테크ETF 1개월 개인 순매수 612억원 돌파</strong> — 한국투자신탁운용 'ACE 미국우주테크액티브' ETF에 최근 1개월 개인 순매수 612억원 유입. 스페이스X 공모 참여 국내 운용사 중 유일하게 공식화. 재사용 발사체·AI위성 데이터·우주 데이터센터 중심 포트폴리오 → 뉴스페이스 IPO 대기 수요가 국내 ETF로 집중되는 구조적 수급 변화</div><span class="badge badge-pos">한국</span></div>
   </div>
 </div>
+
+<!-- 트렌드 레이더 (3~6개월 선행, 오늘 뉴스 재탕 금지) -->
+<div style="margin-bottom:28px;">
+  <div class="section-title" style="color:var(--trend);">🔭 트렌드 레이더 <span style="font-size:0.75rem; color:var(--muted); font-weight:400;">— 3~6개월 선행 테마 포착</span></div>
+  <div class="trend-card">
+    <div class="trend-item">
+      <div class="trend-signal">📡 신호 #1 <span class="trend-horizon">중기 (3~5개월)</span></div>
+      <div class="trend-body">글로벌 VC가 Q1 2026에 로보틱스 분야에만 Figure($10억), Apptronik($9.35억), FieldAI($4.05억) 등 수조원을 집중 투자. ARK Invest는 "범용 자동화가 변곡점 진입"으로 선언. Amazon 창고 로봇 100만대·BMW 자율 생산라인 가동 본격화 → 하반기부터 산업 로봇 HW 발주 사이클 진입 예상. 한국은 세계 1위 로봇 밀도(제조업) 국가로 수혜 구조 선명.</div>
+      <div><span class="trend-etf">📌 수혜 ETF/섹터: KODEX 로봇·자동화 / TIGER 로보틱스 / 현대로템·HD현대·레인보우로보틱스</span></div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-signal">📡 신호 #2 <span class="trend-horizon">중기 (4~6개월)</span></div>
+      <div class="trend-body">AI 데이터센터 전력 수요가 기존 그리드 한계를 초과 — 테크기업들이 공공 전력망을 우회해 직접 소형모듈원전(SMR)·가스발전 계약으로 전환 중. ARK Big Ideas 2026에서 "컴퓨트 가속이 에너지를 최대 제약으로 만들었다"고 명시. 새만금 엔비디아 데이터센터 확정으로 한국 전력 인프라 수요도 구조적 확장 국면 진입. 두산에너빌리티 SMR, 한전기술, LS ELECTRIC 주목.</div>
+      <div><span class="trend-etf">📌 수혜 ETF/섹터: TIGER 전력기기 / KODEX K-신재생에너지 / 두산에너빌리티·LS ELECTRIC·산일전기</span></div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-signal">📡 신호 #3 <span class="trend-horizon">중기 (3~6개월)</span></div>
+      <div class="trend-body">주요국 정부(캐나다 100MW 이상 소버린 AI 데이터센터 공모, EU 8,550만유로 AI인프라 펀딩, 중동 자국 테크스택 구축)가 AI인프라를 국가 전략 자산으로 선언하는 'Sovereign AI' 트렌드 가속. 한국도 새만금 AI밸리 외 각 지자체 AI산단 조성 발주 임박. 광통신망·냉각장비·전력변환(HVDC)이 직접 수혜 밸류체인. Crunchbase Q1 데이터센터·반도체 부문 10개 이상 $10억+ 라운드 클로즈 확인.</div>
+      <div><span class="trend-etf">📌 수혜 ETF/섹터: TIGER AI&반도체핵심공정 / KODEX 데이터센터 / 대한전선·LS·HD현대일렉트릭</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 경제 캘린더 -->
 <div style="margin-bottom:28px;">
   <div class="section-title">📅 주요 경제 이벤트</div>
   <div class="card" style="padding:0; overflow:hidden;">
     <table class="cal-table">
       <thead><tr><th>날짜/시간</th><th>이벤트</th><th>예상치 / 이전값</th><th>중요도</th></tr></thead>
       <tbody>
-        <tr><td style="color:var(--down); font-weight:700;">6/10(수) 21:30</td><td>🔥 미국 5월 CPI · 근원CPI</td><td>예상 +0.2% / 이전 +0.2% MoM</td><td class="imp-high">★★★</td></tr>
-        <tr><td style="color:var(--down); font-weight:700;">6/17(화~수)</td><td>🔥 FOMC 금리결정 · 워시 첫 기자회견</td><td>동결 예상 / 현 5.25~5.50%</td><td class="imp-high">★★★</td></tr>
-        <tr><td>6/11(목) 21:15</td><td>🇪🇺 ECB 기준금리 결정</td><td>동결 예상 / 이전 2.25%</td><td class="imp-med">★★☆</td></tr>
-        <tr><td>6/11(목) 21:30</td><td>미국 5월 PPI · 근원PPI</td><td>예상 +0.2% / 이전 -0.5% MoM</td><td class="imp-med">★★☆</td></tr>
-        <tr><td>6/12(금) 23:00</td><td>미시간 소비자심리지수 6월 예비</td><td>예상 53.0 / 이전 52.2</td><td class="imp-low">★☆☆</td></tr>
+        <tr><td style="color:var(--down); font-weight:700;">6/10 (수) 21:30</td><td>🔥 미국 5월 CPI (소비자물가)</td><td>헤드라인 +4.2% YoY 예상 / 이전 +3.9%</td><td class="imp-high">★★★</td></tr>
+        <tr><td style="color:var(--down); font-weight:700;">6/10 (수) 장후</td><td>🔥 Oracle 실적 발표 (AI인프라 풍향계)</td><td>EPS $1.63 예상 / 이전 $1.47</td><td class="imp-high">★★★</td></tr>
+        <tr><td>6/11 (목) 21:30</td><td>미국 5월 PPI (생산자물가)</td><td>+0.3% MoM 예상 / 이전 +0.5%</td><td class="imp-med">★★☆</td></tr>
+        <tr><td>6/11 (목) 23:00</td><td>미국 6월 미시간대 소비자심리 예비치</td><td>46.0 예상 / 이전 44.8 (사상최저)</td><td class="imp-med">★★☆</td></tr>
+        <tr><td>6/12 (금) 22:30</td><td>미국 5월 소매판매 MoM</td><td>+0.2% 예상 / 이전 +0.1%</td><td class="imp-low">★☆☆</td></tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- 투자 방향성 -->
 <div style="margin-bottom:28px;">
   <div class="section-title">🧭 투자 방향성 코멘트</div>
   <div class="direction-card">
     <div>
-      <div class="phase-tag">⚡ 현재 국면: "NFP 쇼크 D+3 · VIX 20 돌파 · AI 버블 의심 · 워시 FOMC D-9"</div>
-      <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">5월 NFP 172,000건이 예상의 2배를 기록하며 "경기 호조=금리인상"의 역설적 공포가 시장을 강타했다. 나스닥 -4.77%, VIX +34% 폭등으로 기술주 중심 매도가 집중된 가운데, Broadcom의 AI 가이던스 동결이 AI 버블 회의론에 불을 붙였다. 반면 미-이란 MOU 합의 보도에 WTI는 -7.82% 급락, 유가 하락이 인플레 완화 기대를 부여하는 상충 구조 속에서 6/10 CPI와 6/17 신임 워시 의장 첫 FOMC가 최대 변곡점으로 부상했다.</p>
+      <div class="phase-tag">⚡ 현재 국면: "2026.06.09 — 중동 완화 반등 vs. CPI 인플레 시험 + 한국 수급 붕괴 후 기술적 반등"</div>
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">나스닥이 전주 -4% 쇼크에서 단 하루 만에 +2.47% 강반등했다. 이란 군사작전 종료 선언과 반도체 저가매수가 맞물린 결과다. 그러나 10Y 금리 4.55%·WTI 91달러·5월 CPI 예상치 +4.2%라는 삼중 인플레 압박은 해소되지 않았다. 6/10 CPI가 예상치를 웃돌면 연준 금리 인상 공포가 재점화돼 이번 반등이 데드캣 바운스로 전락할 수 있다. 투자자는 "반등에 편승"과 "CPI 전 리스크 축소" 사이에서 포지션 분할이 최선이다.</p>
     </div>
     <div class="dir-row">
       <div class="dir-block" style="border-color:rgba(63,185,80,0.3);">
         <div class="tag" style="color:var(--up)">✅ 지금 유리한 자산/섹터</div>
         <ul>
-          <li><strong>금(Gold)</strong> — $3,248 (+0.82%) · VIX 급등+지정학 불안 헤지 수요 지속. 금리 상승 역풍 있으나 안전자산 프리미엄 우위</li>
-          <li><strong>조선·전력기기</strong> — HD현대중공업 +3.21%, 삼성전기 +6.44% · AI 데이터센터 전력수요 급증 수혜. 반도체 대안 섹터로 로테이션 집중</li>
-          <li><strong>방산·에너지 인프라</strong> — 이란 종전 협상 불확실 잔존 · 미-이란 재충돌 헤지로 방산 수요 유지. 원전·전력망 장기 테마 지속</li>
-          <li><strong>달러 자산·단기채</strong> — USD 강세(원/달러 1,539원) · 10년물 4.54% 환경에서 MMF·단기 국채 캐리 유리. 리스크 오프 포지션으로 적합</li>
-          <li><strong>KOSDAQ 바이오·소부장</strong> — 코스닥 외국인 순매수 +5,095억 이례적 유입 · 낙폭 과대 구간에서 선별 저가 매수 기회 가능</li>
+          <li><strong>AI 인프라·반도체 장비</strong> — Marvell +9%, Micron +7%, Corning +9%. Oracle 실적 긍정 시 추가 상승 여력. 나스닥 기술적 저항 29,700pt 돌파 여부 주목</li>
+          <li><strong>금(Gold)</strong> — $4,354 유지. 인플레 헤지·지정학 리스크 양면 수요. CPI 서프라이즈 시 $4,400 돌파 시도 예상</li>
+          <li><strong>에너지 섹터</strong> — WTI 91달러대, 중동 프리미엄 잔존. 한국 HD현대중공업·현대오일뱅크 관련주 수혜 구조</li>
+          <li><strong>조선·방산</strong> — 중동 분쟁 장기화 수혜, 글로벌 방산 발주 증가세. 오늘 KOSPI 강세 섹터 1위. HD현대중공업 +3.5%</li>
+          <li><strong>단기채 (1~2년물)</strong> — 금리 인하 기대 소멸 환경에서 단기 고금리 확정수익. 달러 강세 구조 지속 시 달러 단기채 매력</li>
         </ul>
       </div>
       <div class="dir-block" style="border-color:rgba(248,81,73,0.3);">
         <div class="tag" style="color:var(--down)">❌ 지금 불리한 자산/섹터</div>
         <ul>
-          <li><strong>AI·반도체 대형주</strong> — Nasdaq-100 -4.77% · AVGO -12.6%, SK하이닉스 -9.92% · AI 버블 의심 + 금리인상 복합 압박. VIX 25 도달 시 추가 -5~10% 위험</li>
-          <li><strong>비트코인·크립토</strong> — 공포탐욕 12(극도공포) · 전월比 -22.96% · ETF 순유출 지속 · AI 인프라로 투기 자본 이탈. $58,000 지지 붕괴 시 추가 하락</li>
-          <li><strong>장기채권</strong> — 10년물 4.54%, 20·30년물 5% 돌파 · 금리인상 우려 재점화로 채권가격 하락 압력 지속. 듀레이션 리스크 매우 높음</li>
-          <li><strong>원화 자산 / 코스피 레버리지</strong> — 환율 1,539원 원화 약세 + 외국인 대규모 이탈 · 코스피 레버리지 ETF 보유 시 추가 손실 위험 극대화</li>
+          <li><strong>장기채 (20년·30년)</strong> — 10Y 4.55% 고착화·CPI 추가 상승 가능성. TLT 등 장기채 ETF 추가 손실 경계</li>
+          <li><strong>2차전지</strong> — 고금리+유가 상승으로 전기차 전환 속도 둔화. KOSDAQ 내 셀·소재 약세 지속, 개인 물량 소화 중</li>
+          <li><strong>바이오·제약 (고밸류)</strong> — 고금리 환경에서 미래현금흐름 할인 압박. KOSDAQ 바이오 외국인 매도 지속</li>
+          <li><strong>비트코인·크립토</strong> — 크립토 공포탐욕 8(극도공포), 전월比 -20.4%. Strategy 비트코인 매도 충격+ETF 자금유출 지속. 단기 $60,000 지지 여부 재시험 국면</li>
         </ul>
       </div>
     </div>
@@ -338,39 +388,40 @@
       <div class="dir-block">
         <div class="tag" style="color:var(--warn)">📌 단기 변수 (오늘~1주)</div>
         <ul>
-          <li>6/10(수) 21:30 미국 5월 CPI — 전월比 +0.3% 이상 시 금리인상 공포 2차 급등, 나스닥 추가 -3% 위험</li>
-          <li>6/11(목) ECB 금리결정 + 미 PPI — 동결+비둘기 발언 시 단기 반등 촉매 가능</li>
-          <li>이란 종전 협상 진행 상황 — 합의 확정 시 WTI $80 진입, 인플레 완화 = 금리인상 가능성 희석</li>
-          <li>코스피 8,000pt 지지선 방어 여부 — 이탈 시 7,800pt 수준 추가 하방 압력, 방어 시 단기 반등 신호</li>
+          <li>6/10(수) 21:30 미국 5월 CPI — 예상 +4.2% 상회 시 연준 인상 공포 재점화, 나스닥 반등 무효화 위험</li>
+          <li>6/10(수) 장후 Oracle 실적 — AI 데이터센터 투자 가이던스가 반도체 섹터 방향성 결정</li>
+          <li>이란-이스라엘 추가 교전 여부 — 레바논 헤즈볼라 전선 확대 시 유가 95달러 재시험, 위험자산 전반 매도</li>
+          <li>KOSPI 외국인 순매수 전환 여부 — 5조 순매도 후 단 하루 귀환 확인 필요. 2,000억 이상 순매수 시 반등 신뢰도 상승</li>
         </ul>
       </div>
       <div class="dir-block">
         <div class="tag" style="color:var(--down)">⚠️ 중기 리스크 (1~3개월)</div>
         <ul>
-          <li>연준 금리인상 현실화 — 6/17 워시 첫 FOMC에서 인상 시사 시 S&P500 -10~15%, 코스피 -7~10% 충격 예상</li>
-          <li>AI 버블 조정 장기화 — 빅테크 대규모 유상증자(Alphabet $800억, Meta 추가) 반복 시 밸류에이션 재평가 사이클 진입</li>
-          <li>미-이란 전쟁 재충돌 리스크 — MOU 합의 불발·핵협상 결렬 시 WTI $100+ 재돌파, 인플레 재점화 최악 시나리오</li>
-          <li>한국 금리인상 + 원화 약세 동반 — 한은 추가 인상 + 1,550원 돌파 고착화 시 외국인 이탈 구조화, 코스피 디스카운트 재확대</li>
+          <li>연준 금리 인상 시나리오 — CPI 2개월 연속 상회 시 9월 FOMC 금리 인상 확률 30%+ 급등. S&P500 -10~15% 조정 가능</li>
+          <li>중동 분쟁 장기화+호르무즈 해협 봉쇄 재시도 — WTI 100달러 돌파 시 글로벌 스태그플레이션 공포 본격화</li>
+          <li>한국 코스피 8,000선 회복력 시험 — 외국인 수급 미복귀 시 9,000선 돌파 시나리오 6개월 지연 가능성</li>
+          <li>AI 빅테크 실적 시즌(7월 중순) — 9주 급등에 따른 기대치 과잉 → 실적 미스 시 대규모 차익실현 트리거</li>
         </ul>
       </div>
     </div>
     <div class="dir-conclusion">
       <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
       <p>
-        <strong>"NFP 쇼크+VIX 20 돌파 후폭풍 — 6/10 CPI 확인 전까지 신규 매수 자제, 반도체·AI 비중 축소하고 현금·금·조선으로 방어 재편"</strong><br><br>
-        ① 반도체(삼성전자·SK하이닉스·Nvidia 등) 보유 비중을 포트폴리오의 20% 이하로 즉시 축소. 브로드컴 쇼크 후 AI 실망 매물 추가 출회 가능성 높음<br>
-        ② 6/10(수) 21:30 미국 5월 CPI 발표까지 현금 비중 30% 이상 유지 및 신규 매수 보류. CPI +0.3% 이상 시 전면 수비, +0.1% 이하 시 성장주 재매수 신호<br>
-        ③ 포트폴리오 5~10%를 금(Gold ETF) 또는 단기채로 헤지 편입. VIX 20~25 구간에서 안전자산 수요 지속 확인됨<br>
-        ④ 코스피 8,000pt 지지 여부와 USD/KRW 1,550원 돌파 여부를 일중 실시간 체크. 8,000pt 붕괴 or 환율 1,550 돌파 시 추가 방어 포지션 전환
+        <strong>"CPI 발표(6/10) 전까지 반등 편승 포지션의 30%는 현금화하고, AI인프라·에너지는 분할 보유 — 결과에 따라 즉시 방향 전환 준비"</strong><br><br>
+        ① 나스닥·S&P500 반등 포지션 보유자 → 6/10 CPI 발표 전 전체의 20~30% 익절 or 헤지(인버스 ETF 5~10% 편입)<br>
+        ② AI인프라 관련주(Nvidia·Micron·TIGER AI반도체 등) — 분할매수 2차 구간(나스닥 29,000선 지지 확인 후) 추가 진입<br>
+        ③ KOSPI 반도체(삼성전자·SK하이닉스) — 외국인 5일 연속 순매수 재개 확인 후 비중 확대. 현재는 관망+소량 탐색적 매수 유지<br>
+        ④ 비트코인 — 크립토 F&G 8(극도공포)은 역발상 매수 구간이나, $60,000 붕괴 시 스탑로스 엄수. 포트폴리오 5% 이하 제한
         <br><br>
-        핵심 체크포인트: <strong>6/10 CPI 수치</strong> + <strong>코스피 8,000pt 지지 여부</strong> + <strong>WTI $85 이탈(이란 합의 확정) 여부</strong>
+        핵심 체크포인트: <strong>6/10 CPI YoY +4.2% 상회 여부</strong> + <strong>Oracle AI 가이던스 상향 여부</strong> + <strong>KOSPI 외국인 순매수 전환 여부</strong>
       </p>
     </div>
   </div>
 </div>
+
 <div class="footer">
   ※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br>
-  데이터 기준: CoinGecko · CoinMarketCap · Coinbase · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com · 한국경제 · 조세일보 · TheStreet · Schwab · CNBC — 2026.06.08 KST
+  데이터 기준: CoinGecko · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.06.09 KST
 </div>
 </body>
 </html>
