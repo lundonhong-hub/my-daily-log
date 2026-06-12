@@ -35,7 +35,7 @@ jobs:
 
       - name: 대시보드 생성
         env:
-          API_MODE: gemini          # ★ claude 또는 gemini
+          API_MODE: claude          # ★ claude 또는 gemini
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           FILENAME: ${{ env.FILENAME }}
