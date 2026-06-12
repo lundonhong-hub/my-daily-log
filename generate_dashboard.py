@@ -83,7 +83,7 @@ elif API_MODE == "gemini":
         config=types.GenerateContentConfig(
             tools=[types.Tool(google_search=types.GoogleSearch())],
             temperature=0.3,
-            max_output_tokens=16000,
+            max_output_tokens=65536,
         ),
     )
     html = response.text
