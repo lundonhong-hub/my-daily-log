@@ -1,4 +1,4 @@
-name: 6시간마다 대시보드 생성 (Claude API)
+name: 대시보드 생성 (Claude / Gemini 선택)
 on:
   schedule:
     - cron: '50 20 * * 6,2,4'
@@ -16,17 +16,14 @@ jobs:
           python-version: '3.11'
 
       - name: 패키지 설치
-        #run: pip install anthropic requests yfinance
-        run: pip install google-genai
+        run: pip install anthropic google-genai
 
       - name: 날짜 및 번호 계산
         run: |
           export TZ='Asia/Seoul'
           TODAY=$(date +'%Y%m%d')
-          # 1. 실제 파일은 index.html로 고정
           echo "FILENAME=index.html" >> $GITHUB_ENV
           echo "TODAY=${TODAY}" >> $GITHUB_ENV
-          # 2. 메일 제목용 식별자 (예: dashboard_20260307_1.html)
           HOUR=$(date +'%H')
           if [ "$HOUR" -lt "09" ]; then NUM="1";
           elif [ "$HOUR" -lt "15" ]; then NUM="2";
@@ -34,12 +31,13 @@ jobs:
           else NUM="4";
           fi
           echo "MAIL_TITLE=dashboard_${TODAY}_${NUM}.html" >> $GITHUB_ENV
-          # 3. 대시보드 상단 기입용 시간
           echo "UPDATE_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Claude API로 대시보드 생성
+      - name: 대시보드 생성
         env:
+          API_MODE: gemini         # ★ claude 또는 gemini 로 변경
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           FILENAME: ${{ env.FILENAME }}
           TODAY: ${{ env.TODAY }}
           UPDATE_TIME: ${{ env.UPDATE_TIME }}
@@ -61,8 +59,7 @@ jobs:
           MAIL_TITLE: ${{ env.MAIL_TITLE }}
         run: |
           python - <<EOF
-          import smtplib
-          import os
+          import smtplib, os
           from email.mime.multipart import MIMEMultipart
           from email.mime.text import MIMEText
           from email.mime.application import MIMEApplication
@@ -77,19 +74,17 @@ jobs:
           msg["From"] = sender
           msg["To"] = sender
 
-          body = f"생성된 대시보드 파일({mail_title})을 index.html 형태로 첨부합니다."
-          msg.attach(MIMEText(body, "plain", "utf-8"))
+          msg.attach(MIMEText(f"대시보드({mail_title}) 첨부합니다.", "plain", "utf-8"))
 
           try:
               with open(filename, "rb") as f:
-                  attachment = MIMEApplication(f.read())
-                  attachment.add_header('Content-Disposition', 'attachment', filename=filename)
-                  msg.attach(attachment)
-              
+                  att = MIMEApplication(f.read())
+                  att.add_header('Content-Disposition', 'attachment', filename=filename)
+                  msg.attach(att)
               with smtplib.SMTP_SSL("smtp.naver.com", 465) as smtp:
                   smtp.login(sender, password)
                   smtp.sendmail(sender, sender, msg.as_string())
-              print(f"[{mail_title}] 이메일 발송 완료!")
+              print(f"[{mail_title}] 발송 완료!")
           except Exception as e:
               print(f"발송 실패: {e}")
               exit(1)
