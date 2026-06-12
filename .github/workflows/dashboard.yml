@@ -1,7 +1,7 @@
-name: 대시보드 생성 (Claude / Gemini 선택)
+name: 대시보드 생성 (매일 05:50 KST)
 on:
   schedule:
-    - cron: '50 20 * * 6,2,4'
+    - cron: '50 20 * * *'   # 매일 UTC 20:50 = KST 05:50
   workflow_dispatch:
 
 jobs:
