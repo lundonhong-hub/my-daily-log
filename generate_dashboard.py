@@ -1,28 +1,35 @@
 import os
+from data_collector import collect_market_data, format_for_prompt
 
 # ============================================================
-# ★ API 선택 — "claude" 또는 "gemini" 로 지정
+# ★ API 선택 — "claude" 또는 "gemini"
 # ============================================================
-API_MODE = os.environ.get("API_MODE", "claude")  # 환경변수로도 제어 가능
+API_MODE = os.environ.get("API_MODE", "claude")
 # ============================================================
 
-filename = os.environ["FILENAME"]
-today = os.environ["TODAY"]
+filename    = os.environ["FILENAME"]
+today       = os.environ["TODAY"]
 update_time = os.environ.get("UPDATE_TIME", "")
 
+# ── 1. 실제 수치 사전 수집 ──────────────────────────────────
+market_data    = collect_market_data()
+market_context = format_for_prompt(market_data)
+
+# ── 2. 프롬프트 로드 + 수치 주입 ───────────────────────────
 with open("prompt_template.md", "r", encoding="utf-8") as f:
     prompt = f.read().replace("[[TODAY]]", today)
 
-# ────────────────────────────────────────────
-# API 호출
-# ────────────────────────────────────────────
+# 프롬프트 맨 앞에 실제 수치 삽입
+prompt = market_context + "\n\n" + prompt
+
+# ── 3. API 호출 ─────────────────────────────────────────────
 if API_MODE == "claude":
     import anthropic
 
-    CLAUDE_MODEL = "claude-haiku-4-5"  # 변경 원하면 여기만 수정
+    CLAUDE_MODEL = "claude-haiku-4-5"
     print(f"Claude API 호출 중... (모델: {CLAUDE_MODEL})")
 
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client   = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     messages = [{"role": "user", "content": prompt}]
 
     while True:
@@ -73,10 +80,10 @@ elif API_MODE == "gemini":
     from google import genai
     from google.genai import types
 
-    GEMINI_MODEL = "gemini-2.5-flash"  # 변경 원하면 여기만 수정
+    GEMINI_MODEL = "gemini-2.5-flash"
     print(f"Gemini API 호출 중... (모델: {GEMINI_MODEL})")
 
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    client   = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     response = client.models.generate_content(
         model=GEMINI_MODEL,
         contents=prompt,
@@ -91,9 +98,7 @@ elif API_MODE == "gemini":
 else:
     raise ValueError(f"API_MODE 오류: '{API_MODE}' — 'claude' 또는 'gemini' 만 가능")
 
-# ────────────────────────────────────────────
-# HTML 후처리 (공통)
-# ────────────────────────────────────────────
+# ── 4. HTML 후처리 (공통) ───────────────────────────────────
 print(f"추출된 HTML 길이: {len(html)}자")
 
 html = html.strip()
