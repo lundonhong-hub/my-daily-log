@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from data_collector import collect_market_data, format_for_prompt
 
 # ============================================================
@@ -11,18 +12,23 @@ filename    = os.environ["FILENAME"]
 today       = os.environ["TODAY"]
 update_time = os.environ.get("UPDATE_TIME", "")
 
-# ── 1. 실제 수치 사전 수집 ──────────────────────────────────
+# ── 1. 요일 확인 (한국시간 기준, 0=월 ~ 6=일) ───────────────
+weekday   = datetime.now().weekday()
+is_sunday = (weekday == 6)
+template_file = "prompt_template_sunday.md" if is_sunday else "prompt_template.md"
+print(f"📅 오늘 요일: {['월','화','수','목','금','토','일'][weekday]}요일 → {template_file} 사용")
+
+# ── 2. 실제 수치 사전 수집 ──────────────────────────────────
 market_data    = collect_market_data()
 market_context = format_for_prompt(market_data)
 
-# ── 2. 프롬프트 로드 + 수치 주입 ───────────────────────────
-with open("prompt_template.md", "r", encoding="utf-8") as f:
+# ── 3. 프롬프트 로드 + 수치 주입 ───────────────────────────
+with open(template_file, "r", encoding="utf-8") as f:
     prompt = f.read().replace("[[TODAY]]", today)
 
-# 프롬프트 맨 앞에 실제 수치 삽입
 prompt = market_context + "\n\n" + prompt
 
-# ── 3. API 호출 ─────────────────────────────────────────────
+# ── 4. API 호출 ─────────────────────────────────────────────
 if API_MODE == "claude":
     import anthropic
 
@@ -98,7 +104,7 @@ elif API_MODE == "gemini":
 else:
     raise ValueError(f"API_MODE 오류: '{API_MODE}' — 'claude' 또는 'gemini' 만 가능")
 
-# ── 4. HTML 후처리 (공통) ───────────────────────────────────
+# ── 5. HTML 후처리 (공통) ───────────────────────────────────
 print(f"추출된 HTML 길이: {len(html)}자")
 
 html = html.strip()
@@ -125,4 +131,4 @@ if "<body>" in html:
 with open(filename, "w", encoding="utf-8") as f:
     f.write(html)
 
-print(f"✅ 완료: {filename} ({API_MODE}) 저장됨 (총 {len(html)}자)")
+print(f"✅ 완료: {filename} ({API_MODE}, {'일요일' if is_sunday else '평일'}) 저장됨 (총 {len(html)}자)")
