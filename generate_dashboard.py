@@ -1,6 +1,7 @@
 import os
+import json
 from datetime import datetime
-from data_collector import collect_market_data, format_for_prompt
+from data_collector import collect_market_data
 
 # ============================================================
 # ★ API 선택 — "claude" 또는 "gemini"
@@ -12,21 +13,22 @@ filename    = os.environ["FILENAME"]
 today       = os.environ["TODAY"]
 update_time = os.environ.get("UPDATE_TIME", "")
 
-# ── 1. 요일 확인 (한국시간 기준, 0=월 ~ 6=일) ───────────────
+# ── 1. 요일 확인 (0=월 ~ 6=일) ─────────────────────────────
 weekday   = datetime.now().weekday()
 is_sunday = (weekday == 6)
 template_file = "prompt_template_sunday.md" if is_sunday else "prompt_template.md"
-print(f"📅 오늘 요일: {['월','화','수','목','금','토','일'][weekday]}요일 → {template_file} 사용")
+print(f"📅 {['월','화','수','목','금','토','일'][weekday]}요일 → {template_file}")
 
-# ── 2. 실제 수치 사전 수집 ──────────────────────────────────
-market_data    = collect_market_data()
-market_context = format_for_prompt(market_data)
+# ── 2. 실제 수치 수집 → JSON ────────────────────────────────
+market_data = collect_market_data()
+market_json = json.dumps(market_data, ensure_ascii=False, indent=2)
 
-# ── 3. 프롬프트 로드 + 수치 주입 ───────────────────────────
+# ── 3. 프롬프트 로드 + 치환 ─────────────────────────────────
 with open(template_file, "r", encoding="utf-8") as f:
-    prompt = f.read().replace("[[TODAY]]", today)
+    prompt = f.read()
 
-prompt = market_context + "\n\n" + prompt
+prompt = prompt.replace("[[TODAY]]", today)
+prompt = prompt.replace("[[MARKET_DATA_JSON]]", market_json)
 
 # ── 4. API 호출 ─────────────────────────────────────────────
 if API_MODE == "claude":
@@ -104,7 +106,7 @@ elif API_MODE == "gemini":
 else:
     raise ValueError(f"API_MODE 오류: '{API_MODE}' — 'claude' 또는 'gemini' 만 가능")
 
-# ── 5. HTML 후처리 (공통) ───────────────────────────────────
+# ── 5. HTML 후처리 ───────────────────────────────────────────
 print(f"추출된 HTML 길이: {len(html)}자")
 
 html = html.strip()
