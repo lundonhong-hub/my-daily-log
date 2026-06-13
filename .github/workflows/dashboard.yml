@@ -1,0 +1,91 @@
+name: 대시보드 생성 (매일 05:50 KST)
+on:
+  schedule:
+    - cron: '50 20 * * *'   # 매일 UTC 20:50 = KST 05:50
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Python 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 패키지 설치
+        run: pip install anthropic google-genai yfinance requests pandas
+
+      - name: 날짜 및 번호 계산
+        run: |
+          export TZ='Asia/Seoul'
+          TODAY=$(date +'%Y%m%d')
+          echo "FILENAME=index.html" >> $GITHUB_ENV
+          echo "TODAY=${TODAY}" >> $GITHUB_ENV
+          HOUR=$(date +'%H')
+          if [ "$HOUR" -lt "09" ]; then NUM="1";
+          elif [ "$HOUR" -lt "15" ]; then NUM="2";
+          elif [ "$HOUR" -lt "21" ]; then NUM="3";
+          else NUM="4";
+          fi
+          echo "MAIL_TITLE=dashboard_${TODAY}_${NUM}.html" >> $GITHUB_ENV
+          echo "UPDATE_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: 대시보드 생성
+        env:
+          API_MODE: claude          # ★ claude 또는 gemini
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PORTFOLIO_SHEET_ID: ${{ secrets.PORTFOLIO_SHEET_ID }}
+          FILENAME: ${{ env.FILENAME }}
+          TODAY: ${{ env.TODAY }}
+          UPDATE_TIME: ${{ env.UPDATE_TIME }}
+        run: python generate_dashboard.py
+
+      - name: GitHub에 저장
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add index.html
+          git commit -m "Update dashboard: ${{ env.MAIL_TITLE }}" || echo "No changes to commit"
+          git push
+
+      - name: 이메일 발송
+        env:
+          NAVER_EMAIL: ${{ secrets.NAVER_EMAIL }}
+          NAVER_PASSWORD: ${{ secrets.NAVER_PASSWORD }}
+          FILENAME: ${{ env.FILENAME }}
+          MAIL_TITLE: ${{ env.MAIL_TITLE }}
+        run: |
+          python - <<EOF2
+          import smtplib, os
+          from email.mime.multipart import MIMEMultipart
+          from email.mime.text import MIMEText
+          from email.mime.application import MIMEApplication
+
+          sender   = os.environ["NAVER_EMAIL"]
+          password = os.environ["NAVER_PASSWORD"]
+          filename = os.environ["FILENAME"]
+          title    = os.environ["MAIL_TITLE"]
+
+          msg = MIMEMultipart("mixed")
+          msg["Subject"] = f"📊 시장 대시보드 - {title}"
+          msg["From"]    = sender
+          msg["To"]      = sender
+          msg.attach(MIMEText(f"대시보드({title}) 첨부합니다.", "plain", "utf-8"))
+
+          try:
+              with open(filename, "rb") as f:
+                  att = MIMEApplication(f.read())
+                  att.add_header("Content-Disposition", "attachment", filename=filename)
+                  msg.attach(att)
+              with smtplib.SMTP_SSL("smtp.naver.com", 465) as smtp:
+                  smtp.login(sender, password)
+                  smtp.sendmail(sender, sender, msg.as_string())
+              print(f"[{title}] 발송 완료!")
+          except Exception as e:
+              print(f"발송 실패: {e}")
+              exit(1)
+          EOF2
