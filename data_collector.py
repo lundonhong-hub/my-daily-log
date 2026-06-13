@@ -1,6 +1,6 @@
 import yfinance as yf
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import os
 
@@ -8,7 +8,6 @@ def collect_market_data():
     data = {"market": {}, "btc": {}, "fear_greed": {}}
     print("📡 시장 데이터 수집 중...")
 
-    # ── 1. yfinance ──────────────────────────────────────────
     tickers = {
         "SP500":   "^GSPC",
         "NASDAQ":  "^NDX",
@@ -24,8 +23,8 @@ def collect_market_data():
 
     for key, symbol in tickers.items():
         try:
-            t    = yf.Ticker(symbol)
-            info = t.fast_info
+            t          = yf.Ticker(symbol)
+            info       = t.fast_info
             close      = round(info["last_price"], 2)
             prev_close = round(info["previous_close"], 2)
             change     = round(close - prev_close, 2)
@@ -42,27 +41,23 @@ def collect_market_data():
             print(f"  ❌ {key} 실패: {e}")
             data["market"][key] = {"error": str(e)}
 
-    # ── 2. 비트코인 (CoinGecko) ──────────────────────────────
     try:
-        r   = requests.get(
+        r  = requests.get(
             "https://api.coingecko.com/api/v3/coins/bitcoin"
             "?localization=false&tickers=false&market_data=true"
             "&community_data=false&developer_data=false",
             timeout=10
         )
-        md  = r.json()["market_data"]
-        krw = md["current_price"]["krw"]
-        usd = md["current_price"]["usd"]
-        ch  = round(md["price_change_percentage_24h"], 2)
+        md      = r.json()["market_data"]
+        krw     = md["current_price"]["krw"]
+        usd     = md["current_price"]["usd"]
+        ch      = round(md["price_change_percentage_24h"], 2)
         prev_krw = round(krw / (1 + ch / 100))
-
-        # 7일 고점
         try:
-            hist = yf.Ticker("BTC-KRW").history(period="7d")
+            hist   = yf.Ticker("BTC-KRW").history(period="7d")
             high_7d = int(hist["High"].max()) if not hist.empty else 0
         except:
             high_7d = 0
-
         data["btc"] = {
             "krw":          krw,
             "usd":          usd,
@@ -82,7 +77,6 @@ def collect_market_data():
         print(f"  ❌ BTC 실패: {e}")
         data["btc"] = {"error": str(e)}
 
-    # ── 3. 크립토 공포탐욕 (alternative.me) ──────────────────
     try:
         r   = requests.get("https://api.alternative.me/fng/?limit=1", timeout=10)
         fng = r.json()["data"][0]
@@ -98,58 +92,85 @@ def collect_market_data():
 
 
 def normalize_ticker(ticker_raw):
-    """티커 정규화
-    - 숫자 6자리: 한국 종목 → 000270.KS
-    - 영숫자 혼합 6자리 (예: 0204D0): 한국 종목 → 0204D0.KS
-    - 순수 영문 (예: SPYM, GLTR): 미국 종목 그대로
-    """
+    """티커 정규화 — .ks/.KS 이미 붙은 경우 포함"""
     ticker = str(ticker_raw).strip()
-
+    upper  = ticker.upper()
     # 이미 .KS / .KQ 붙어있으면 그대로
-    if ticker.endswith(".KS") or ticker.endswith(".KQ"):
-        return ticker.upper(), "KRW"
-
-    # 6자리 숫자+영문 혼합 → 한국 종목 (예: 0204D0, 476160, 086790)
+    if upper.endswith(".KS") or upper.endswith(".KQ"):
+        return upper, "KRW"
+    # 6자리 앞4자리 숫자 → 한국 종목 (476160, 0204D0 등)
     if len(ticker) == 6 and ticker[:4].isdigit():
-        return ticker.upper() + ".KS", "KRW"
-
-    # 순수 숫자 → 한국 종목 (혹시 앞자리 0 잘린 경우 대비 zfill)
+        return upper + ".KS", "KRW"
+    # 순수 숫자 → 한국 종목
     if ticker.isdigit():
         return ticker.zfill(6) + ".KS", "KRW"
+    # 영문 → 미국 종목
+    return upper, "USD"
 
-    # 영문만 → 미국 종목
-    return ticker.upper(), "USD"
+
+def get_price_kr(code):
+    """한국 종목 현재가 — pykrx 사용"""
+    try:
+        from pykrx import stock
+        today = datetime.now().strftime("%Y%m%d")
+        df = stock.get_market_ohlcv(today, ticker=code)
+        if df is not None and not df.empty:
+            return float(df["종가"].iloc[-1])
+        # 오늘 데이터 없으면 최근 5일
+        from datetime import timedelta
+        start = (datetime.now() - timedelta(days=5)).strftime("%Y%m%d")
+        df = stock.get_market_ohlcv(start, today, ticker=code)
+        if df is not None and not df.empty:
+            return float(df["종가"].iloc[-1])
+    except Exception as e:
+        print(f"    pykrx 실패 ({code}): {e}")
+    return None
+
+
+def get_price_us(ticker):
+    """미국 종목 현재가 — yfinance 사용"""
+    try:
+        price = yf.Ticker(ticker).fast_info["last_price"]
+        if price and price > 0:
+            return float(price)
+    except Exception:
+        pass
+    try:
+        hist = yf.Ticker(ticker).history(period="2d")
+        if not hist.empty:
+            return float(hist["Close"].iloc[-1])
+    except Exception:
+        pass
+    return None
 
 
 def collect_portfolio_data(sheet_id):
     """구글 시트에서 포트폴리오 읽어서 현재가·수익률 계산"""
     print("📋 포트폴리오 데이터 수집 중...")
 
-    # ── 구글 시트 CSV 다운로드 ──────────────────────────────
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv"
     try:
         r = requests.get(url, timeout=15)
         r.encoding = "utf-8"
-        lines = r.text.strip().split("\n")
+        lines   = r.text.strip().split("\n")
         headers = [h.strip() for h in lines[0].split(",")]
-        rows = []
+        rows    = []
         for line in lines[1:]:
             vals = [v.strip() for v in line.split(",")]
-            if len(vals) >= 5 and vals[0]:  # 빈 행 스킵
+            if len(vals) >= 5 and vals[0]:
                 rows.append(dict(zip(headers, vals)))
         print(f"  ✅ 시트 로드: {len(rows)}개 종목")
     except Exception as e:
         print(f"  ❌ 시트 로드 실패: {e}")
         return {"error": str(e)}
 
-    # ── USD/KRW 환율 ─────────────────────────────────────────
+    # USD/KRW 환율
     try:
-        usdkrw = yf.Ticker("KRW=X").fast_info["last_price"]
+        usdkrw = float(yf.Ticker("KRW=X").fast_info["last_price"])
     except:
-        usdkrw = 1380  # fallback
+        usdkrw = 1380.0
 
-    # ── 종목별 현재가 조회 ───────────────────────────────────
-    holdings = []
+    holdings        = []
     account_summary = {}
     total_value_krw = 0
     total_cost_krw  = 0
@@ -164,9 +185,22 @@ def collect_portfolio_data(sheet_id):
 
             ticker, currency = normalize_ticker(ticker_raw)
 
-            # 현재가 조회
-            t     = yf.Ticker(ticker)
-            price = t.fast_info["last_price"]
+            # 통화별 시세 조회
+            if currency == "KRW":
+                kr_code = ticker.replace(".KS", "").replace(".KQ", "")
+                price   = get_price_kr(kr_code)
+                if price is None:
+                    price = avg_price
+                    print(f"  ⚠️ {name} pykrx 실패 → 매수평균가 사용")
+                else:
+                    print(f"  ✅ {name}: ₩{price:,.0f}")
+            else:
+                price = get_price_us(ticker)
+                if price is None:
+                    price = avg_price
+                    print(f"  ⚠️ {name} yfinance 실패 → 매수평균가 사용")
+                else:
+                    print(f"  ✅ {name}: ${price:,.2f}")
 
             # 원화 환산
             if currency == "USD":
@@ -183,23 +217,22 @@ def collect_portfolio_data(sheet_id):
             direction = "up" if gain_pct >= 0 else "down"
 
             holding = {
-                "account":    account,
-                "name":       name,
-                "ticker":     ticker,
-                "currency":   currency,
-                "shares":     shares,
-                "avg_price":  avg_price,
-                "cur_price":  round(price, 2),
-                "price_krw":  price_krw,
-                "value_krw":  value_krw,
-                "cost_krw":   cost_krw,
-                "gain_krw":   gain_krw,
-                "gain_pct":   gain_pct,
-                "direction":  direction,
+                "account":   account,
+                "name":      name,
+                "ticker":    ticker,
+                "currency":  currency,
+                "shares":    shares,
+                "avg_price": avg_price,
+                "cur_price": round(price, 2),
+                "price_krw": price_krw,
+                "value_krw": value_krw,
+                "cost_krw":  cost_krw,
+                "gain_krw":  gain_krw,
+                "gain_pct":  gain_pct,
+                "direction": direction,
             }
             holdings.append(holding)
 
-            # 계좌별 집계
             if account not in account_summary:
                 account_summary[account] = {"value_krw": 0, "cost_krw": 0, "holdings": []}
             account_summary[account]["value_krw"] += value_krw
@@ -209,13 +242,10 @@ def collect_portfolio_data(sheet_id):
             total_value_krw += value_krw
             total_cost_krw  += cost_krw
 
-            print(f"  ✅ {name} ({account}): ₩{price_krw:,} · {gain_pct:+.2f}%")
-
         except Exception as e:
             print(f"  ❌ {row.get('종목명','?')} 실패: {e}")
-            holdings.append({"name": row.get("종목명","?"), "error": str(e)})
+            holdings.append({"name": row.get("종목명", "?"), "error": str(e)})
 
-    # ── 계좌별 수익률 계산 ───────────────────────────────────
     for acc in account_summary:
         v = account_summary[acc]["value_krw"]
         c = account_summary[acc]["cost_krw"]
@@ -225,7 +255,6 @@ def collect_portfolio_data(sheet_id):
     total_gain_krw = total_value_krw - total_cost_krw
     total_gain_pct = round((total_gain_krw / total_cost_krw) * 100, 2) if total_cost_krw > 0 else 0
 
-    # ── 손실/주목 포지션 추출 ────────────────────────────────
     loss_positions  = [h for h in holdings if "gain_pct" in h and h["gain_pct"] < -5]
     watch_positions = [h for h in holdings if "gain_pct" in h and h["gain_pct"] > 50]
 
@@ -246,7 +275,6 @@ def collect_portfolio_data(sheet_id):
 if __name__ == "__main__":
     data = collect_market_data()
     print("\n" + json.dumps(data, ensure_ascii=False, indent=2))
-
     sheet_id = os.environ.get("PORTFOLIO_SHEET_ID", "")
     if sheet_id:
         portfolio = collect_portfolio_data(sheet_id)
