@@ -16,7 +16,7 @@ update_time = os.environ.get("UPDATE_TIME", "")
 # ── 1. 요일 확인 (0=월 ~ 6=일) ─────────────────────────────
 weekday   = datetime.now().weekday()
 is_sunday = (weekday == 6)
-template_file = "prompt_template_sunday.md" if is_sunday else "prompt_template.md"
+template_file = "prompt_template.md" if is_sunday else "prompt_template_weekday.md"
 print(f"📅 {['월','화','수','목','금','토','일'][weekday]}요일 → {template_file}")
 
 # ── 2. 실제 수치 수집 → JSON ────────────────────────────────
