@@ -98,14 +98,27 @@ def collect_market_data():
 
 
 def normalize_ticker(ticker_raw):
-    """티커 정규화: 숫자면 KR 종목(6자리 0패딩 + .KS), 영문이면 US 종목 그대로"""
+    """티커 정규화
+    - 숫자 6자리: 한국 종목 → 000270.KS
+    - 영숫자 혼합 6자리 (예: 0204D0): 한국 종목 → 0204D0.KS
+    - 순수 영문 (예: SPYM, GLTR): 미국 종목 그대로
+    """
     ticker = str(ticker_raw).strip()
-    if ticker.replace("0", "").isdigit() or ticker.isdigit():
-        # 숫자로만 구성 → 한국 종목코드
+
+    # 이미 .KS / .KQ 붙어있으면 그대로
+    if ticker.endswith(".KS") or ticker.endswith(".KQ"):
+        return ticker.upper(), "KRW"
+
+    # 6자리 숫자+영문 혼합 → 한국 종목 (예: 0204D0, 476160, 086790)
+    if len(ticker) == 6 and ticker[:4].isdigit():
+        return ticker.upper() + ".KS", "KRW"
+
+    # 순수 숫자 → 한국 종목 (혹시 앞자리 0 잘린 경우 대비 zfill)
+    if ticker.isdigit():
         return ticker.zfill(6) + ".KS", "KRW"
-    else:
-        # 영문 포함 → 미국 종목
-        return ticker.upper(), "USD"
+
+    # 영문만 → 미국 종목
+    return ticker.upper(), "USD"
 
 
 def collect_portfolio_data(sheet_id):
