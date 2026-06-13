@@ -25,7 +25,7 @@ market_json = json.dumps(market_data, ensure_ascii=False, indent=2)
 
 # ── 3. 포트폴리오 데이터 수집 ────────────────────────────────
 sheet_id = os.environ.get("PORTFOLIO_SHEET_ID", "")
-if sheet_id:
+if sheet_id and weekday < 5:
     portfolio_data = collect_portfolio_data(sheet_id)
     portfolio_json = json.dumps(portfolio_data, ensure_ascii=False, indent=2)
     print(f"✅ 포트폴리오 로드 완료: 총 {portfolio_data.get('total_value_krw', 0):,}원")
