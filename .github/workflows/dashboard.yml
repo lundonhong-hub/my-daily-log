@@ -16,7 +16,7 @@ jobs:
           python-version: '3.11'
 
       - name: 패키지 설치
-        run: pip install anthropic google-genai yfinance requests pandas
+        run: pip install anthropic google-genai yfinance requests pandas pykrx
 
       - name: 날짜 및 번호 계산
         run: |
