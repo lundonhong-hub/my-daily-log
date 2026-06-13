@@ -112,15 +112,12 @@ def get_price_kr(code):
     """한국 종목 현재가 — pykrx 사용"""
     try:
         from pykrx import stock
-        today = datetime.now().strftime("%Y%m%d")
-        df = stock.get_market_ohlcv(today, ticker=code)
-        if df is not None and not df.empty:
-            return float(df["종가"].iloc[-1])
-        # 오늘 데이터 없으면 최근 5일
         from datetime import timedelta
+        today = datetime.now().strftime("%Y%m%d")
         start = (datetime.now() - timedelta(days=5)).strftime("%Y%m%d")
-        df = stock.get_market_ohlcv(start, today, ticker=code)
-        if df is not None and not df.empty:
+        # 기간 + 티커 방식 (위치 인자 순서: fromdate, todate, ticker)
+        df = stock.get_market_ohlcv(start, today, code)
+        if df is not None and not df.empty and "종가" in df.columns:
             return float(df["종가"].iloc[-1])
     except Exception as e:
         print(f"    pykrx 실패 ({code}): {e}")
