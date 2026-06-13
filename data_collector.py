@@ -180,7 +180,10 @@ def collect_portfolio_data(sheet_id):
             shares     = int(str(row.get("수량", 0)).replace(",", ""))
             avg_price  = float(str(row.get("매수평균가", 0)).replace(",", ""))
 
-            ticker, currency = normalize_ticker(ticker_raw)
+            ticker, _ = normalize_ticker(ticker_raw)
+            currency = str(row.get("통화", "KRW")).strip().upper()
+            if currency not in ("USD", "KRW"):
+                currency = "KRW"
 
             # 통화별 시세 조회
             if currency == "KRW":
