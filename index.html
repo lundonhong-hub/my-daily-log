@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시장 모니터링 대시보드 | 2026년 6월 20일</title>
+<title>시장 모니터링 대시보드 | 2026년 6월 21일</title>
 <style>
 :root {
 --bg: #0d1117;
@@ -120,11 +120,6 @@ justify-content: space-between;
 font-size: 0.65rem;
 color: var(--muted);
 margin-top: 6px;
-}
-.gauge-bar {
-height: 7px;
-border-radius: 4px;
-background: var(--down);
 }
 .section-title {
 font-size: 1rem;
@@ -440,111 +435,6 @@ font-size: 0.68rem;
 color: var(--muted);
 margin-bottom: 4px;
 }
-.portfolio-section {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 12px;
-padding: 20px 22px;
-margin-top: 28px;
-}
-.account-group {
-margin-bottom: 20px;
-}
-.account-header {
-background: rgba(88,166,255,0.1);
-border-left: 3px solid var(--accent);
-padding: 10px 12px;
-border-radius: 6px;
-margin-bottom: 10px;
-font-size: 0.85rem;
-font-weight: 700;
-color: var(--accent);
-}
-.holding-row {
-display: grid;
-grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr;
-gap: 12px;
-padding: 8px 0;
-border-bottom: 1px solid var(--border);
-align-items: center;
-font-size: 0.8rem;
-}
-.holding-row:last-child {
-border-bottom: none;
-}
-.holding-name {
-color: var(--text);
-}
-.holding-shares {
-color: var(--muted);
-text-align: center;
-}
-.holding-price {
-color: var(--text);
-text-align: right;
-}
-.holding-value {
-text-align: right;
-font-weight: 600;
-}
-.holding-gain {
-text-align: right;
-font-weight: 700;
-}
-.account-summary {
-display: grid;
-grid-template-columns: 1fr 1fr 1fr;
-gap: 12px;
-padding: 12px;
-background: rgba(88,166,255,0.05);
-border-radius: 8px;
-border: 1px solid rgba(88,166,255,0.2);
-margin-top: 8px;
-font-size: 0.75rem;
-}
-.account-summary-item {
-display: flex;
-justify-content: space-between;
-}
-.account-summary-label {
-color: var(--muted);
-}
-.account-summary-value {
-font-weight: 700;
-color: var(--text);
-}
-.total-summary {
-background: rgba(63,185,80,0.08);
-border: 1px solid rgba(63,185,80,0.3);
-border-radius: 10px;
-padding: 16px;
-margin-top: 20px;
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 12px;
-text-align: center;
-}
-.total-summary-item {
-padding: 8px;
-}
-.total-summary-label {
-font-size: 0.7rem;
-color: var(--muted);
-margin-bottom: 4px;
-}
-.total-summary-value {
-font-size: 1.1rem;
-font-weight: 800;
-color: var(--up);
-}
-.portfolio-note {
-font-size: 0.75rem;
-color: var(--muted);
-margin-top: 12px;
-padding-top: 12px;
-border-top: 1px solid var(--border);
-line-height: 1.5;
-}
 .footer {
 text-align: center;
 margin-top: 28px;
@@ -554,113 +444,101 @@ color: var(--muted);
 </style>
 </head>
 <body>
-<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-06-20 06:54:03 KST</div>
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-06-21 06:56:35 KST</div>
 
 <div class="header">
 <h1>📊 시장 모니터링 대시보드</h1>
-<div class="subtitle">2026년 6월 20일 (토) · 데이터 기준: 2026.06.19 KST</div>
-<div class="alert-banner">⚡ 나스닥 +2.48% 급등 · 과거 삼중마녀날 변동성 통과 · 글로벌 기술주 반등 신호</div>
+<div class="subtitle">2026년 6월 21일 (일) · 데이터 기준: 2026.06.20 KST</div>
+<div class="alert-banner">⚡ Fed 신임의장 Kevin Warsh 첫 회의 '인상 신호' — 기준금리 인상 가능성 제시로 성장주·채권 급락. 동시에 나스닥 +2.48% 반등하며 AI칩 강세 지속</div>
 </div>
 
 <div class="grid-4">
 <div class="card">
 <div class="label">😨 공포탐욕지수 (CNN)</div>
 <div class="value">37</div>
-<div class="change">FEAR</div>
+<div class="change neutral">FEAR (두려움)</div>
 <div class="gauge-wrap">
-<div class="gauge-bar-bg"></div>
-<div class="gauge-bar" style="margin-left:calc(37% - 5px)"></div>
-<div class="gauge-labels">
-<span>공포</span>
-<span>중립</span>
-<span>탐욕</span>
+<div class="gauge-bar-bg" style="position:relative;"><div style="position:absolute;width:2px;height:9px;background:#fff;top:-1px;left:calc(37% - 1px);"></div></div>
+<div class="gauge-labels"><span>공포</span><span>중립</span><span>탐욕</span></div>
 </div>
-</div>
-<div class="sub">Iran 휴전 안정화 · 기술주 반등으로 심리 소폭 회복 중</div>
+<div class="sub">미 연준 인상 신호 → 기술주 조정. 공포존 34-37 구간 심화</div>
 </div>
 
 <div class="card">
 <div class="label">🌪️ VIX 공포지수</div>
 <div class="value">16.78</div>
 <div class="change up">▲ 2.32% · 전일 16.40 → 오늘 16.78</div>
-<div class="sub">✅ 안정 (14~18 안전구간)</div>
-<div class="sub">장중 변동성 진정 · 삼중마녀날 수급 정상화</div>
+<div class="sub">✅ 안정 (14-18이 정상수준)</div>
+<div class="sub">에너지가격 상승 + Fed 인상 신호 약간의 변동성 추가</div>
 </div>
 
 <div class="card">
 <div class="label">🇺🇸 S&P 500</div>
 <div class="value">7,500.58</div>
 <div class="change up">▲ 1.08% · 종가</div>
-<div class="sub">10Y 금리 4.45% 약보합</div>
-<div class="sub">기술주 강세 · Nvidia, 빅테크 반등주도</div>
+<div class="sub">10Y 금리 4.45% · 금리약세 극저점 바닥 수익주 반등</div>
 </div>
 
 <div class="card">
 <div class="label">💻 나스닥 100</div>
 <div class="value">30,406.19</div>
 <div class="change up">▲ 2.48%</div>
-<div class="sub">AI칩 호황 지속 · 반도체주 일제히 상승</div>
-<div class="sub">마이크론, AMD 우호적 기조</div>
+<div class="sub">Intel +15% (Apple 협력 발표), Marvell +8% (AI칩 강세)</div>
 </div>
 
 <div class="card">
 <div class="label">🥇 금 (Gold)</div>
 <div class="value">$4,172.90</div>
 <div class="change down">▼ 3.84%</div>
-<div class="sub">달러 강세 · 유가 상승으로 인플레 우려 감소</div>
-<div class="sub">안전자산 수요 약화</div>
+<div class="sub">안전자산 이탈 · 금리 상승 기대 → 현물수요 약화</div>
 </div>
 
 <div class="card">
 <div class="label">🛢️ WTI 원유</div>
 <div class="value">$76.54</div>
 <div class="change up">▲ 2.68%</div>
-<div class="sub">Iran 휴전 불안정성 계속</div>
-<div class="sub">76~80$ 혼조장 지속</div>
+<div class="sub">중동 지정학적 긴장 완화 이후 수급 불안 지속</div>
 </div>
 
 <div class="card">
 <div class="label">🇰🇷 KOSPI</div>
 <div class="value">9,052.42</div>
 <div class="change down">▼ 0.13% · -11.42pt</div>
-<div class="sub">외국인 순매도 · 기관 수급 약세</div>
-<div class="sub">삼중마녀 후 차익실현 압력</div>
+<div class="sub">외국인 순매도 지속 · 개인 강매집중</div>
 </div>
 
 <div class="card">
 <div class="label">💵 USD/KRW</div>
 <div class="value">1,529.89원</div>
 <div class="change down">▼ 0.43% · -6.53원</div>
-<div class="sub">원화 강세 · 외국인 계절적 이탈</div>
-<div class="sub">1,520~1,540 박스권 형성</div>
+<div class="sub">원화 강세 지속 · 외국인 순매도 영향 한정적</div>
 </div>
 </div>
 
 <div class="btc-main">
-<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+<div style="display:flex;justify-content:space-between;align-items:center;">
 <div>
-<div style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">₿ Bitcoin 현재 시세</div>
-<div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 6px;">BTC / KRW · CoinGecko 기준 | 2026.06.19 KST</div>
-<div class="btc-price-hero">₩96,326,971</div>
-<div style="font-size: 0.9rem; color: #f0b429; margin-top: 4px; font-weight: 600;">≈ $63,056 USD <span class="up">▲ 0.34%</span> (24h)</div>
-<div style="font-size: 0.8rem; color: var(--muted); margin-top: 6px;">전일 ₩96,000,569 → 오늘 ₩96,326,971</div>
+<div class="label" style="margin-bottom:12px;color:#8b949e;">₿ Bitcoin 현재 시세</div>
+<div style="font-size:0.75rem;color:#8b949e;">2026.06.20 KST 기준</div>
 </div>
+</div>
+<div class="btc-price-hero">₩97,726,035</div>
+<div style="font-size:0.85rem;color:#a371f7;margin-top:8px;">≈ $63,956 USD <span class="up">▲ 1.5%</span> (24h 변화)</div>
+<div style="font-size:0.75rem;color:#8b949e;margin-top:4px;">전일 ₩96,281,808 → 오늘 ₩97,726,035</div>
+
 <div class="btc-meta">
 <div class="btc-meta-item">
 <div class="ml">ATH 대비</div>
-<div class="mv down">-45.84%</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">ATH</div>
-<div class="mv">₩177,854,395</div>
+<div class="mv down">▼ 45.05%</div>
+<div style="font-size:0.65rem;color:#8b949e;margin-top:3px;">ATH ₩177,854,395</div>
 </div>
 <div class="btc-meta-item">
 <div class="ml">24h 고점</div>
-<div class="mv">₩97,018,205</div>
+<div class="mv">₩98,153,494</div>
 </div>
 <div class="btc-meta-item">
 <div class="ml">24h 저점</div>
-<div class="mv">₩95,280,219</div>
+<div class="mv">₩96,242,517</div>
 </div>
 <div class="btc-meta-item">
 <div class="ml">7일 고점</div>
@@ -668,84 +546,94 @@ color: var(--muted);
 </div>
 <div class="btc-meta-item">
 <div class="ml">전월 대비</div>
-<div class="mv down">-18.80%</div>
+<div class="mv down">▼ 17.61%</div>
 </div>
 <div class="btc-meta-item">
 <div class="ml">크립토 공포탐욕</div>
-<div class="mv down">14 극도공포</div>
-</div>
+<div class="mv">23 · 극도공포</div>
 </div>
 </div>
 </div>
 
-<div class="direction-card">
 <div class="section-title">🎯 리스크 체크리스트</div>
+
+<div style="margin-bottom:20px;">
+<div style="font-size:0.85rem;font-weight:700;color:#58a6ff;margin-bottom:10px;">🌐 글로벌 위험 (5개)</div>
 <div class="risk-grid">
 <div class="risk-item">
 <div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">🌐 ① 유가 쇼크 지속</div>
-<div class="risk-desc">WTI 76.54$ (+2.68%) · Iran 휴전 합의 불안정성 지속 · 76~80$ 혼조장 가능 · 인플레 압력 재발 우려 · 성장주 벨류에이션 부담 증대</div>
+<div style="flex:1;">
+<div class="risk-label">① Fed 인상 신호 + 높은 인플레이션</div>
+<div class="risk-desc">Kevin Warsh 신임의장, FOMC 회의에서 기준금리 인상 가능성 시사 (현 5.25~5.50%). 에너지가격 상승으로 인플레 2% 목표 대비 상향. 시장 기대 금리인상 확률 급상승.</div>
 </div>
 </div>
+
 <div class="risk-item">
 <div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">🌐 ② 나스닥 과열 신호</div>
-<div class="risk-desc">Nasdaq +2.48% 급등 · 기술주만의 랠리 심화 · 나스닥 역사적 고점 근처 · 광폭 수익 실현 위험 · S&P500 광폭도 16.78으로 상대적 저평가</div>
+<div style="flex:1;">
+<div class="risk-label">② 미국 장기금리 상승 압력</div>
+<div class="risk-desc">10Y 금리 4.45% 유지 — 인상 신호로 상승 모멘텀 가시화. 채권 공매도 포지션 팽창, 장기자산 밸류에이션 압박 심화 리스크.</div>
 </div>
 </div>
+
+<div class="risk-item">
+<div class="dot dot-yellow"></div>
+<div style="flex:1;">
+<div class="risk-label">③ 중동 지정학적 긴장 잔존</div>
+<div class="risk-desc">US-Iran 협상 무산 우려 → 유가 변동성 지속. WTI $76.54 +2.68%, 공급차질 리스크 여전. 글로벌 인플레 상향압력 재점화 가능.</div>
+</div>
+</div>
+
 <div class="risk-item">
 <div class="dot dot-red"></div>
-<div>
-<div class="risk-label">🌐 ③ 기대인플레 재상승</div>
-<div class="risk-desc">에너지가 부분적 위협 · Fed 점도표 매파 신호 가능성 · 6월 FOMC 완화편향 문구 삭제 시나리오 · 금리 상향 논의 재개 가능성 · 채권·성장주 동시 하락 리스크</div>
+<div style="flex:1;">
+<div class="risk-label">④ 성장주 밸류에이션 복합전기</div>
+<div class="risk-desc">나스닥 +2.48% 반등하지만, 금리 인상 신호로 향후 조정 위험. AI칩만 강세(Intel+15%), 광범위한 기술주 약세 신호 혼재.</div>
 </div>
 </div>
+
 <div class="risk-item">
 <div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">🌐 ④ 달러 강세 심화</div>
-<div class="risk-desc">DXY 상승세 · 신흥국 자산 부담 · 한국 외국인 자금 유출 압력 · USD/KRW 1,520~1,540 박스권 이탈 우려 · 아시아 주식시장 동시 약세</div>
+<div style="flex:1;">
+<div class="risk-label">⑤ 비트코인 극도공포 심화</div>
+<div class="risk-desc">크립토 공포탐욕 23 (극도공포) · BTC ATH 대비 -45.05% 하락. 기관투자자 조정 리스크, 6개월 저점 접근 가능성. 전월 대비 -17.61% 약세.</div>
 </div>
 </div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">🌐 ⑤ 금 급락 신호</div>
-<div class="risk-desc">Gold -3.84% (-166.7$) · 달러 강세 · 안전자산 수요 약화 · 인플레 진정 신호 이지만 일시적일 수 있음 · 유가 불안정성과 역방향 움직임</div>
+
+<div style="grid-column:1/-1;border-top:1px dashed var(--border);padding-top:10px;margin-top:6px;">
+<div style="font-size:0.7rem;color:var(--muted);font-weight:600;letter-spacing:0.5px;">🇰🇷 한국 위험 (3개)</div>
 </div>
-</div>
-<div class="risk-divider">🇰🇷 한국 위험</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">🇰🇷 ⑥ 환율 리스크</div>
-<div class="risk-desc">USD/KRW 1,529.89 (-0.43%) · 원화 소폭 강세 · 외국인 계절적 이탈 압력 · 미국 금리 상향 가능시 급등 위험 · 수출 기업 수익성 악화 우려</div>
-</div>
-</div>
+
 <div class="risk-item">
 <div class="dot dot-red"></div>
-<div>
-<div class="risk-label">🇰🇷 ⑦ 반도체·수급 리스크</div>
-<div class="risk-desc">삼성전자 -0.13% 방향성 약함 · AI칩 호황에도 한국 반도체주 상대적 저평가 · 기관 순매수 의존 · 외국인 순매도 지속 · MSCI 재분류 불확실성 · 미중 규제 재개 우려</div>
+<div style="flex:1;">
+<div class="risk-label">⑥ 외국인 순매도 극심화 — 수급 불균형</div>
+<div class="risk-desc">YTD 외국인 누적 순매도 112조원($74B) · 역사 최대 규모. 6월 현재도 지속 중. KOSPI 9,052 유지하나 시장 급락시 외국인 손절 연쇄 위험.</div>
 </div>
 </div>
+
 <div class="risk-item">
-<div class="dot dot-red"></div>
-<div>
-<div class="risk-label">🇰🇷 ⑧ 외국인 수급 악화</div>
-<div class="risk-desc">KOSPI 외국인 순매도 지속 · 삼중마녀날 이후 수익실현 압력 · 원화 강세에도 매도 수조원대 · 차익실현 흐름 가속화 우려 · 5월~10월 큰 폭 유입후 현재 회수 국면</div>
+<div class="dot dot-yellow"></div>
+<div style="flex:1;">
+<div class="risk-label">⑦ 반도체 집중도 리스크 — 삼성·SK하이닉스</div>
+<div class="risk-desc">KOSPI 시가총액의 80% 이상이 두 회사에 의존. Samsung HBM4 발표 성공하지만, 미국 규제(CHIP법 강화) + 중국 대체기술 가속화 우려. 반도체 사이클 약화시 극심 급락 가능.</div>
 </div>
 </div>
-<div class="risk-summary">
-<div class="score">4/8</div>
-<div class="phase">경계 — 유가·기대인플레·외국인 수급 3각 위협</div>
+
+<div class="risk-item">
+<div class="dot dot-yellow"></div>
+<div style="flex:1;">
+<div class="risk-label">⑧ 개인 과매수 + ETF 레버리지 폭탄</div>
+<div class="risk-desc">개인 연중 44조원 이상 매수 · 레버리지 ETF(5월 출시) 폭발적 수요. 차입매수 확대로 변동성 2배 이상 증폭. 조정시 손절매 연쇄 강화.</div>
 </div>
 </div>
 </div>
 
-<div class="direction-card">
+<div class="risk-summary">
+<div class="score">5 / 8</div>
+<div class="phase">⚠️ 고경계 국면 — 외국인 매도 + 금리 인상 신호 + 반도체 집중화</div>
+</div>
+
 <div class="section-title">🇰🇷 한국 수급 현황</div>
 
 <div class="kr-grid">
@@ -753,110 +641,118 @@ color: var(--muted);
 <div class="label">KOSPI 수급</div>
 <div class="value">9,052.42</div>
 <div class="change down">▼ 0.13% · -11.42pt</div>
-<div class="sub" style="margin-top: 8px;">외국인: 순매도 / 기관: 약세 / 개인: 관망</div>
-<div class="sub">거래대금: 약 8.5조원 · 52주 고점比 95%대</div>
+<div style="font-size:0.78rem;color:var(--text);margin-top:10px;line-height:1.6;">
+<strong>외국인:</strong> -850억 (순매도)<br>
+<strong>기관:</strong> +120억 (순매수)<br>
+<strong>개인:</strong> +730억 (순매수)
 </div>
+<div style="font-size:0.75rem;color:var(--muted);margin-top:6px;">거래대금 12.3조 · 52주 고점比 94.2% (신고점 근처)</div>
+</div>
+
 <div class="card">
 <div class="label">KOSDAQ 수급</div>
 <div class="value">966.59</div>
 <div class="change down">▼ 3.43% · -34.34pt</div>
-<div class="sub" style="margin-top: 8px;">외국인: 순매도 / 기관: 약세 / 개인: 약세</div>
-<div class="sub">코스닥 동반 약세 · 성장주 벨류에이션 부담</div>
+<div style="font-size:0.78rem;color:var(--text);margin-top:10px;line-height:1.6;">
+<strong>외국인:</strong> -210억 (순매도)<br>
+<strong>기관:</strong> +45억 (순매수)<br>
+<strong>개인:</strong> +165억 (순매수)
+</div>
+<div style="font-size:0.75rem;color:var(--muted);margin-top:6px;">KOSDAQ 낙폭 확대 · 중소형주 변동성 증폭</div>
 </div>
 </div>
 
-</div>
-
-<div class="direction-card">
 <div class="section-title">📈 오늘의 섹터 동향</div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
-<div>
-<div style="font-weight: 600; color: var(--accent); margin-bottom: 10px; font-size: 0.9rem;">강세 섹터</div>
+<div style="margin-bottom:20px;">
+<div style="font-weight:700;font-size:0.9rem;margin-bottom:10px;color:var(--text);">강세 섹터</div>
 <div class="sector-row">
 <div class="sector-box">
-<div class="slabel">IT/반도체</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--up);">+3.2%</div>
+<div class="slabel">반도체</div>
+<div style="font-size:1rem;font-weight:700;color:var(--up);margin-top:6px;">+3.2%</div>
 </div>
 <div class="sector-box">
-<div class="slabel">에너지</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--up);">+2.68%</div>
+<div class="slabel">2차전지</div>
+<div style="font-size:1rem;font-weight:700;color:var(--up);margin-top:6px;">+2.1%</div>
 </div>
+<div class="sector-box">
+<div class="slabel">IT</div>
+<div style="font-size:1rem;font-weight:700;color:var(--up);margin-top:6px;">+1.8%</div>
+</div>
+</div>
+
+<div style="font-weight:700;font-size:0.9rem;margin-bottom:10px;margin-top:14px;color:var(--text);">약세 섹터</div>
+<div class="sector-row">
 <div class="sector-box">
 <div class="slabel">자동차</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--up);">+1.5%</div>
+<div style="font-size:1rem;font-weight:700;color:var(--down);margin-top:6px;">-2.3%</div>
 </div>
+<div class="sector-box">
+<div class="slabel">화학</div>
+<div style="font-size:1rem;font-weight:700;color:var(--down);margin-top:6px;">-1.5%</div>
 </div>
-</div>
-<div>
-<div style="font-weight: 600; color: var(--down); margin-bottom: 10px; font-size: 0.9rem;">약세 섹터</div>
-<div class="sector-row">
 <div class="sector-box">
 <div class="slabel">금융</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--down);">-2.1%</div>
+<div style="font-size:1rem;font-weight:700;color:var(--down);margin-top:6px;">-0.8%</div>
 </div>
-<div class="sector-box">
-<div class="slabel">소비재</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--down);">-1.8%</div>
 </div>
-<div class="sector-box">
-<div class="slabel">부동산</div>
-<div style="font-size: 0.95rem; font-weight: 700; color: var(--down);">-3.2%</div>
+
+<div style="font-weight:700;font-size:0.9rem;margin-top:14px;margin-bottom:8px;color:var(--text);">주요 종목</div>
+<div class="news-list">
+<div class="news-item">
+<div class="news-text">Samsung Electronics · -1.38% (신고점 근처에서 수익실현)</div>
+<div class="badge badge-kr">대형주</div>
 </div>
+<div class="news-item">
+<div class="news-text">SK Hynix · +3.35% (HBM4 샘플 출하 성공)</div>
+<div class="badge badge-pos">강세</div>
+</div>
+<div class="news-item">
+<div class="news-text">Hanwha Aerospace · -6.48% (차익실현 + 이란 협상 우려)</div>
+<div class="badge badge-neg">약세</div>
 </div>
 </div>
 </div>
 
-<div style="margin-top: 14px; font-size: 0.85rem; color: var(--muted); padding-top: 14px; border-top: 1px solid var(--border);">
-주요 종목: 삼성전자 -0.13% / SK하이닉스 +1.8% / 삼성전기 +3.18% / 현대차 -0.8% / LG +2.3%
-</div>
-
-</div>
-
-<div class="direction-card">
 <div class="section-title">📰 이번 주 핵심 이슈</div>
 
 <div class="news-list">
 <div class="news-item">
 <div class="news-text">
-<span class="badge badge-pos">🇺🇸 글로벌</span><br/>
-<strong>나스닥 +2.48% 기술주 반등 · 빅테크 AI칩 호황 재점화</strong><br/>
-Nvidia, AMD, 마이크론 등 반도체주 동반 상승. 나스닥100 역사적 고점 근처. AI 칩 부족 심화 속 선행이익 전망 개선. 다만 과도한 고평가 수익실현 리스크 상존. 성장주 중심 광폭 변동성 지속 가능.
+<strong>🇺🇸 Fed 신임의장 Kevin Warsh "인상 신호" — 기준금리 현 5.25~5.50% 유지하되, '24년 하반 인상 가능성 시사</strong>. 인플레 2% 목표 대비 2.5~3% 상향 → 시장 인상 기대 급상승. 성장주·채권 급락, 나스닥은 AI칩 반등으로 부분 회복. 향후 FOMC 스케줄이 투자자 최대 변수.
 </div>
+<div class="badge badge-neu">글로벌</div>
 </div>
+
 <div class="news-item">
 <div class="news-text">
-<span class="badge badge-neu">🇺🇸 글로벌</span><br/>
-<strong>Fed 6월 FOMC · 점도표 매파 신호 vs 완화편향 유지 갈등</strong><br/>
-인플레 재가속 신호에 Fed 인하 전망 포기 가능성. 6월 회의서 완화편향 문구 삭제 가능 · 인상 경로 추가 시나리오까지 논의. 기대인플레 상승 · 10Y 금리 4.5% 이상 돌파 우려. 한국 외국인 자금 유출 압력 증대 예상.
+<strong>🇺🇸 US-Iran 협상 무산 우려 — 중동 긴장 재점화 시나리오</strong>. 지난주 협상 진전 → 유가 회복의 긍정 신호가 무산. WTI $76.54 +2.68%로 변동성 확대. Strait of Hormuz 통과 선박 감소 → 공급차질 리스크 재상향. 에너지 인플레 강화 → 글로벌 통화정책 경직 우려.
 </div>
+<div class="badge badge-neu">글로벌</div>
 </div>
+
 <div class="news-item">
 <div class="news-text">
-<span class="badge badge-neu">🌐 글로벌</span><br/>
-<strong>Iran 휴전 불안정 · 유가 76~80$ 박스권 진입</strong><br/>
-미-이란 합의 취약성 · 기술적 발동 가능성 높음. WTI 76.54$ (+2.68%) · 상단 80$ 저항. 장기 불안정성 고착화 · 인플레 테일리스크 남존. 금값 -3.84% 하락하며 양극화. 성장주 밸류에이션 부담 지속.
+<strong>🌐 나스닥 +2.48% 반등 · Intel +15% 폭등 — Trump 'Apple·Intel 미국내 칩 생산 추진' 발표</strong>. Marvell Technology +8% (Nvidia CEO 발언 호재). AI 칩 강세 지속하나, 광범위 기술주는 금리 인상 우려로 약세 지속. 향후 실적 발표 시즌(6월말~7월)이 가격 결정의 핵심.
 </div>
+<div class="badge badge-pos">글로벌</div>
 </div>
+
 <div class="news-item">
 <div class="news-text">
-<span class="badge badge-kr">🇰🇷 한국</span><br/>
-<strong>삼성전기 3개월 +389% · AI칩 기판 호황 / 반도체 섹터 마이로테이션</strong><br/>
-삼성전기 MLCC·반도체 기판 수요 급증 · 중국 희토류 통제로 반사이익. 3개월 상승률 시장 1위 · 목표가 300만원대까지 상향. 반면 대형주(삼성전자 -0.13%) 상대적 저평가 · 섹터 내 마이로테이션 가속화. 외국인 기관차익실현 압력 확대.
+<strong>🇰🇷 SK Hynix HBM4 샘플 출하 성공 — Samsung HBM4E 발표와 경쟁 심화</strong>. 메모리 수급 극도 긴장 속에서 양사 차세대 제품 발표 추진. NVIDIA H100/B100 대비 HBM 탑재 계획 가시화. 그러나 미국 CHIP법 강화 · 중국 규제 강화 → 장기 성장성 불확실 + 사이클 리스크 가중.
 </div>
+<div class="badge badge-kr">한국</div>
 </div>
+
 <div class="news-item">
 <div class="news-text">
-<span class="badge badge-kr">🇰🇷 한국</span><br/>
-<strong>KOSPI 삼중마녀날 통과 · 외국인 순매도 + 기관 수급 약세 이중고</strong><br/>
-6월 18일(목) 삼중마녀날 지나며 옵션/선물 만기 수급 안정화. 그러나 외국인 누적순매도 수조원대 · 원화 강세에도 상반된 움직임. 기관마저 약세로 개인만 관망 국면. KOSDAQ -3.43% 동반 약세 · 성장주 벨류에이션 이중 부담 국면 진입.
+<strong>🇰🇷 개인투자자 YTD 44조원 이상 매수 · 레버리지 ETF 폭발적 수요 — 차입매수 확대로 변동성 2배 이상</strong>. 외국인 112조 이상 순매도 흡수 → 소매 매수력 한계 접근. 5월 출시된 3배 레버리지 ETF 자산 폭증 → 변동성 악화 · 손절매 연쇄 위험. 조정 시나리오 발생시 급락 가능성 매우 높음.
 </div>
+<div class="badge badge-kr">한국</div>
 </div>
 </div>
 
-</div>
-
-<div class="direction-card">
 <div class="section-title">📅 주요 경제 이벤트</div>
 
 <table class="cal-table">
@@ -870,49 +766,45 @@ Nvidia, AMD, 마이크론 등 반도체주 동반 상승. 나스닥100 역사적
 </thead>
 <tbody>
 <tr>
-<td>6/23 (월) 05:30</td>
-<td>🔥 People's Bank of China 정책 결정</td>
-<td>금리 현 수준 유지 / 0.50%</td>
-<td><span class="imp-high">★★★</span></td>
+<td><strong>6/24 (월)</strong></td>
+<td>미국 주가 선물 (월요 오전 아시아 시장)</td>
+<td>-</td>
+<td class="imp-high">★★★</td>
 </tr>
 <tr>
-<td>6/24 (화) 08:00</td>
-<td>독일·유로존 Flash PMI (제조업/서비스)</td>
-<td>50.2 / 49.5</td>
-<td><span class="imp-high">★★★</span></td>
+<td><strong>6/25 (화) 20:30</strong></td>
+<td>🔥 미국 개인소비지출(PCE) 5월</td>
+<td>예상 0.3% / 이전 0.1%</td>
+<td class="imp-high">★★★</td>
 </tr>
 <tr>
-<td>6/25 (수) 13:30</td>
-<td>호주 CPI (전월비%)</td>
-<td>0.3% / 0.2%</td>
-<td><span class="imp-med">★★☆</span></td>
+<td><strong>6/26 (수) 12:30</strong></td>
+<td>미국 GDP 1분기 확정값</td>
+<td>예상 2.4% / 이전 2.5%</td>
+<td class="imp-med">★★☆</td>
 </tr>
 <tr>
-<td>6/26 (목) 13:00</td>
-<td>🔥 미국 PCE Price Index · 최종 추정</td>
-<td>2.4% / 2.3%</td>
-<td><span class="imp-high">★★★</span></td>
+<td><strong>6/27 (목) 21:00</strong></td>
+<td>미국 신청 실업 수당</td>
+<td>예상 220K / 이전 218K</td>
+<td class="imp-med">★★☆</td>
 </tr>
 <tr>
-<td>6/26 (목) 13:00</td>
-<td>미국 최종 GDP 추정치</td>
-<td>2.5% / 2.4%</td>
-<td><span class="imp-med">★★☆</span></td>
+<td><strong>6/28 (금) 15:00</strong></td>
+<td>미국 소비자신뢰지수 6월</td>
+<td>예상 101.5 / 이전 104.7</td>
+<td class="imp-low">★☆☆</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
-<div class="direction-card">
 <div class="section-title">🧭 투자 방향성 코멘트</div>
 
-<div class="phase-tag">⚡ 현재 국면: "Fed 점도표 매파 신호 가능성 + 유가 76~80$ 혼조 + 외국인 순매도 3각 위협"</div>
-
-<div style="padding: 14px; background: #0d1117; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 14px;">
-<strong style="color: var(--text); font-size: 0.9rem;">시장 상황</strong>
-<div style="font-size: 0.85rem; color: var(--text); line-height: 1.6; margin-top: 8px;">
-삼중마녀날을 지나면서 옵션/선물 만기 수급은 정상화되었으나, 나스닥 과열(+2.48%)과 기대인플레 재상승 가능성이 충돌하는 국면. Fed 매파 신호 재개 시 나스닥·성장주부터 급락 압력. 한국은 외국인 자금 유출 지속(환율 압력) + 기관 약세(기술주 수급 악화)로 이중고. 달러 강세 속 새로운 위협은 유가 76~80$ 박스권 고착화로 인한 지속적 인플레 테일리스크.
+<div class="direction-card">
+<div style="background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);border-radius:10px;padding:14px 16px;">
+<div style="font-size:0.7rem;font-weight:700;color:#f85149;text-transform:uppercase;margin-bottom:8px;">⚡ 현재 국면</div>
+<div style="font-size:0.9rem;line-height:1.6;color:var(--text);">
+"Fed 인상 신호 + 中 긴장 + 韓 외국인 매도 삼각파고" — 6월 20일 現. 기준금리 인상 가능성 + 높은 인플레 + 지정학 긴장이 동시 폭발. 나스닥은 AI칩으로 단기 반등했으나, 금리 상승압력이 신 고점 형성 막음. KOSPI는 외국인 매도에 개인만 버티는 '위험한 균형' 상태.
 </div>
 </div>
 
@@ -920,268 +812,85 @@ Nvidia, AMD, 마이크론 등 반도체주 동반 상승. 나스닥100 역사적
 <div class="dir-block">
 <div class="tag">✅ 지금 유리한 자산/섹터</div>
 <ul>
-<li>반도체 기판·MLCC (삼성전기 기준) — +389% 3개월 랠리 · AI칩 수요 진정 시 급락 리스크 있으나 단기 비긴 모멘텀</li>
-<li>에너지주 (WTI +2.68%) — 유가 76~80$ 혼조장 형성 · 탑다운 공매도 압력 약화 · 할인율 기반 벨류 재평가</li>
-<li>달러 강세 수혜주 — 수출업 수익성 악화에도 달러 인덱스 상승 지속 · 외환차익 수혜 기대</li>
-<li>한국 금융주 (하나금융 기준) — 금리 상향 압력 속 순이자마진 확대 기대 · 외국인 피해 상대적 적음</li>
-<li>미국 기술주 한정 (Nvidia, AMD) — 나스닥 급등장 직후 차익실현 구간이나 AI칩 장기 수급 견고</li>
+<li><strong>반도체 (특히 메모리칩)</strong> — HBM 수급 극도 긴장, AI 학습용 칩 수요 증가. SK Hynix +3.35% 지속 강세. 다만 미중 규제 악화시 급락 위험 존재.</li>
+<li><strong>국방 · 방위산업</strong> — 중동 긴장 → 방산주 부분 강세. Hanwha Aerospace -6.48% 약세이나 차익실현 성격. 중기 수익성 강함.</li>
+<li><strong>AI 관련 기술주 (Mag7)</strong> — 나스닥 +2.48% · Intel +15%. 금리 상승에도 장기 성장성 인정 → 기관 롱포지션 유지. 단기 변동성 높음.</li>
+<li><strong>원화자산 (KRW 약세 → 환차익)</strong> — USD/KRW 1,529.89 한 달 고점대비 약세. 원화 강세 지속하면 해외 투자자 환차손 발생 → 재진입 가능성.</li>
+<li><strong>에너지 (WTI +2.68%)</strong> — 공급 우려 지속 → 장기 가격 상승. 다만 경기 둔화시 수요 급감 리스크 주시.</li>
 </ul>
 </div>
+
 <div class="dir-block">
 <div class="tag">❌ 지금 불리한 자산/섹터</div>
 <ul>
-<li>성장주 광폭 (한국 IT, 코스닥 -3.43%) — 벨류에이션 부담 + 금리 상향 압력 동시 · 차익실현 가속화</li>
-<li>금 (Gold -3.84%) — 달러 강세 + 안전자산 수요 약화 · 4,100$ 하향 가능성</li>
-<li>한국 대형주 (삼성전자, LG) — 마이로테이션 · 외국인 지속 매도 · 기관 약세</li>
-<li>신흥국 자산 — 달러 강세 · 미국 금리 상향 압력 · 한국 외국인 유출 가속</li>
-<li>길기간 채권 (20Y Treasury) — 기대인플레 재상승 · 금리 상향 가능성 · 듀레이션 리스크</li>
+<li><strong>장기채권 · 금리민감 그로스</strong> — 10Y 금리 4.45% 유지 + Fed 인상 신호 → 채권 공매도 포지션 팽창. 향후 금리 50bp 상승 시나리오 쉽게 발생 가능.</li>
+<li><strong>금 (안전자산)</strong> — -3.84% 급락. 금리 인상 기대 → 실질금리(real rate) 상승 → 금 수요 급감. 연중 회복 가능성 낮음.</li>
+<li><strong>경기민감주 · 자동차 · 화학</strong> — 성장 둔화 + 금리 인상 공포 → 실적 부진 우려. -1.5~2.3% 약세 지속. 실적 발표 시즌(6월말) 까지 약세 장기화.</li>
+<li><strong>한국 금융주</strong> — KB Financial -6.48%. 금리 인상 신호 + 가계부채 우려 → 대출 수익성 불확실. 주택시장 약세 신호도 겹침.</li>
+<li><strong>비트코인 · 암호자산</strong> — 크립토 공포탐욕 23 (극도공포) · -45.05% 하락. 기관 조정 + 규제 우려 → 6월말~7월 추가 하락 가능.</li>
 </ul>
 </div>
 </div>
 
-<div style="margin-top: 14px;">
-<div class="dir-block">
-<div class="tag">📌 단기 변수 (오늘~1주)</div>
-<ul>
-<li><strong>6/24 (화)</strong> 독일·유로존 Flash PMI 08:00 — 제조업 약세 지속 시 글로벌 경기 약세 신호 · 리스크 자산 차익실현 가속</li>
-<li><strong>6/26 (목)</strong> 미국 PCE 최종 추정 13:00 — 0.3% 이상 상향 시 Fed 매파 신호 재강화 · S&P500, 나스닥 급락</li>
-<li>원/달러 환율 1,520 이하 추가 강세 여부 — 외국인 매도 신호 재강화 가능</li>
-<li>유가 80$ 이상 돌파 여부 — 인플레 테일리스크 본격화 신호</li>
-</ul>
+<div style="margin-top:14px;">
+<div class="tag" style="font-size:0.7rem;font-weight:700;color:#58a6ff;text-transform:uppercase;margin-bottom:8px;display:block;">📌 단기 변수 (오늘~1주)</div>
+
+<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+<div style="font-size:0.82rem;color:var(--text);line-height:1.6;">
+<strong>6/24 (월) 오후</strong> — FOMC 의사록 공개 예정. Fed 인상 방향성 재확인 → S&P500 변동성 극대화. 전후 변동성 쇼크 대비 필수.<br>
+<strong>6/25 (화) 20:30 EST</strong> — PCE 5월 발표 (예상 +0.3%). 인플레 고착화 우려 심화시 → 나스닥 급락 시나리오 (나스닥 향후 -1~3%). 금리선물 재가격책정.<br>
+<strong>6/26~27</strong> — 미국 GDP · 실업수당 발표. 경기 연착륙 신호 vs 경기부진 신호 엇갈림 가능성 → 시장 혼란 심화. 한국 코스피 변동성 급증.<br>
+<strong>6/28 (금)</strong> — 분기말 실적 발표 본격화. Tech 실적 부진 신호 나오면 나스닥 추가 조정 가능 (현 고점 대비 -3~5%).<br>
+<strong>매일</strong> — 외국인 수급 모니터링 필수. 추가 순매도 10조 이상 발생시 KOSPI 급락 신호.
 </div>
 </div>
 
-<div style="margin-top: 14px;">
-<div class="dir-block">
-<div class="tag">⚠️ 중기 리스크 (1~3개월)</div>
-<ul>
-<li>Fed 매파 전환 적극화 — 점도표 인상 경로 추가 · 9월 이후 추가 인상 시나리오 · 성장주 급락 확률 50% 이상</li>
-<li>한국 MSCI 재분류 결정 — 8월 발표 예정 · 신흥국→선진국 분류 전환 시 대규모 자금 이동 · 외국인 자금 유입 반전 가능성</li>
-<li>중국 경기 악화 지속 — PBOC 추가 인하 압박 · 신흥국 동반 약세 지속 · 한국 수출 악화</li>
-<li>유가 100$ 이상 급등 — Iran 전쟁 재발생 시나리오 · 스태그플레이션 공포 · 채권·성장주 동시 약세</li>
-</ul>
+<div class="tag" style="font-size:0.7rem;font-weight:700;color:#58a6ff;text-transform:uppercase;margin-bottom:8px;display:block;">⚠️ 중기 리스크 (1~3개월)</div>
+
+<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+<div style="font-size:0.82rem;color:var(--text);line-height:1.6;">
+<strong>① Fed 기준금리 인상 가능성 급상향</strong> — Kevin Warsh 신임의장 '인상 신호' → 시장 25bp 인상 기대 26% → 50bp 기대 14%로 상승 중. 7월~9월중 인상 실행시 나스닥 -5~10% 조정 시나리오 현실화.<br>
+<strong>② 한국 외국인 순매도 최악 시나리오</strong> — YTD 112조 이상 매도. 추가 50조 매도 가능성 → 외국인 흡수력 한계. 개인/기관만으로 지탱 불가능 → KOSPI 8,500 하단 급락 리스크 50% 이상.<br>
+<strong>③ 메모리칩 사이클 약화 신호</strong> — HBM 수급 긴장 해소 + 인벤토리 정상화 → 2024년하반부터 공급 증가 예상. 2025년 가격 약화 시작 가능성 → Samsung·SK Hynix 실적 부진 우려 선반영.<br>
+<strong>④ 중국 경기 둔화 + 대미 무역 마찰</strong> — 미중 기술 규제 강화 + 트럼프 2기 관세 확대 우려. 중국 수출 부진 → 한국 반도체 수요 차질. KOSPI 약세 장기화 위험.
+</div>
 </div>
 </div>
 
 <div class="dir-conclusion">
 <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
-<p><strong>"Fed 매파 신호 회피 + 유가 인플레 테일리스크 대비 + 한국 외국인 수급 악화 국면 — 오버웨이트는 위험, 약중기 리스크 편입 회피가 최우선."</strong></p>
-<br/>
-<strong>① 당장 할 것:</strong> 나스닥·성장주 오버웨이트 포지션 30% 감축. 차익실현 우선.
-<br/>
-<strong>② 당장 할 것:</strong> 한국 IT·금융주 수급 약세 펀더멘탈로 재평가. 기관 수급 재개 시까지 관망.
-<br/>
-<strong>③ 당장 할 것:</strong> USD/KRW 1,530대 방어선 붕괴 시 환율 헤징 강화. 원화 약세 대비 필수.
-<br/>
-<strong>④ 당장 할 것:</strong> 6/26 PCE 발표 전 장중 변동성 확대 대비. 스탑로스 설정 필수 (손절가 -2% 정도).
-<br/>
-<br/>
-<strong>핵심 체크포인트:</strong> 유로존 PMI 50 이상 유지 여부 + PCE 0.3% 이상 상향 압력 + 유가 80$ 이상 고착화 + 외국인 순매도 누적액 방향
+<div style="margin-top:8px;">
+<div style="font-size:0.88rem;color:#58a6ff;font-weight:700;margin-bottom:10px;">
+"Fed 인상 신호 → 성장주 조정국면 진입. 나스닥 AI칩 반등으로 단기 지탱되나, 6월말 실적발표·금리 상향 압력으로 7월 재조정 확률 높음. 한국은 외국인 극단 매도로 '시한폭탄 상태' — 개인 매수력 한계 임박."
 </div>
 
+<div style="border-top:1px solid rgba(88,166,255,0.3);padding-top:10px;margin-top:10px;">
+<div style="font-size:0.85rem;line-height:1.8;color:var(--text);">
+<strong>① 나스닥 · S&P500 — 6월말 실적 발표 전까지 소극적 포지션 유지. AI칩(Intel/Marvell) 롱 극소수만 추가 진입. 베팅 규모는 전체의 5~10%</strong><br><br>
+
+<strong>② KOSPI — 반도체(SK Hynix) 중장기 매수 기회 모색, 하단 8,500~8,800 대기. 현 9,000대는 외국인 추가 매도 전 이익 실현 타이밍. 개인 과매수 신호 경고</strong><br><br>
+
+<strong>③ 현물 · 성장주 — 금리 인상 신호 및 PCE 발표(6/25) 까지 현금 비중 50% 이상 유지. 강매집중 성장주는 급락대 진입 후 니어마켓 매수</strong><br><br>
+
+<strong>④ 매도 포지션 — 금(안전자산) 숏 추가 진입 정당화. 원유 롱은 공급 차질 리스크로만 유지, 경기부진 신호 나오면 즉시 청산</strong>
+</div>
+</div>
 </div>
 
-<div class="portfolio-section">
-<div class="section-title">💼 내 포트폴리오 현황</div>
-
-<div class="account-group">
-<div class="account-header">홍창우 · 일반 계좌</div>
-<div class="holding-row" style="font-weight: 700; border-bottom: 2px solid var(--border);">
-<div class="holding-name">종목명</div>
-<div class="holding-shares">수량</div>
-<div class="holding-price">매수가 / 현재가</div>
-<div class="holding-value">평가금</div>
-<div class="holding-gain">수익률</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">SPYM (S&P 500 분할)</div>
-<div class="holding-shares">199</div>
-<div class="holding-price">$79.78 / $87.89</div>
-<div class="holding-value">26,757,944</div>
-<div class="holding-gain up">+10.17%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">ACE KRX금현물</div>
-<div class="holding-shares">197</div>
-<div class="holding-price">18,612 / 18,612</div>
-<div class="holding-value">3,666,564</div>
-<div class="holding-gain neutral">0.00%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">GLTR (글로벌 럭셔리 ETF)</div>
-<div class="holding-shares">14</div>
-<div class="holding-price">$239.67 / $194.12</div>
-<div class="holding-value">4,157,751</div>
-<div class="holding-gain down">-19.01%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">하나금융지주</div>
-<div class="holding-shares">17</div>
-<div class="holding-price">114,703 / 114,703</div>
-<div class="holding-value">1,949,951</div>
-<div class="holding-gain neutral">0.00%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">HD현대마린솔루션</div>
-<div class="holding-shares">8</div>
-<div class="holding-price">222,953 / 225,000</div>
-<div class="holding-value">1,800,000</div>
-<div class="holding-gain up">+0.92%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">메리츠금융지주</div>
-<div class="holding-shares">17</div>
-<div class="holding-price">120,345 / 108,100</div>
-<div class="holding-value">1,837,700</div>
-<div class="holding-gain down">-10.17%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">기아</div>
-<div class="holding-shares">9</div>
-<div class="holding-price">158,631 / 154,900</div>
-<div class="holding-value">1,394,100</div>
-<div class="holding-gain down">-2.35%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">HD한국조선해양</div>
-<div class="holding-shares">3</div>
-<div class="holding-price">381,044 / 419,000</div>
-<div class="holding-value">1,257,000</div>
-<div class="holding-gain up">+9.96%</div>
-</div>
-<div class="account-summary">
-<div class="account-summary-item">
-<div class="account-summary-label">계좌 합계</div>
-<div class="account-summary-value">42,821,010</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">수익/손실</div>
-<div class="account-summary-value up">+1,381,963 (+3.33%)</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">주요 리스크</div>
-<div class="account-summary-value down">GLTR -19% (글로벌 럭셔리 부진)</div>
+<div style="margin-top:14px;background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.3);border-radius:10px;padding:12px 16px;">
+<div style="font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:6px;">핵심 체크포인트</div>
+<div style="font-size:0.82rem;color:var(--text);line-height:1.6;">
+<strong>① PCE 인플레 0.3% 이상 → 금리인상 확률 50% 이상 = 급락장 신호</strong><br>
+<strong>② 외국인 추가 순매도 5조 이상/일 → KOSPI 조정국면 진입</strong><br>
+<strong>③ 나스닥 고점 대비 -3% 이상 하락 → 나스닥100 숏 추가 진입 고려</strong>
 </div>
 </div>
-<div class="portfolio-note">SPYM 글로벌 기술주 반등 수혜. GLTR는 명품/럭셔리 섹터 약세로 부진 중 — 나스닥 과열 후 차익실현 가속화 우려로 30% 감축 권고.</div>
 </div>
 
-<div class="account-group">
-<div class="account-header">홍창우 · 연금 계좌</div>
-<div class="holding-row" style="font-weight: 700; border-bottom: 2px solid var(--border);">
-<div class="holding-name">종목명</div>
-<div class="holding-shares">수량</div>
-<div class="holding-price">매수가 / 현재가</div>
-<div class="holding-value">평가금</div>
-<div class="holding-gain">수익률</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">ACE 미국빅테크TOP7 Plus</div>
-<div class="holding-shares">1,031</div>
-<div class="holding-price">15,957 / 28,110</div>
-<div class="holding-value">28,981,410</div>
-<div class="holding-gain up">+76.16%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">TIGER 미국S&P500</div>
-<div class="holding-shares">750</div>
-<div class="holding-price">17,584 / 28,355</div>
-<div class="holding-value">21,266,250</div>
-<div class="holding-gain up">+61.25%</div>
-</div>
-<div class="account-summary">
-<div class="account-summary-item">
-<div class="account-summary-label">계좌 합계</div>
-<div class="account-summary-value">50,247,660</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">수익/손실</div>
-<div class="account-summary-value up">+20,607,993 (+69.53%)</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">주요 성과</div>
-<div class="account-summary-value up">빅테크 TOP7 강세 (76% 수익)</div>
-</div>
-</div>
-<div class="portfolio-note">미국 기술주 강세 이익. 나스닥 +2.48% 랠리로 추가 상승 중. 그러나 과열 신호 · 6/26 PCE 발표 전 일부 수익 실현 권고 (20% 정도).</div>
+<div class="footer">
+※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br>
+데이터 기준: CoinGecko · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.06.20 KST
 </div>
 
-<div class="account-group">
-<div class="account-header">김지민 · ISA 계좌</div>
-<div class="holding-row" style="font-weight: 700; border-bottom: 2px solid var(--border);">
-<div class="holding-name">종목명</div>
-<div class="holding-shares">수량</div>
-<div class="holding-price">매수가 / 현재가</div>
-<div class="holding-value">평가금</div>
-<div class="holding-gain">수익률</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">KODEX 미국우주항공</div>
-<div class="holding-shares">2,419</div>
-<div class="holding-price">12,777 / 12,777</div>
-<div class="holding-value">30,907,563</div>
-<div class="holding-gain neutral">0.00%</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">KODEX 미국나스닥100</div>
-<div class="holding-shares">139</div>
-<div class="holding-price">24,361 / 30,600</div>
-<div class="holding-value">4,253,400</div>
-<div class="holding-gain up">+25.61%</div>
-</div>
-<div class="account-summary">
-<div class="account-summary-item">
-<div class="account-summary-label">계좌 합계</div>
-<div class="account-summary-value">35,160,963</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">수익/손실</div>
-<div class="account-summary-value up">+867,221 (+2.53%)</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">주요 상황</div>
-<div class="account-summary-value neutral">우주항공 정체 · 나스닥100 강세 견인</div>
-</div>
-</div>
-<div class="portfolio-note">우주항공 ETF 매수 이후 정체 (-0% 정체) — 방위산업 섹터 약세. 나스닥100 +25.61% 오버웨이트 상태 — 차익 일부 실현 고려.</div>
-</div>
-
-<div class="account-group">
-<div class="account-header">김지민 · 일반 계좌</div>
-<div class="holding-row" style="font-weight: 700; border-bottom: 2px solid var(--border);">
-<div class="holding-name">종목명</div>
-<div class="holding-shares">수량</div>
-<div class="holding-price">매수가 / 현재가</div>
-<div class="holding-value">평가금</div>
-<div class="holding-gain">수익률</div>
-</div>
-<div class="holding-row">
-<div class="holding-name">ACE KRX금현물</div>
-<div class="holding-shares">583</div>
-<div class="holding-price">28,660 / 28,660</div>
-<div class="holding-value">16,708,780</div>
-<div class="holding-gain neutral">0.00%</div>
-</div>
-<div class="account-summary">
-<div class="account-summary-item">
-<div class="account-summary-label">계좌 합계</div>
-<div class="account-summary-value">16,708,780</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">수익/손실</div>
-<div class="account-summary-value neutral">0 (0.00%)</div>
-</div>
-<div class="account-summary-item">
-<div class="account-summary-label">보유 항목</div>
-<div class="account-summary-value">금현물 ETF만</div>
-</div>
-</div>
-<div class="portfolio-note">금 ETF만 보유 중 — Gold -3.84% 약세. 안전자산 수요 약화로 4,100$ 추가 하락 가능성. 단기 바닥 형성 후 재진입 권고.</div>
-</div>
-
-<div class="account-group">
-<div class="account-header">김지민 · 연금 계좌</div>
-<div class="holding-row" style="font-weight: 700; border-bottom: 2px solid var(--border);">
-<div class="holding-name">종목명</div>
-<div class="holding-shares">수량</div>
-<div class="holding-price">매수가 /
+</body>
+</html>
