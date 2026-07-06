@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시장 모니터링 대시보드 | 2026년 7월 6일</title>
+<title>시장 모니터링 대시보드 | 2026년 7월 7일</title>
 <style>
 :root {
   --bg: #0d1117;
@@ -435,6 +435,86 @@ body {
   color: var(--muted);
   margin-bottom: 4px;
 }
+.portfolio-section {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.portfolio-account {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.portfolio-account-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.portfolio-table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+.portfolio-table th {
+  padding: 8px;
+  text-align: left;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.7rem;
+}
+.portfolio-table td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(33,38,45,0.5);
+}
+.portfolio-table tr:last-child td {
+  border-bottom: none;
+}
+.portfolio-gain {
+  font-weight: 600;
+}
+.portfolio-summary {
+  background: rgba(88,166,255,0.08);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 28px;
+  text-align: center;
+}
+.portfolio-summary-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.portfolio-summary-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.portfolio-summary-item {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+}
+.portfolio-summary-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.portfolio-summary-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
 .footer {
   text-align: center;
   margin-top: 28px;
@@ -444,321 +524,299 @@ body {
 </style>
 </head>
 <body>
-<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-07-06 06:44:47 KST</div>
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-07-07 07:04:03 KST</div>
 
 <div class="header">
   <h1>📊 시장 모니터링 대시보드</h1>
-  <div class="subtitle">2026년 7월 6일 (월요일) · 데이터 기준: 2026.07.06 KST</div>
-  <div class="alert-banner">⚡ SpaceX IPO 나스닥 편입 개시 — 약 2조 달러 리밸런싱 유동성 유입 + 독립기념일 휴장 후 갭업 시나리오 + 외국인 KOSPI 순매수 복귀 시그널</div>
+  <div class="subtitle">2026년 7월 7일 (월) · 데이터 기준: 2026.07.07 KST</div>
+  <div class="alert-banner">⚡ SpaceX 나스닥100 편입 + 삼성전자 2분기 실적 발표 임박 — AI 반도체 수급 확인 주간</div>
 </div>
 
 <div class="grid-4">
   <div class="card">
     <div class="label">😨 공포탐욕지수 (CNN)</div>
-    <div class="value">34</div>
-    <div class="change"><span class="neutral">FEAR</span></div>
+    <div class="value">31</div>
+    <div class="change neutral">FEAR</div>
     <div class="gauge-wrap">
       <div class="gauge-bar-bg"></div>
       <div class="gauge-labels">
-        <span>극도공포</span>
         <span>공포</span>
         <span>중립</span>
         <span>탐욕</span>
-        <span>극도탐욕</span>
       </div>
     </div>
-    <div class="sub">중동 분쟁 완화 신호에도 기술주 조정 우려 · 금리 인상 시나리오 가중</div>
+    <div class="sub">약간의 공포 심화 — 반도체·AI 밸류에이션 불확실성 지속</div>
   </div>
 
   <div class="card">
     <div class="label">🌪️ VIX 공포지수</div>
-    <div class="value">15.81</div>
-    <div class="change"><span class="up">▼ -2.04%</span> · 전일 16.14 → 오늘 15.81</div>
-    <div class="sub">✅ 안정 (10~15 정상, 독립기념일 이후 안정화)</div>
+    <div class="value">15.57</div>
+    <div class="change down">▼ 1.52% · 전일 15.81 → 오늘 15.57</div>
+    <div class="sub">✅ 안정 (15 수준)</div>
+    <div class="change neutral">S&P 상승에 공포 완화, 경계 수위 정상권</div>
   </div>
 
   <div class="card">
     <div class="label">🇺🇸 S&P 500</div>
-    <div class="value">7,483.24</div>
-    <div class="change"><span class="neutral">▲ +0.00%</span> · 거의 무변화</div>
-    <div class="sub">반도체 조정 vs 방산·금융 강세 팽팽 · 기술주 80% 상승 후 차익실현</div>
+    <div class="value">7,537.43</div>
+    <div class="change up">▲ 0.72% · 장중</div>
+    <div class="sub">Nasdaq 반도체 회복 + Tech 낙관 — Foxconn 실적 호조 신호</div>
   </div>
 
   <div class="card">
     <div class="label">💻 나스닥 100</div>
-    <div class="value">29,329.21</div>
-    <div class="change"><span class="down">▼ -1.61%</span></div>
-    <div class="sub">AI 칩 수익심화 시정 · NVDA 여전히 약세 · 성장주 리밸런싱</div>
+    <div class="value">26,121.16</div>
+    <div class="change up">▲ 1.26%</div>
+    <div class="sub">반도체 반등 강했음 — NVDA 로드맵 확인 + 테크 낙관</div>
   </div>
+</div>
 
+<div class="grid-4">
   <div class="card">
     <div class="label">🥇 금 (Gold)</div>
     <div class="value">$4,187.30</div>
-    <div class="change"><span class="up">▲ +2.57%</span></div>
-    <div class="sub">지정학적 리스크 헤징 · 달러 약세 + 실질금리 하락</div>
+    <div class="change up">▲ 1.49%</div>
+    <div class="sub">약달러 + 안전자산 수요 — 장기 인플레 헷지 수익</div>
   </div>
 
   <div class="card">
     <div class="label">🛢️ WTI 원유</div>
     <div class="value">$68.78</div>
-    <div class="change"><span class="up">▲ +1.58%</span></div>
-    <div class="sub">중동 긴장 완화 기대감 · 공급 불안 여전 · $65~70 변동성</div>
+    <div class="change up">▲ 0.53%</div>
+    <div class="sub">이란·중동 평화 기대감 반영, 공급 안정적</div>
   </div>
 
   <div class="card">
     <div class="label">🇰🇷 KOSPI</div>
-    <div class="value">8,088.34</div>
-    <div class="change"><span class="up">▲ +5.76%</span> · +440.25pt</div>
-    <div class="sub">외국인 2조 순매수 복귀 · 삼성전자·SK하이닉스 강세 · 반도체 실적 재평가</div>
+    <div class="value">8,051.33</div>
+    <div class="change down">▼ 0.46% · -37pt</div>
+    <div class="sub">외국인 -1,000억 · 기관 +500억</div>
   </div>
 
   <div class="card">
     <div class="label">💵 USD/KRW</div>
-    <div class="value">1,528.15원</div>
-    <div class="change"><span class="down">▼ -0.58%</span> · -8.92원</div>
-    <div class="sub">원화 강세 · 한국 GDP 성장률 1.8% + 명목성장 10.5% 호재</div>
+    <div class="value">1,530.04원</div>
+    <div class="change down">▼ 0.11원</div>
+    <div class="sub">원화 미약 강세 — 외국인 매도 계속 시 약세 우려</div>
   </div>
 </div>
 
 <div class="btc-main">
-  <div class="section-title">₿ Bitcoin 현재 시세 (2026.07.06 KST 기준)</div>
-  <div>BTC / KRW · CoinGecko 기준</div>
-  <div class="btc-price-hero">₩96,153,511</div>
-  <div style="font-size:0.9rem; color:var(--muted); margin-top:8px;">≈ $62,896 USD <span class="down">▼ -0.6%</span> (24h)</div>
+  <div style="text-align:center; margin-bottom:20px;">
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;">₿ Bitcoin 현재 시세 · 2026.07.07 KST 기준</div>
+    <div style="font-size:0.85rem; color:var(--muted); margin-bottom:12px;">BTC / KRW · CoinGecko 기준</div>
+  </div>
+  <div class="btc-price-hero">₩98,517,119</div>
+  <div style="font-size:1rem; color:var(--up); margin-top:8px; font-weight:600;">≈ $64,358 USD <span class="up">▲ 2.1%</span> (전일比)</div>
+  <div style="font-size:0.8rem; color:var(--muted); margin-top:6px;">전일 ₩96,490,812 → 오늘 ₩98,517,119</div>
   
   <div class="btc-meta">
-    <div class="btc-meta-item">
-      <div class="ml">전일 종가</div>
-      <div class="mv">₩96,733,914</div>
-    </div>
     <div class="btc-meta-item">
       <div class="ml">ATH 대비</div>
-      <div class="mv down">-45.94%</div>
-    </div>
-    <div class="btc-meta-item">
-      <div class="ml">24h 고점</div>
-      <div class="mv">₩96,731,803</div>
-    </div>
-    <div class="btc-meta-item">
-      <div class="ml">24h 저점</div>
-      <div class="mv">₩95,490,618</div>
-    </div>
-  </div>
-  
-  <div class="btc-meta">
-    <div class="btc-meta-item">
-      <div class="ml">7일 고점</div>
-      <div class="mv">₩96,921,904</div>
-    </div>
-    <div class="btc-meta-item">
-      <div class="ml">ATH (역사 최고)</div>
-      <div class="mv">₩177,854,395</div>
-    </div>
-    <div class="btc-meta-item">
-      <div class="ml">전월 대비</div>
-      <div class="mv up">+2.05%</div>
+      <div class="mv down">▼ 44.61%</div>
+      <div style="font-size:0.7rem; color:var(--muted); margin-top:3px;">₩177,854,395</div>
     </div>
     <div class="btc-meta-item">
       <div class="ml">크립토 공포탐욕</div>
-      <div class="mv" style="color:#d29922;">23 / 극도공포</div>
+      <div class="mv">24</div>
+      <div style="font-size:0.7rem; color:var(--down); margin-top:3px;">극도공포</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">24h 고점</div>
+      <div class="mv">₩99,011,577</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">24h 저점</div>
+      <div class="mv">₩94,017,176</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">7일 고점</div>
+      <div class="mv">₩98,485,488</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">전월 대비</div>
+      <div class="mv up">▲ 5.94%</div>
     </div>
   </div>
 </div>
 
-<div style="margin-bottom:28px;">
-  <div class="section-title">🎯 리스크 체크리스트</div>
-  
-  <div style="margin-bottom:14px;">
-    <div style="font-size:0.85rem; font-weight:700; color:var(--accent); margin-bottom:10px;">🌐 글로벌 (5개)</div>
-    <div class="risk-grid">
-      <div class="risk-item">
-        <div class="dot dot-red"></div>
-        <div>
-          <div class="risk-label">① 나스닥 기술주 조정 심화</div>
-          <div class="risk-desc">반도체 80% 상승 후 차익실현 · NASDAQ -1.61% · 성장주 재조정 리스크 35-40% 추가 낙폭 가능성</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-yellow"></div>
-        <div>
-          <div class="risk-label">② 미국 금리 인상 시나리오 부활</div>
-          <div class="risk-desc">6월 PCE 4.2% 최고 · TNX 4.49% 상승 · 기업 이자비용 압박 · 10Y 금리 5% 돌파 시 고배당/방어주 선호</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-red"></div>
-        <div>
-          <div class="risk-label">③ SpaceX IPO 리밸런싱 쇼크</div>
-          <div class="risk-desc">2조 5천억 달러 IPO · NASDAQ-100 개편 첫날 · Mag7 외 분산 자금화 유동성 변동성 심화 우려</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-yellow"></div>
-        <div>
-          <div class="risk-label">④ 중동 분쟁 재악화 가능성</div>
-          <div class="risk-desc">이란 핵협상 불확실성 · 유가 변동성 상시 모니터링 · $65~75 박스권 유지</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-yellow"></div>
-        <div>
-          <div class="risk-label">⑤ 미-중 무역 정책 리스크</div>
-          <div class="risk-desc">상반기 관세 휴전 이후 하반기 재격화 우려 · 반도체·LCD 산업 추가 규제 가능성</div>
-        </div>
-      </div>
+<div class="section-title">🎯 리스크 체크리스트</div>
+
+<div class="risk-grid">
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">① 반도체·AI 밸류에이션 재평가</div>
+      <div class="risk-desc">NASDAQ 반도체 -4.5% (1일), SK하이닉스 -14.57% · 삼성전자 -9.06% (2일) — AI 인프라 지출 가시성 약화 우려. 수익 확인 필요</div>
     </div>
   </div>
 
-  <div style="margin-bottom:14px;">
-    <div style="font-size:0.85rem; font-weight:700; color:var(--accent); margin-bottom:10px;">🇰🇷 한국 (3개)</div>
-    <div class="risk-grid">
-      <div class="risk-item">
-        <div class="dot dot-yellow"></div>
-        <div>
-          <div class="risk-label">⑥ 원화 환율 변동성</div>
-          <div class="risk-desc">USD/KRW 1,528원 · 원화 강세 추세 · 1,500원대 정착 가능 · 수출 경쟁력 개선 vs 해외 매출 환산 이익 악화</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-green"></div>
-        <div>
-          <div class="risk-label">⑦ 반도체·메모리 수급</div>
-          <div class="risk-desc">삼성전자·SK하이닉스 NAND/DRAM 가격 상승 추세 · 2026 H2 수급 타이트 예상 · 외국인 매수 복귀</div>
-        </div>
-      </div>
-      <div class="risk-item">
-        <div class="dot dot-green"></div>
-        <div>
-          <div class="risk-label">⑧ 외국인 수급 전환</div>
-          <div class="risk-desc">6월 4,973억 순매도 → 7월 2조+ 순매수 복귀 · 중기 상승 시그널 강화 · 기관과 함께 저가 매수 국면</div>
-        </div>
-      </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">② 외국인 KOSPI 기록 순매도</div>
+      <div class="risk-desc">순매도 7.76조원 (1일) — H1 누적 148조원 순매도. 포트폴리오 리밸런싱 + 달러 강세로 자본유출 지속. 7월도 계속 예상</div>
+    </div>
+  </div>
+
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">③ 미국 고용 둔화 vs 금리 경로 불확실</div>
+      <div class="risk-desc">6월 NFP 57K (예상 115K), 실업률 4.2% 하락 = 노동 참여율 61.5% (2021년 3월 이후 최저) — Fed 금리 유지 vs 9월 인상 53.5% 가능성</div>
+    </div>
+  </div>
+
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">④ 글로벌 경기 회복 지연 신호</div>
+      <div class="risk-desc">ECB 금리 인상 23bp만 기대 (22M 축소) — 유로존 인플레 둔화 + 경기 약세 우려. 신흥국 에너지 비용 부담 지속</div>
+    </div>
+  </div>
+
+  <div class="risk-item">
+    <div class="dot dot-green"></div>
+    <div>
+      <div class="risk-label">⑤ 방산·드론 섹터 강세 지속</div>
+      <div class="risk-desc">AeroVironment +30% (주간), Northrop +10%, RTX +7% — 이란 중동 갈등 + AI 무기 체계 수요. 부채 우려 완화, 턴어라운드 섹터</div>
+    </div>
+  </div>
+
+  <div class="risk-divider">🇰🇷 한국 리스크 (3개)</div>
+
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">⑥ 외국인 순매도 가속 (1,000억+)</div>
+      <div class="risk-desc">7월 외국인 -1,000억 · 원화 약세 압박 — 구조적 자본유출 계속 예상. 바닥 아직 미확인</div>
+    </div>
+  </div>
+
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">⑦ SK하이닉스 나스닥 상장 변수</div>
+      <div class="risk-desc">SK하이닉스 미국 ADR 상장 7월 10일 (28조 규모) — 가격 발표 미정, 공급 충격 + 환율 변동성 주의. 삼성 실적 화요일</div>
+    </div>
+  </div>
+
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">⑧ KOSPI 포지셔닝 재정렬 리스크</div>
+      <div class="risk-desc">H1 +163% 상승 후 외국인 리밸런싱 한창 — 기관(+500억) 매수로 개인 흡수, 변동성 높음. 9월 목표 11,000~11,500 선상 추이 관주</div>
     </div>
   </div>
 
   <div class="risk-summary">
-    <div class="score">4.8</div>
-    <div class="phase">⚠️ 경계 국면 · 고배율 기술주 리스크 ↔ 반도체·방산 수급 호조 팽팽</div>
+    <div class="score">4.5 / 8</div>
+    <div class="phase">⚠️ 고경계 국면</div>
   </div>
 </div>
 
-<div style="margin-bottom:28px;">
+<div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
   <div class="section-title">🇰🇷 한국 수급 현황</div>
-  
+
   <div class="kr-grid">
     <div class="card">
       <div class="label">KOSPI 수급</div>
-      <div class="value">8,088.34</div>
-      <div class="change"><span class="up">▲ +5.76%</span> · +440.25pt</div>
-      <div class="sub">외국인 2조원+ 순매수 · 기관 매수세 · 개인 일부 익절</div>
-      <div style="font-size:0.75rem; color:var(--muted); margin-top:8px;">거래대금 약 18조원 · 52주 고점 대비 95% 수준</div>
+      <div class="value">8,051.33</div>
+      <div class="change down">▼ 0.46% · -37pt</div>
+      <div style="font-size:0.78rem; color:var(--muted); margin-top:10px;">
+        외국인 <span class="down">-1,000억</span> · 기관 <span class="up">+500억</span> · 개인 <span class="up">+400억</span><br>
+        거래대금 11.2조 · 52주 고점比 87%
+      </div>
     </div>
-    
+
     <div class="card">
       <div class="label">KOSDAQ 수급</div>
-      <div class="value">868.41</div>
-      <div class="change"><span class="up">▲ +0.19%</span> · +1.69pt</div>
-      <div class="sub">외국인 74억 순매수 · 기관 138억 순매수 · 성장주 안정화</div>
-      <div style="font-size:0.75rem; color:var(--muted); margin-top:8px;">개인은 소폭 매도 · 중소형주 회피세</div>
+      <div class="value">847.07</div>
+      <div class="change down">▼ 2.46% · -21pt</div>
+      <div style="font-size:0.78rem; color:var(--muted); margin-top:10px;">
+        외국인 <span class="down">-300억</span> · 기관 <span class="down">-100억</span> · 개인 <span class="up">+350억</span><br>
+        테마주 부진, 개인투자자 흡수
+      </div>
     </div>
   </div>
 </div>
 
-<div style="margin-bottom:28px;">
+<div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
   <div class="section-title">📈 오늘의 섹터 동향</div>
-  
-  <div class="card">
-    <div style="margin-bottom:14px;">
-      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">강세 섹터</div>
-      <div class="sector-row">
-        <div class="sector-box">
-          <div class="slabel">반도체</div>
-          <div class="mv" style="color:var(--up);">+7.2%</div>
-        </div>
-        <div class="sector-box">
-          <div class="slabel">방위산업</div>
-          <div class="mv" style="color:var(--up);">+4.8%</div>
-        </div>
-        <div class="sector-box">
-          <div class="slabel">조선</div>
-          <div class="mv" style="color:var(--up);">+3.9%</div>
-        </div>
-      </div>
+
+  <div class="dir-row" style="gap:20px;">
+    <div class="dir-block">
+      <div class="tag">강세 섹터</div>
+      <ul>
+        <li>방산·드론 <span class="up">+2.8%</span></li>
+        <li>에너지 인프라 <span class="up">+1.5%</span></li>
+        <li>금융 <span class="up">+0.8%</span></li>
+      </ul>
     </div>
-    
-    <div>
-      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">약세 섹터</div>
-      <div class="sector-row">
-        <div class="sector-box">
-          <div class="slabel">금융</div>
-          <div class="mv" style="color:var(--down);">-1.8%</div>
-        </div>
-        <div class="sector-box">
-          <div class="slabel">화학·정유</div>
-          <div class="mv" style="color:var(--down);">-0.9%</div>
-        </div>
-        <div class="sector-box">
-          <div class="slabel">유틸리티</div>
-          <div class="mv" style="color:var(--down);">-0.3%</div>
-        </div>
-      </div>
+    <div class="dir-block">
+      <div class="tag">약세 섹터</div>
+      <ul>
+        <li>반도체 <span class="down">-1.2%</span></li>
+        <li>2차전지 <span class="down">-0.9%</span></li>
+        <li>디스플레이 <span class="down">-1.1%</span></li>
+      </ul>
     </div>
-    
-    <div style="margin-top:10px; font-size:0.8rem; color:var(--muted);">
-      주요 종목: 삼성전자 +7.0% · SK하이닉스 +6.5% · LG에너지솔루션 +4.2% · 현대차 +2.1%
-    </div>
+  </div>
+
+  <div style="margin-top:12px; font-size:0.8rem; color:var(--text); line-height:1.6;">
+    <span style="font-weight:600;">주요 종목:</span> 삼성전자 ▼0.2% (기대감 흡수) · SK하이닉스 ▼2.1% · 기아 ▲0.3% · 하나금융 ▲0.1%
   </div>
 </div>
 
-<div style="margin-bottom:28px;">
+<div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
   <div class="section-title">📰 이번 주 핵심 이슈</div>
-  
+
   <div class="news-list">
     <div class="news-item">
       <div class="news-text">
-        <span class="badge badge-neg">🇺🇸 글로벌</span>
-        <strong>나스닥 기술주 조정 — 반도체 80% 상승 후 차익실현 심화</strong>
-        NASDAQ 하락 -1.61% · 기술주 고배율 조정 리스크 35-40% 추가 낙폭 가능성 · 성장주 리밸런싱 진행 중 · AI 관련주 모멘텀 약화 · 9월까지 변동성 지속 전망
+        🇺🇸 <span style="font-weight:600;">SpaceX 나스닥100 편입 (7월 7일) — 메가 IPO 첫 고속등록 적용</span><br>
+        6.2조 규모 최대 IPO · 나스닥 신규 룰 첫 사례 · 일반인 유동성 공급 시작 — AI 우주산업 시너지 주목, 수급 안정화 기대 vs 초기 변동성 주의
       </div>
+      <div class="badge badge-pos">강기</div>
     </div>
-    
+
     <div class="news-item">
       <div class="news-text">
-        <span class="badge badge-neu">🇺🇸 글로벌</span>
-        <strong>미국 금리 인상 시나리오 재점화 — PCE 4.2% 최고치 기록</strong>
-        6월 소비자물가 4.2% · 3년 만에 최고 · 10년물 금리 4.49%로 상승 · 연준의 금리 인상 결정 확률 상승 중 · 기업 차입비용 압박 · 고배당·방어주로 자금 이동
+        🇺🇸 <span style="font-weight:600;">Nvidia 로드맵 확인 + Foxconn 실적 호조 — AI 하드웨어 수요 지속성 재평가</span><br>
+        Foxconn 분기 매출 예상 상회 · Nvidia "로드맵 정상" 성명 — 반도체 서버 지연 우려 해소, 나스닥 1.26% 회복 · 다만 밸류에이션 재평가 진행 중
       </div>
+      <div class="badge badge-neu">혼조</div>
     </div>
-    
+
     <div class="news-item">
       <div class="news-text">
-        <span class="badge badge-neg">🌐 글로벌</span>
-        <strong>SpaceX IPO 나스닥 편입 첫날 — 2.5조 달러 리밸런싱 유동성 쇼크</strong>
-        SpaceX (SPCX) 7월 6일 NASDAQ-100 편입 개시 · Float 기반 가중치 적용 · 약 2.5조 달러 규모 · 지수 추종 자금의 포트폴리오 조정 강제 · 단기 변동성 확대 · Mag7 외 분산 수요 창출
+        🌐 <span style="font-weight:600;">미국 고용 둔화 + 금리 경로 불확실 — 연준 결정 권력 재편</span><br>
+        NFP 57K (예상 115K) · 실업률 4.2% vs 노동 참여율 61.5% 최저 — Warsh 신임 연준의장 예측 회피 기조. 9월 인상 53.5% vs 인하 기대, 마켓 혼란 가능
       </div>
+      <div class="badge badge-neg">악재</div>
     </div>
-    
+
     <div class="news-item">
       <div class="news-text">
-        <span class="badge badge-kr">🇰🇷 한국</span>
-        <strong>KOSPI 5.76% 급등 — 외국인 2조 원 폭풍 순매수 복귀</strong>
-        외국인 6월 4,973억 순매도 → 7월 2조+ 순매수로 전환 · 삼성전자·SK하이닉스 강세 · 반도체 수급 타이트 재평가 · 한국 GDP 명목성장률 10.5% (50년 만에 최고) · 원화 1,528원 강세로 해외 투자자 매력도 상승
+        🇰🇷 <span style="font-weight:600;">삼성전자 2분기 실적 발표 (7월 8일 예상) — 18배 영업이익 증가 전망</span><br>
+        AI 메모리 가격 강세 + 수급 개선 · 2025년 전사 이익 능가 예상 — KOSPI 기술주 방향성 결정 요소. 외국인 리밸런싱 진행 중 실적 쇼케이스
       </div>
+      <div class="badge badge-kr">한국</div>
     </div>
-    
+
     <div class="news-item">
       <div class="news-text">
-        <span class="badge badge-kr">🇰🇷 한국</span>
-        <strong>반도체 메모리 수급 호조 지속 — NAND/DRAM 가격 상승세</strong>
-        삼성·SK 메모리 칩 수요 강세 · AI 데이터센터 확장으로 NAND 공급 부족 예상 · 중국 배터리 규제로 K-배터리·K-ESS 수혜 · 2026 H2 반도체 실적 개선 기대감 · 외국인 재진입 신호
+        🇰🇷 <span style="font-weight:600;">SK하이닉스 나스닥 ADR 상장 (7월 10일) — 28조원 최대 규모 미국 상장</span><br>
+        달러 조달 + 환율 변동성 · 국내 상장 물량 축소 vs 달러 강세 기대 — 7월 초 가격 발표 임박, 외국인 자본회귀 계기 될 수도 있으나 단기 수급 변동성 높음
       </div>
+      <div class="badge badge-kr">한국</div>
     </div>
   </div>
 </div>
 
-<div style="margin-bottom:28px;">
+<div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
   <div class="section-title">📅 주요 경제 이벤트</div>
-  
+
   <table class="cal-table">
     <thead>
       <tr>
@@ -770,157 +828,328 @@ body {
     </thead>
     <tbody>
       <tr>
-        <td>7월 8일 (수)</td>
-        <td>🔥 FOMC 회의록 공개</td>
-        <td>kevin Warsh 금리 정책 기조</td>
+        <td>07/07 모닝</td>
+        <td>🔥 SpaceX 나스닥100 편입</td>
+        <td>최대 2.5조 신규 유동성</td>
         <td><span class="imp-high">★★★</span></td>
       </tr>
       <tr>
-        <td>7월 10일 (금)</td>
-        <td>PPI (생산자물가)</td>
-        <td>예상 0.1% MoM</td>
-        <td><span class="imp-med">★★★</span></td>
+        <td>07/08 15시</td>
+        <td>삼성전자 2Q 실적</td>
+        <td>영업이익 18배 증가</td>
+        <td><span class="imp-high">★★★</span></td>
       </tr>
       <tr>
-        <td>7월 11일 (토)</td>
-        <td>PCE 물가지수 (최종)</td>
-        <td>4.2% YoY 확정</td>
+        <td>07/08 19시</td>
+        <td>연준 FOMC 의사록</td>
+        <td>7월 인상 확률 변화</td>
+        <td><span class="imp-high">★★★</span></td>
+      </tr>
+      <tr>
+        <td>07/09 20시 반</td>
+        <td>트럼프 발언 / 지정학</td>
+        <td>이란 중동 긴장 추이</td>
         <td><span class="imp-med">★★☆</span></td>
       </tr>
       <tr>
-        <td>7월 14일 (월)</td>
-        <td>중국 2Q GDP</td>
-        <td>4.5% YoY 예상</td>
-        <td><span class="imp-low">★☆☆</span></td>
-      </tr>
-      <tr>
-        <td>7월 16일 (수)</td>
-        <td>영국 CPI 발표</td>
-        <td>2.2% YoY 예상</td>
-        <td><span class="imp-low">★☆☆</span></td>
+        <td>07/10 오전</td>
+        <td>SK하이닉스 ADR 상장</td>
+        <td>28조원 공급 충격</td>
+        <td><span class="imp-med">★★☆</span></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div style="margin-bottom:28px;">
+<div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
+  <div class="section-title">🧭 투자 방향성 코멘트</div>
+
   <div class="direction-card">
-    <div class="phase-tag">⚡ 현재 국면: "독립기념일 휴장 해제 + 외국인 순매수 복귀 + SpaceX IPO 리밸런싱 신호"</div>
-    
-    <div>
-      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px; color:var(--accent);">시장 상황</div>
-      <div style="font-size:0.8rem; line-height:1.6; color:var(--text);">
-        미국 기술주 조정(NASDAQ -1.61%)과 한국 반도체 강세(KOSPI +5.76%)가 동시에 진행 중. 
-        글로벌 자금은 리밸런싱 국면(SpaceX IPO 편입)에서 성장주 이탈 → 방산·반도체·배터리 등 실적형 섹터로 이동 중. 
-        금리 인상 시나리오 부활(10Y 금리 4.49%)로 고배당·경기방어주 선호도 상승. 외국인의 KOSPI 매수 복귀는 K-반도체 수급 긍정적 재평가 + 원화 강세 신호.
-      </div>
+    <div class="phase-tag">⚡ 현재 국면: "SpaceX 편입 + 삼성 실적 주간 · 반도체 밸류에이션 재평가 vs 방산·에너지 교체"</div>
+
+    <div style="font-size:0.85rem; line-height:1.6; color:var(--text);">
+      <strong>시장상황:</strong> 글로벌 반도체 -1~-4% 조정 속 SpaceX 신규 가입으로 대형주 유동성 공급 vs 외국인 KOSPI 구조적 매도. 연준 고용 약화 신호 = 9월 인상 확률 50% 이하로 내려갈 가능성. 달러 약세 + 유가 안정 신호 vs 원화는 외국인 매도에 여전히 약세. 한국 반도체 2분기 실적이 이주 핵심 — 삼성·SK하이닉스 수익성 확인이 외국인 리턴 시점 결정.
     </div>
 
     <div class="dir-row">
       <div class="dir-block">
         <div class="tag">✅ 지금 유리한 자산/섹터</div>
         <ul>
-          <li>삼성전자·SK하이닉스 — 메모리 칩 수급 타이트 + 외국인 매수 복귀 + 7% 이상 상승세</li>
-          <li>방위산업 (LIG넥스원·한화 등) — 미 국방 예산 증가 + 중동 불안 > 조정 기대감</li>
-          <li>LG에너지솔루션 — ESS·배터리 AI 데이터센터 수요 확대 + 중국산 규제</li>
-          <li>일반 금융주 (KB·신한) — 금리 인상 시나리오 + 순이자마진 확대 혜택</li>
-          <li>K-배터리 (삼성SDI·LG화학) — 미국 ESS 시장 확대 + 중국산 배제</li>
+          <li><strong>미국 대형 기술주 (Mag 7)</strong> — SpaceX 편입 + Nvidia 로드맵 확인 · S&P +0.72% 유지 · 유동성 공급 기간 상승 추세 지속 가능</li>
+          <li><strong>방산·드론 ETF (ITA)</strong> — AeroVironment +30% (주간) · Northrop +10% · 이란 중동 지정학 프리미엄 + AI 무기 사이클 · 부채 완화 시 +15% 추가 가능</li>
+          <li><strong>에너지 인프라 (유틀리티)</strong> — 유가 안정 $68.78 · 금리 전망 약화 + 배당 매력 재발견 · 방어 섹터로 기능</li>
+          <li><strong>금 / 장기 채권</strong> — 1.49% 상승 · 달러 약세 + 경기 약화 우려 · 9월 금리 인상 확률 50% 이하 시 장기채 랠리 가능성</li>
+          <li><strong>한국 비메모리 반도체 / 자동차</strong> — 기아 +1.3% · 현대차·HD현대 설비 투자 수혜. KOSPI 외국인 밑에서 개인·기관 흡수 계속</li>
         </ul>
       </div>
-      
       <div class="dir-block">
         <div class="tag">❌ 지금 불리한 자산/섹터</div>
         <ul>
-          <li>고배율 기술주 (Mag7 내 약한 종목) — 80% 상승 후 차익실현 · -35~40% 추가 조정 가능</li>
-          <li>장기 채권 (10Y 금리 상승) — 금리 인상 시나리오에 역풍 · 듀레이션 리스크</li>
-          <li>엔비디아 (NVDA) — 반도체 이익 취 축약 우려 · 실적 모멘텀 약화 · 추가 조정 가능</li>
-          <li>성장주 중소형 (코스닥) — 외국인 회피 · 유동성 경색 우려</li>
-          <li>화학·정유 — 유가 변동성 + 수급 불안 · 단기 수익성 악화</li>
+          <li><strong>KOSPI 반도체 (삼성, SK하이닉스)</strong> — 외국인 -1,000억 매도 · 실적 확인 전까지 -0.5~-2% 기술적 조정 우려 · 7월 8일 삼성 실적 전까지 회피</li>
+          <li><strong>2차전지 / 디스플레이</strong> — 글로벌 수급 약화 + 중국 경쟁력 · -0.9~-1.1% 지속 약세 · 단기 밑받침 약함</li>
+          <li><strong>금융주 (시중은행)</strong> — 금리 인상 기대 약화 · 대출 수익성 이슈 · 하나금융 -6.6% 년초 이후 부진</li>
+          <li><strong>신흥국 고금리 통화 (KRW, BRL)</strong> — 원화 약세 -100bps 수준 · 달러 강세 일시 중단이나 구조적 약세 계속 · 단기 반등 후 재약세 가능성</li>
         </ul>
       </div>
     </div>
 
-    <div>
-      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px; color:var(--accent);">📌 단기 변수 (오늘~1주)</div>
-      <ul style="list-style:none; padding-left:0; font-size:0.8rem; line-height:1.6; color:var(--text);">
-        <li>› 7월 6일 (오늘) 미국 장 오픈 · SpaceX 편입 첫날 리밸런싱 현황 모니터링 · 시초가 갭업 62% 확률</li>
-        <li>› 7월 8일 (수) FOMC 회의록 공개 · Kevin Warsh 금리 정책 신호 · 금리 인상 의지 강도 확인</li>
-        <li>› 7월 10일 (금) 미국 PPI 발표 · 물가 지속성 판단 · 금리 인상 결정 영향</li>
-        <li>› 한국 삼성전자·SK하이닉스 실적 발표 (7월 중) · 반도체 수급 재확인</li>
-      </ul>
+    <div class="dir-row" style="margin-top:14px;">
+      <div class="dir-block">
+        <div class="tag">📌 단기 변수 (오늘~1주)</div>
+        <ul>
+          <li><strong>07/07 (오전 장중)</strong> — SpaceX 나스닥100 편입 공시 시 수급 상황 · 일반인 유동성 신규 유입 규모 · 기술주 변동성 증가 예상</li>
+          <li><strong>07/08 15시 (한국시간)</strong> — 삼성전자 2Q 실적 발표 · KOSPI 기술주 방향 결정 · 삼성 적자/이익 여부가 외국인 회귀 신호</li>
+          <li><strong>07/08 19시 (한국시간)</strong> — 연준 FOMC 의사록 · 9월 인상 가능성 해석 · 금리 시장 변동성 · 달러/원화 환율 변동</li>
+          <li><strong>07/10 (오전)</strong> — SK하이닉스 나스닥 ADR 상장 · 달러 공급 + 환율 압박 · 한국 반도체 2차 평가 시간 · 외국인 자본 회귀 신호 여부</li>
+        </ul>
+      </div>
+      <div class="dir-block">
+        <div class="tag">⚠️ 중기 리스크 (1~3개월)</div>
+        <ul>
+          <li><strong>반도체 오버슈팅 조정</strong> — 메모리 가격 정점 우려 · Q3 수익 모멘텀 둔화 가능 · KOSPI 재조정 -5~-10% 시나리오 > 외국인 추가 매도 유발</li>
+          <li><strong>연준 인상 경로 혼란</strong> — 고용 약화 vs 인플레 불 완전 소화 · 9월 인상 50% vs 인하 기대 혼재 · 변동성 장기화</li>
+          <li><strong>원화 약세 구조화 가능</strong> — 외국인 누적 매도 148조 + 7월도 계속 예상 · 1,550원 돌파 시 심리 악화 · 기술적 약세 심화</li>
+          <li><strong>이란 중동 긴장 재격화</strong> — 유가 급등 시 글로벌 경기 충격 · 방산주 추가 상승도 가능 vs 전반 인플레 부담</li>
+        </ul>
+      </div>
     </div>
 
-    <div>
-      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px; color:var(--accent);">⚠️ 중기 리스크 (1~3개월)</div>
-      <ul style="list-style:none; padding-left:0; font-size:0.8rem; line-height:1.6; color:var(--text);">
-        <li>› 연준의 금리 인상 결정 (7월 내) · 금리 인상 시 기술주 추가 조정 30~40% · 채권 가격 하락</li>
-        <li>› 미-중 무역 정책 재강화 · 반도체·LCD 산업 추가 규제 · 한국 기업 수출 악화</li>
-        <li>› 중동 분쟁 재악화 · 유가 $80 돌파 시 인플레 재점화 · 경기 침체 우려</li>
-        <li>› Anthropic·OpenAI 대규모 IPO (하반기) · 초대형 자금화 · 기술주 유동성 다시 경색</li>
-      </ul>
-    </div>
-
-    <div class="dir-conclusion">
+    <div class="dir-conclusion" style="margin-top:14px;">
       <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
-      <p>
-        <strong>"독립기념일 휴장 해제 후 외국인 반도체 매수 복귀 + 금리 인상 신호 혼재 국면 · 기술주 조정 vs 실적형 섹터 강세 펼치기 시작 · 7월 초 FOMC 회의록까지 변동성 높은 상태 지속."</strong>
+      <p style="font-weight:600;">
+        "SpaceX 수급 상승장 + 삼성 실적 기대 쇼케이스 주간 — 하지만 외국인 구조적 매도와 반도체 밸류에이션 재평가 진행 중이므로, 고점 팔기·저점 담기 전략이 필수. 한국 반도체는 실적 확인 후 매수."
       </p>
-      <p style="margin-top:10px;">
-        ① <strong>반도체 장기 보유 강화</strong> — 삼성전자·SK하이닉스 + 소형주 SK제약·삼성화학 · 외국인 복귀 모멘텀 활용 · 8,200 돌파 시 추가 매수<br/>
-        ② <strong>기술주 차익실현 진행</strong> — NVDA·매그7 내 고배율 종목 일부 익절 · 35~40% 낙폭 시 저가 매수 대기<br/>
-        ③ <strong>방위산업·배터리 추가 진입</strong> — 방산주(LIG넥스원) + K-배터리(LG화학) · 중동 리스크 + 미 국방 예산 + AI 데이터센터 수요 3중 수혜<br/>
-        ④ <strong>금리 인상 신호에 대비</strong> — 금융주 비중 증가 · 장기 채권 회피 · 현금 보유율 20~30% 유지 · 7월 8일 FOMC 후 재조정
-      </p>
-      <p style="margin-top:10px; font-size:0.78rem; color:var(--muted);">
-        핵심 체크포인트: FOMC 회의록 기조 + 7월 PPI + 미 국방 관련주 수급 + 삼성전자 8,000원 매물
-      </p>
-    </div>
-  </div>
-</div>
+      
+      <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(88,166,255,0.3);">
+        <div style="font-size:0.8rem; color:var(--text); line-height:1.8;">
+          <div style="margin-bottom:8px;">① <strong>S&P500 + NASDAQ 기술주 매수 계속:</strong> SpaceX 편입 기간(~1주) 유동성 공급 탄력 · 반도체 실적 회복 신호 대기 · 손절 VIX 20 초과</div>
+          
+          <div style="margin-bottom:8px;">② <strong>한국 대형 반도체 7월 8일 삼성 실적 후 진입 검토:</strong> 현재 외국인 매도 구간 회피 · 실적 긍정 확인 후 기관·개인 동반 매수 패턴 노려</div>
+          
+          <div style="margin-bottom:8px;">③ <strong>방산·드론 / 에너지 ETF 교체 강화:</strong> AeroVironment +30% 이미 랠리 but Northrop·RTX 여전히 추가 상승 여력 · 이란 긴장 고조 시 +15% 재현 가능 · 수익 실현은 26% 상승선에서</div>
+          
+          <div>④ <strong>달러 약세 기간 원화 매집 vs KRW 1,550 돌파 주의:</strong> 원화 단기 반등 가능성 있으나 구조적 약세 계속 · 7월 말까지 1,520~1,550 박스권 · 1,550 돌파 시 손절 필수</div>
+        </div>
+      </div>
 
-<div style="margin-bottom:28px;">
-  <div class="section-title">🔭 트렌드 레이더 — 3~6개월 선행 테마 포착</div>
-  
-  <div class="direction-card">
-    <div>
-      <div style="font-size:0.9rem; font-weight:700; color:var(--accent); margin-bottom:12px;">📡 신호 #1 | 장기 (3~6개월)</div>
-      <div style="font-size:0.8rem; line-height:1.6; color:var(--text); margin-bottom:12px;">
-        <strong>AI 인프라 → 에너지·냉각·네트워크 장비 확대</strong><br/>
-        엔비디아·테슬라 등 빅테크의 대규모 데이터센터 투자 가속화 · AI 학습 모델 개수 급증 (GPT-5 & 고급형 Claude 경쟁) → 전력 소비 4배 증가 전망 · 데이터센터 냉각 솔루션 수요 폭증 · 미국 송전망 노후화로 ESS(에너지저장장치) 필수 · 한국 K-배터리·K-냉각 장비 기업의 수급 타이트 심화 예상
-      </div>
-      <div style="font-size:0.75rem; color:var(--text); background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.2); border-radius:6px; padding:8px 12px;">
-        📌 수혜 ETF/섹터: TIGER 반도체TOP10 · KODEX 전력기기 · 수소·에너지저장장치 관련주 (LG화학·삼성SDI) · 냉각/냉동 부품사 (한온시스템)
-      </div>
-    </div>
-
-    <div>
-      <div style="font-size:0.9rem; font-weight:700; color:var(--accent); margin-bottom:12px;">📡 신호 #2 | 중기 (2~4개월)</div>
-      <div style="font-size:0.8rem; line-height:1.6; color:var(--text); margin-bottom:12px;">
-        <strong>지정학적 위험 → 방위산업 & 방위 기술 수주 급증</strong><br/>
-        중동 분쟁 장기화 + 미-중 갈등 심화 → 각국 국방력 강화 전략 · 미국 국방예산 증가 · 한국도 방위사업청 예산 확대 · 방위산업 기업의 수주 잔고 급증 · 무인기·미사일·방어시스템 개발 수요 증가 · 이스라엘·대만 반도체 보호 전략 부상 → K-반도체 전략적 중요성 상승
-      </div>
-      <div style="font-size:0.75rem; color:var(--text); background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.2); border-radius:6px; padding:8px 12px;">
-        📌 수혜 ETF/섹터: TIGER 방위산업 · 항공우주·방위산업 섹터 (LIG넥스원·한화시스템·KAI) · 정밀기계·제어 장비사
-      </div>
-    </div>
-
-    <div>
-      <div style="font-size:0.9rem; font-weight:700; color:var(--accent); margin-bottom:12px;">📡 신호 #3 | 단기 (1~3개월)</div>
-      <div style="font-size:0.8rem; line-height:1.6; color:var(--text); margin-bottom:12px;">
-        <strong>양자컴퓨팅 상용화 신호 → 금융·제약·물류 최적화</strong><br/>
-        미국 CHIPS and Science Act 펀딩 + 양자컴퓨팅 국가전략 추진 · 2026 하반기 PsiQuantum·Quantinuum IPO 예정 · 금융사(리스크 분석)·제약사(신약 개발)·물류사(경로 최적화) 대규모 R&D 투자 개시 · 양자 보안(Post-quantum cryptography) 표준 확정 → 엔터프라이즈 소프트웨어 업그레이드 수요 · 한국 양자통신 기업(SK텔레콤·KT) 기술 수출 기회 증가
-      </div>
-      <div style="font-size:0.75rem; color:var(--text); background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.2); border-radius:6px; padding:8px 12px;">
-        📌 수혜 ETF/섹터: KODEX 정보통신 · 반도체 고급 패키징사 · 암호화 보안 솔루션 회사 · SK텔레콤·KT 양자통신 관련 사업부 성장
+      <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(88,166,255,0.3); font-size:0.8rem; color:var(--warn); font-weight:600;">
+        핵심 체크포인트: 삼성 실적 + FOMC 의사록 + SK하이닉스 ADR 가격 결정 이 3가지 모두 호재 확인 시만 KOSPI 매수 신호 · 하나라도 약세면 -2~-5% 추가 조정 각오
       </div>
     </div>
   </div>
 </div>
 
-<div class="footer">
-  ※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br/>
-  데이터 기준: CoinGecko · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.07.06 KST
-</div>
+<div class="portfolio-section">
+  <div class="section-title">💼 내 포트폴리오 현황</div>
 
-</body>
-</html>
+  <div class="portfolio-account">
+    <div class="portfolio-account-name">홍창우_일반 · +3.03% (₩1,257,300)</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목명</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SPYM</td>
+          <td>199</td>
+          <td>$79.78</td>
+          <td>$88.43</td>
+          <td><span class="portfolio-gain up">+10.84%</span></td>
+        </tr>
+        <tr>
+          <td>ACE KRX금현물</td>
+          <td>197</td>
+          <td>₩18,612</td>
+          <td>₩18,612</td>
+          <td><span class="portfolio-gain neutral">±0.0%</span></td>
+        </tr>
+        <tr>
+          <td>GLTR</td>
+          <td>14</td>
+          <td>$239.67</td>
+          <td>$188.68</td>
+          <td><span class="portfolio-gain down">-21.28%</span></td>
+        </tr>
+        <tr>
+          <td>하나금융지주</td>
+          <td>17</td>
+          <td>₩114,703</td>
+          <td>₩114,703</td>
+          <td><span class="portfolio-gain neutral">±0.0%</span></td>
+        </tr>
+        <tr>
+          <td>HD현대마린솔루션</td>
+          <td>8</td>
+          <td>₩222,953</td>
+          <td>₩208,000</td>
+          <td><span class="portfolio-gain down">-6.71%</span></td>
+        </tr>
+        <tr>
+          <td>메리츠금융지주</td>
+          <td>17</td>
+          <td>₩120,345</td>
+          <td>₩112,400</td>
+          <td><span class="portfolio-gain down">-6.60%</span></td>
+        </tr>
+        <tr>
+          <td>기아</td>
+          <td>9</td>
+          <td>₩158,631</td>
+          <td>₩160,700</td>
+          <td><span class="portfolio-gain up">+1.30%</span></td>
+        </tr>
+        <tr>
+          <td>HD한국조선해양</td>
+          <td>3</td>
+          <td>₩381,044</td>
+          <td>₩365,000</td>
+          <td><span class="portfolio-gain down">-4.21%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="portfolio-account">
+    <div class="portfolio-account-name">홍창우_연금 · +71.01% (₩21,046,673)</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목명</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ACE 미국빅테크TOP7 Plus</td>
+          <td>1,031</td>
+          <td>₩15,957</td>
+          <td>₩28,390</td>
+          <td><span class="portfolio-gain up">+77.92%</span></td>
+        </tr>
+        <tr>
+          <td>TIGER 미국S&P500</td>
+          <td>750</td>
+          <td>₩17,584</td>
+          <td>₩28,555</td>
+          <td><span class="portfolio-gain up">+62.39%</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:0.8rem; color:var(--text); margin-top:10px; padding:10px; background:rgba(63,185,80,0.08); border-radius:6px;">
+      💡 <strong>코멘트:</strong> S&P500 +0.72% 추가 상승 · 미국 Tech 반도체 회복세로 Mag 7 관심 재집중 · SpaceX 편입 유동성 효과로 추가 +1~2% 기대 가능
+    </div>
+  </div>
+
+  <div class="portfolio-account">
+    <div class="portfolio-account-name">김지민_ISA · +2.29% (₩786,601)</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목명</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>KODEX 미국우주항공</td>
+          <td>2,419</td>
+          <td>₩12,777</td>
+          <td>₩12,777</td>
+          <td><span class="portfolio-gain neutral">±0.0%</span></td>
+        </tr>
+        <tr>
+          <td>KODEX 미국나스닥100</td>
+          <td>139</td>
+          <td>₩24,361</td>
+          <td>₩30,020</td>
+          <td><span class="portfolio-gain up">+23.23%</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:0.8rem; color:var(--text); margin-top:10px; padding:10px; background:rgba(63,185,80,0.08); border-radius:6px;">
+      💡 <strong>코멘트:</strong> 우주항공 정체 중 · 나스닥100 +1.26% 강세로 혼합 실적 유지 · SpaceX 편입 효과 누릴 수 있으나 별도 추격 필요 없음
+    </div>
+  </div>
+
+  <div class="portfolio-account">
+    <div class="portfolio-account-name">김지민_일반 · -12.85% (-₩1,035,999)</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목명</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SK하이닉스</td>
+          <td>3</td>
+          <td>₩2,688,333</td>
+          <td>₩2,343,000</td>
+          <td><span class="portfolio-gain down">-12.85%</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:0.8rem; color:var(--text); margin-top:10px; padding:10px; background:rgba(248,81,73,0.08); border-radius:6px;">
+      ⚠️ <strong>주의:</strong> SK하이닉스 -12.85% 부진 중 · 7월 10일 ADR 상장 가격 발표 대기 중 · 국내 상장 물량 일부 축소 예상이나 단기 환율 변동성 상승. 실적 확인 후 재평가 필요
+    </div>
+  </div>
+
+  <div class="portfolio-account">
+    <div class="portfolio-account-name">김지민_연금 · +132.73% (₩13,826,095)</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목명</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TIGER 미국필라델피아AI반도체</td>
+          <td>355</td>
+          <td>₩12,515</td>
+          <td>₩51,500</td>
+          <td><span class="portfolio-gain up">+311.51%</span></td>
+        </tr>
+        <tr>
+          <td>ACE KRX금현물</td>
+          <td>249</td>
+          <td>₩23,518</td>
+          <td>₩23,518</td>
+          <td><span class="portfolio-gain neutral">±0.0%</span></td>
+        </tr>
+        <tr>
+          <td>KODEX 현대차로보틱스밸류체인TOP3</td>
+          <td>14</td>
+          <td>₩8,410</td>
+          <td>₩7,440</td>
+          <td><span class="portfolio-gain down">-11.53%</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:0.8rem; color:var(--text); margin-top:10px; padding:10px; background:rgba(63,185,80,0.08); border-radius:6px;">
+      💡 <strong>코멘트:</strong> AI반도체 ETF +311.51% 대박 · 나스닥 반도체 -1.2% 약세 중에도 보유 강세 유지 · 로보틱스는 약세 중이나 연금 포트는 장기 수익이 충분. 분산 잘됨
+    </div>
+  </div>
+
+  <div class="portfolio-summary">
+    <div class="portfolio-summary-title">📊 전체 포트폴리오
