@@ -3,845 +3,1069 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시장 모니터링 대시보드 | 2026년 7월 13일</title>
+<title>시장 모니터링 대시보드 | 2026년 7월 14일</title>
 <style>
 :root {
---bg: #0d1117;
---card: #161b22;
---border: #21262d;
---up: #3fb950;
---down: #f85149;
---warn: #d29922;
---accent: #58a6ff;
---text: #e6edf3;
---muted: #8b949e;
---trend: #a371f7;
+  --bg: #0d1117;
+  --card: #161b22;
+  --border: #21262d;
+  --up: #3fb950;
+  --down: #f85149;
+  --warn: #d29922;
+  --accent: #58a6ff;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --trend: #a371f7;
 }
 * {
-box-sizing: border-box;
-margin: 0;
-padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 body {
-background: var(--bg);
-color: var(--text);
-font-family: 'Segoe UI', sans-serif;
-padding: 20px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
 }
 .header {
-text-align: center;
-margin-bottom: 28px;
+  text-align: center;
+  margin-bottom: 28px;
 }
 .header h1 {
-font-size: 1.6rem;
-font-weight: 700;
-color: var(--accent);
-letter-spacing: -0.5px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.5px;
 }
 .header .subtitle {
-font-size: 0.85rem;
-color: var(--muted);
-margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 6px;
 }
 .header .alert-banner {
-display: inline-block;
-margin-top: 12px;
-background: rgba(248,81,73,0.15);
-border: 1px solid var(--down);
-border-radius: 8px;
-padding: 8px 20px;
-font-size: 0.82rem;
-color: var(--down);
-font-weight: 600;
+  display: inline-block;
+  margin-top: 12px;
+  background: rgba(248,81,73,0.15);
+  border: 1px solid var(--down);
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  color: var(--down);
+  font-weight: 600;
 }
 .grid-4 {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 14px;
-margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
 }
 @media (max-width: 900px) {
-.grid-4 {
-grid-template-columns: repeat(2, 1fr);
-}
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 500px) {
-.grid-4 {
-grid-template-columns: 1fr;
-}
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
 }
 .card {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 12px;
-padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
 }
 .card .label {
-font-size: 0.75rem;
-color: var(--muted);
-text-transform: uppercase;
-letter-spacing: 0.5px;
-margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 .card .value {
-font-size: 1.55rem;
-font-weight: 700;
-line-height: 1;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1;
 }
 .card .change {
-font-size: 0.82rem;
-margin-top: 5px;
+  font-size: 0.82rem;
+  margin-top: 5px;
 }
 .card .sub {
-font-size: 0.75rem;
-color: var(--muted);
-margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
 }
 .up {
-color: var(--up);
+  color: var(--up);
 }
 .down {
-color: var(--down);
+  color: var(--down);
 }
 .neutral {
-color: var(--warn);
+  color: var(--warn);
 }
 .gauge-wrap {
-margin-top: 10px;
+  margin-top: 10px;
 }
 .gauge-bar-bg {
-height: 7px;
-border-radius: 4px;
-background: linear-gradient(to right, #f85149, #d29922, #3fb950);
+  height: 7px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #f85149, #d29922, #3fb950);
 }
 .gauge-labels {
-display: flex;
-justify-content: space-between;
-font-size: 0.65rem;
-color: var(--muted);
-margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 6px;
 }
 .section-title {
-font-size: 1rem;
-font-weight: 700;
-color: var(--accent);
-margin-bottom: 14px;
-padding-bottom: 8px;
-border-bottom: 1px solid var(--border);
-display: flex;
-align-items: center;
-gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .btc-main {
-background: linear-gradient(135deg, #161b22 0%, #1a2035 100%);
-border: 1px solid #2d3a5a;
-border-radius: 12px;
-padding: 20px 22px;
-margin-bottom: 14px;
+  background: linear-gradient(135deg, #161b22 0%, #1a2035 100%);
+  border: 1px solid #2d3a5a;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
 }
 .btc-price-hero {
-font-size: 2.6rem;
-font-weight: 800;
-color: #f0b429;
-line-height: 1;
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: #f0b429;
+  line-height: 1;
 }
 .btc-meta {
-display: flex;
-gap: 10px;
-flex-wrap: wrap;
-margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
 }
 .btc-meta-item {
-background: rgba(0,0,0,0.3);
-border: 1px solid #2d3a5a;
-border-radius: 8px;
-padding: 10px 14px;
-flex: 1;
-min-width: 110px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #2d3a5a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  flex: 1;
+  min-width: 110px;
 }
 .btc-meta-item .ml {
-font-size: 0.7rem;
-color: var(--muted);
-text-transform: uppercase;
-letter-spacing: 0.5px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .btc-meta-item .mv {
-font-size: 1.05rem;
-font-weight: 700;
-margin-top: 4px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 4px;
 }
 .risk-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 @media (max-width: 600px) {
-.risk-grid {
-grid-template-columns: 1fr;
-}
+  .risk-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .risk-item {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 10px;
-padding: 12px 14px;
-display: flex;
-align-items: flex-start;
-gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
 }
 .dot {
-width: 12px;
-height: 12px;
-border-radius: 50%;
-margin-top: 3px;
-flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 3px;
+  flex-shrink: 0;
 }
 .dot-red {
-background: var(--down);
-box-shadow: 0 0 6px rgba(248,81,73,0.6);
+  background: var(--down);
+  box-shadow: 0 0 6px rgba(248,81,73,0.6);
 }
 .dot-yellow {
-background: var(--warn);
-box-shadow: 0 0 6px rgba(210,153,34,0.6);
+  background: var(--warn);
+  box-shadow: 0 0 6px rgba(210,153,34,0.6);
 }
 .dot-green {
-background: var(--up);
-box-shadow: 0 0 6px rgba(63,185,80,0.6);
+  background: var(--up);
+  box-shadow: 0 0 6px rgba(63,185,80,0.6);
 }
 .risk-label {
-font-size: 0.78rem;
-font-weight: 600;
-color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
 }
 .risk-desc {
-font-size: 0.73rem;
-color: var(--muted);
-margin-top: 3px;
+  font-size: 0.73rem;
+  color: var(--muted);
+  margin-top: 3px;
 }
 .risk-divider {
-grid-column: 1 / -1;
-border-top: 1px dashed var(--border);
-padding-top: 6px;
-font-size: 0.7rem;
-color: var(--muted);
-font-weight: 600;
-letter-spacing: 0.5px;
+  grid-column: 1 / -1;
+  border-top: 1px dashed var(--border);
+  padding-top: 6px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 .risk-summary {
-margin-top: 14px;
-background: rgba(248,81,73,0.1);
-border: 1px solid rgba(248,81,73,0.3);
-border-radius: 10px;
-padding: 12px 16px;
-text-align: center;
+  margin-top: 14px;
+  background: rgba(248,81,73,0.1);
+  border: 1px solid rgba(248,81,73,0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: center;
 }
 .risk-summary .score {
-font-size: 1.8rem;
-font-weight: 800;
-color: var(--down);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--down);
 }
 .risk-summary .phase {
-font-size: 0.9rem;
-color: var(--warn);
-font-weight: 600;
-margin-top: 2px;
+  font-size: 0.9rem;
+  color: var(--warn);
+  font-weight: 600;
+  margin-top: 2px;
 }
 .news-list {
-display: flex;
-flex-direction: column;
-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .news-item {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 10px;
-padding: 12px 14px;
-display: flex;
-justify-content: space-between;
-align-items: flex-start;
-gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
 }
 .news-text {
-font-size: 0.82rem;
-color: var(--text);
-line-height: 1.5;
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.5;
 }
 .badge {
-font-size: 0.68rem;
-font-weight: 700;
-padding: 3px 9px;
-border-radius: 20px;
-white-space: nowrap;
-flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .badge-neg {
-background: rgba(248,81,73,0.15);
-color: var(--down);
-border: 1px solid rgba(248,81,73,0.3);
+  background: rgba(248,81,73,0.15);
+  color: var(--down);
+  border: 1px solid rgba(248,81,73,0.3);
 }
 .badge-pos {
-background: rgba(63,185,80,0.15);
-color: var(--up);
-border: 1px solid rgba(63,185,80,0.3);
+  background: rgba(63,185,80,0.15);
+  color: var(--up);
+  border: 1px solid rgba(63,185,80,0.3);
 }
 .badge-neu {
-background: rgba(210,153,34,0.15);
-color: var(--warn);
-border: 1px solid rgba(210,153,34,0.3);
+  background: rgba(210,153,34,0.15);
+  color: var(--warn);
+  border: 1px solid rgba(210,153,34,0.3);
 }
 .badge-btc {
-background: rgba(240,180,41,0.15);
-color: #f0b429;
-border: 1px solid rgba(240,180,41,0.3);
+  background: rgba(240,180,41,0.15);
+  color: #f0b429;
+  border: 1px solid rgba(240,180,41,0.3);
 }
 .badge-kr {
-background: rgba(88,166,255,0.15);
-color: var(--accent);
-border: 1px solid rgba(88,166,255,0.3);
+  background: rgba(88,166,255,0.15);
+  color: var(--accent);
+  border: 1px solid rgba(88,166,255,0.3);
 }
 .cal-table {
-width: 100%;
-border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 .cal-table th {
-font-size: 0.73rem;
-color: var(--muted);
-text-align: left;
-padding: 8px 10px;
-border-bottom: 1px solid var(--border);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
 }
 .cal-table td {
-font-size: 0.8rem;
-padding: 10px;
-border-bottom: 1px solid rgba(33,38,45,0.5);
+  font-size: 0.8rem;
+  padding: 10px;
+  border-bottom: 1px solid rgba(33,38,45,0.5);
 }
 .cal-table tr:last-child td {
-border-bottom: none;
+  border-bottom: none;
 }
 .imp-high {
-color: var(--down);
-font-weight: 700;
+  color: var(--down);
+  font-weight: 700;
 }
 .imp-med {
-color: var(--warn);
+  color: var(--warn);
 }
 .imp-low {
-color: var(--muted);
+  color: var(--muted);
 }
 .direction-card {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 12px;
-padding: 20px 22px;
-display: flex;
-flex-direction: column;
-gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 .dir-row {
-display: flex;
-gap: 14px;
+  display: flex;
+  gap: 14px;
 }
 @media (max-width: 700px) {
-.dir-row {
-flex-direction: column;
-}
+  .dir-row {
+    flex-direction: column;
+  }
 }
 .dir-block {
-flex: 1;
-background: #0d1117;
-border-radius: 10px;
-padding: 14px;
-border: 1px solid var(--border);
+  flex: 1;
+  background: #0d1117;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
 }
 .dir-block .tag {
-font-size: 0.7rem;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-margin-bottom: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 .dir-block ul {
-padding-left: 0;
-list-style: none;
-display: flex;
-flex-direction: column;
-gap: 6px;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .dir-block li {
-font-size: 0.8rem;
-color: var(--text);
-line-height: 1.5;
-padding-left: 14px;
-position: relative;
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
 }
 .dir-block li::before {
-content: '›';
-position: absolute;
-left: 0;
+  content: '›';
+  position: absolute;
+  left: 0;
 }
 .dir-conclusion {
-background: rgba(88,166,255,0.08);
-border: 1px solid rgba(88,166,255,0.3);
-border-radius: 10px;
-padding: 14px 16px;
+  background: rgba(88,166,255,0.08);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 10px;
+  padding: 14px 16px;
 }
 .dir-conclusion .tag {
-font-size: 0.7rem;
-font-weight: 700;
-color: var(--accent);
-text-transform: uppercase;
-margin-bottom: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 .dir-conclusion p {
-font-size: 0.85rem;
-line-height: 1.6;
-color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
 }
 .phase-tag {
-display: inline-block;
-background: rgba(248,81,73,0.15);
-color: var(--down);
-border: 1px solid rgba(248,81,73,0.3);
-border-radius: 6px;
-font-size: 0.75rem;
-font-weight: 700;
-padding: 4px 12px;
-margin-bottom: 10px;
+  display: inline-block;
+  background: rgba(248,81,73,0.15);
+  color: var(--down);
+  border: 1px solid rgba(248,81,73,0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  margin-bottom: 10px;
 }
 .kr-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 14px;
-margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
 }
 @media (max-width: 600px) {
-.kr-grid {
-grid-template-columns: 1fr;
-}
+  .kr-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .sector-row {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 .sector-box {
-background: #0d1117;
-border-radius: 8px;
-padding: 10px;
-border: 1px solid var(--border);
+  background: #0d1117;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
 }
 .sector-box .slabel {
-font-size: 0.68rem;
-color: var(--muted);
-margin-bottom: 4px;
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-bottom: 4px;
 }
 .footer {
-text-align: center;
-margin-top: 28px;
-font-size: 0.72rem;
-color: var(--muted);
+  text-align: center;
+  margin-top: 28px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.portfolio-section {
+  margin-top: 28px;
+}
+.account-group {
+  margin-bottom: 20px;
+}
+.account-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.portfolio-table th {
+  background: rgba(33,38,45,0.5);
+  padding: 8px;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.portfolio-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.portfolio-table tr:last-child td {
+  border-bottom: none;
+}
+.gain-up {
+  color: var(--up);
+  font-weight: 600;
+}
+.gain-down {
+  color: var(--down);
+  font-weight: 600;
+}
+.account-summary {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total-summary {
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 14px;
+  text-align: center;
+}
+.total-summary .value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.total-summary .subtext {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.portfolio-comment {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 6px;
+  font-style: italic;
 }
 </style>
 </head>
 <body>
-<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-07-13 06:35:31 KST</div>
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">⏱ 최종 업데이트: 2026-07-14 06:39:24 KST</div>
+
 <div class="header">
-<h1>📊 시장 모니터링 대시보드</h1>
-<p class="subtitle">2026년 7월 13일 (일요일) · 데이터 기준: 2026.07.10 KST</p>
-<div class="alert-banner">⚡ 공포탐욕지수 중립 진입 + 반도체 섹터 반등 + 중동 지정학적 리스크 상존 → 단기 변동성 확대 국면</div>
+  <h1>📊 시장 모니터링 대시보드</h1>
+  <div class="subtitle">2026년 7월 14일 (월) · 데이터 기준: 2026.07.13 KST</div>
+  <div class="alert-banner">⚡ SK하이닉스 나스닥 상장(13일 +14%) 후 국내 ADR 차익실현 및 글로벌 반도체 수급 조정으로 코스피 -8.95% · 외국인 대규모 순매도 · 중동 긴장 재점화로 유가 +4.99%</div>
 </div>
 
 <div class="grid-4">
-<div class="card">
-<div class="label">😨 공포탐욕지수 (CNN)</div>
-<div class="value">49</div>
-<div class="change"><span class="neutral">●</span> NEUTRAL</div>
-<div class="sub">시장 감정 전환점 — 순매수세 복귀 신호</div>
-<div class="gauge-wrap">
-<div class="gauge-bar-bg"></div>
-<div class="gauge-labels">
-<span>공포</span>
-<span>중립</span>
-<span>탐욕</span>
-</div>
-</div>
-</div>
-
-<div class="card">
-<div class="label">🌪️ VIX 공포지수</div>
-<div class="value">15.03</div>
-<div class="change"><span class="down">▼</span> <span class="down">-5.11%</span> · 전일 15.84 → 오늘 15.03</div>
-<div class="sub"><span class="up">✅ 안정</span> (15 이하 = 저변동성 구간)</div>
-<div class="gauge-wrap">
-<div class="gauge-bar-bg"></div>
-<div class="gauge-labels">
-<span>공포</span>
-<span>중립</span>
-<span>탐욕</span>
-</div>
-</div>
-</div>
-
-<div class="card">
-<div class="label">🇺🇸 S&P 500</div>
-<div class="value">7,575.39</div>
-<div class="change"><span class="up">▲</span> <span class="up">+0.42%</span> (종가)</div>
-<div class="sub">은행주 약세 견디며 지속 상승 — 10Y금리 4.57% 상승 압박</div>
-</div>
-
-<div class="card">
-<div class="label">💻 나스닥 100</div>
-<div class="value">29,825.11</div>
-<div class="change"><span class="up">▲</span> <span class="up">+0.33%</span></div>
-<div class="sub">반도체 반등주도 — 구글, ASML, SK하이닉스 동반 상승</div>
-</div>
-
-<div class="card">
-<div class="label">🥇 금 (Gold)</div>
-<div class="value">$4,113.70</div>
-<div class="change"><span class="down">▼</span> <span class="down">-0.38%</span></div>
-<div class="sub">지정학적 프리미엄 해제 — 안전자산 수요 약화</div>
-</div>
-
-<div class="card">
-<div class="label">🛢️ WTI 원유</div>
-<div class="value">$71.41</div>
-<div class="change"><span class="down">▼</span> <span class="down">-1.35%</span></div>
-<div class="sub">이란 긴장 완화 신호 — 공급 리스크 후퇴</div>
-</div>
-
-<div class="card">
-<div class="label">🇰🇷 KOSPI</div>
-<div class="value">7,475.94</div>
-<div class="change"><span class="up">▲</span> <span class="up">+2.52%</span></div>
-<div class="sub">외국인 순매수 전환 · 기관 흡수 · 반도체 주도</div>
-</div>
-
-<div class="card">
-<div class="label">💵 USD/KRW</div>
-<div class="value">1,498.27원</div>
-<div class="change"><span class="down">▼</span> <span class="down">-0.55%</span></div>
-<div class="sub">원화 강세 전환 — 외국인 순매수 시작 신호</div>
-</div>
+  <div class="card">
+    <div class="label">😨 공포탐욕지수 (CNN)</div>
+    <div class="value" style="color: var(--warn);">49</div>
+    <div class="change" style="color: var(--warn);">NEUTRAL</div>
+    <div class="gauge-wrap">
+      <div class="gauge-bar-bg" style="position: relative;">
+        <div style="position: absolute; width: 2px; height: 100%; background: #fff; left: calc(49% - 1px); top: 0;"></div>
+      </div>
+      <div class="gauge-labels">
+        <span>공포</span>
+        <span>중립</span>
+        <span>탐욕</span>
+      </div>
+    </div>
+    <div class="sub">시장 심리 중립 유지 — 지정학 리스크·차익실현·AI 버블 경계심 교차</div>
+  </div>
+  <div class="card">
+    <div class="label">🌪️ VIX 공포지수</div>
+    <div class="value">17.16</div>
+    <div class="change"><span class="up">▲ 14.1%</span> · 전일 15.04 → 오늘 17.16</div>
+    <div class="sub">⚠️ 경계구간 (15~20범위)</div>
+  </div>
+  <div class="card">
+    <div class="label">🇺🇸 S&P 500</div>
+    <div class="value">7,515.34</div>
+    <div class="change"><span class="down">▼ -0.79%</span> · 종가</div>
+    <div class="sub">10Y 금리 4.61% · 기술주 약세, 금융 강세 섹터 회전</div>
+  </div>
+  <div class="card">
+    <div class="label">💻 나스닥 100</div>
+    <div class="value">29,264.1</div>
+    <div class="change"><span class="down">▼ -1.88%</span></div>
+    <div class="sub">반도체·AI 칩 약세 · SK하이닉스 나스닥 데뷔 후 메모리 업황 불확실성</div>
+  </div>
+  <div class="card">
+    <div class="label">🥇 금 (Gold)</div>
+    <div class="value">$4,008.7</div>
+    <div class="change"><span class="down">▼ -1.44%</span></div>
+    <div class="sub">안전자산 약세 · 달러 강세 압박</div>
+  </div>
+  <div class="card">
+    <div class="label">🛢️ WTI 원유</div>
+    <div class="value">$78.0</div>
+    <div class="change"><span class="up">▲ 4.99%</span></div>
+    <div class="sub">호르무즈 해협 긴장 재개 · 인플레 재점화 우려</div>
+  </div>
+  <div class="card">
+    <div class="label">🇰🇷 KOSPI</div>
+    <div class="value">6,806.93</div>
+    <div class="change"><span class="down">▼ -8.95%</span> · -669.01pt</div>
+    <div class="sub">외국인 순매도 · 반도체주 -10~15% 급락 · 매도 사이드카·서킷브레이커 발동</div>
+  </div>
+  <div class="card">
+    <div class="label">💵 USD/KRW</div>
+    <div class="value">1,497.02원</div>
+    <div class="change"><span class="down">▼ -0.12%</span> · -1.85원</div>
+    <div class="sub">원화 소폭 강세 · 국내 증시 급락에도 외국인 자금 유출 둔화</div>
+  </div>
 </div>
 
 <div class="btc-main">
-<div class="section-title">₿ Bitcoin 현재 시세 2026.07.10 KST 기준</div>
-<div class="btc-price-hero">₩95,981,546</div>
-<div class="btc-meta">
-<div class="btc-meta-item">
-<div class="ml">USD 환산</div>
-<div class="mv down">≈ $64,025 ▼ -0.45%</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">전일대비</div>
-<div class="mv down">전일 ₩96,415,415 → 현재 ₩95,981,546</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">ATH 대비</div>
-<div class="mv down">-46.03% (ATH ₩177,854,395)</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">24h 고점</div>
-<div class="mv">₩96,455,340</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">24h 저점</div>
-<div class="mv">₩95,425,946</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">7일 고점</div>
-<div class="mv">₩98,733,672</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">전월 대비</div>
-<div class="mv up">+0.70%</div>
-</div>
-<div class="btc-meta-item">
-<div class="ml">크립토 공포탐욕</div>
-<div class="mv neutral">26 | Fear 구간</div>
-</div>
-</div>
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <div class="label" style="color: #b8bcc5; margin-bottom: 8px;">₿ Bitcoin 현재 시세  2026.07.13 KST 기준</div>
+      <div class="btc-price-hero">₩92,773,855</div>
+      <div style="font-size: 0.9rem; color: #b8bcc5; margin-top: 4px;">≈ $61,925 USD <span class="down">▼ -3.29%</span> (24h)</div>
+      <div style="font-size: 0.75rem; color: var(--muted); margin-top: 6px;">전일 ₩95,929,950 → 오늘 ₩92,773,855</div>
+    </div>
+  </div>
+  <div class="btc-meta">
+    <div class="btc-meta-item">
+      <div class="ml">ATH 대비</div>
+      <div class="mv" style="color: var(--down);">-47.84%</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">ATH ₩</div>
+      <div class="mv">177,854,395</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">크립토 공포탐욕</div>
+      <div class="mv" style="color: var(--warn);">28 (공포)</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">24h 고점</div>
+      <div class="mv">₩96,516,233</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">24h 저점</div>
+      <div class="mv">₩92,554,015</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">7일 고점</div>
+      <div class="mv">₩98,257,208</div>
+    </div>
+    <div class="btc-meta-item">
+      <div class="ml">전월 대비</div>
+      <div class="mv" style="color: var(--down);">-3.61%</div>
+    </div>
+  </div>
 </div>
 
-<div style="margin-bottom: 14px;">
-<h2 class="section-title">🎯 리스크 체크리스트</h2>
-<div style="margin-bottom: 10px;">
-<div style="font-size: 0.85rem; font-weight: 700; color: #58a6ff; margin-bottom: 10px;">🌐 글로벌</div>
 <div class="risk-grid">
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">① 중동 지정학적 변동성</div>
-<div class="risk-desc">이란-미국 휴전 협상 재개 → 유가 $71.41 (-1.35%) · 트럼프 "협상 가능" 발언 이후 오일 쇼크 완화 · 본격적 충돌 재개 시 WTI $80 돌파 가능성 | 에너지 선물·방산주 변동성 확대</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">② 반도체 수급 과도기</div>
-<div class="risk-desc">삼성전자 호실적에도 KOSPI 4.91% 하락 (7월7일) → DeepSeek AI칩 개발 뉴스로 NVIDIA 독점 우려 · 차량용/IoT칩 과잉투자 우려 → SMH ETF 변동성 확대 · 2027년 실적 컨센서스 하향 리스크</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-green"></div>
-<div>
-<div class="risk-label">③ 미국 노동시장 안정화</div>
-<div class="risk-desc">초기청구 215,000 (예상 218,000 하회) · 6월 NFP 57,000 실적 부진에도 7월 둘째주 클레임 안정 · 실업률 4.2% 유지 · Fed 7월 인상 가능성 3% 미만 | 하반기 인하 기대감 유지 ✅</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">④ 인플레이션 재점화 우려</div>
-<div class="risk-desc">AI 데이터센터 폭발적 건설 → 전력수요 2027년까지 4배 증가 · 에너지 병목 심화 (IEA "2027년 서버 당 가정 65개 전력 필요") · 유가 유동성 → 에너지 물가 상승률 2-3% 재가속 가능</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-red"></div>
-<div>
-<div class="risk-label">⑤ 초과 유동성 회수 신호</div>
-<div class="risk-desc">Fed 2026년 하반기 1회 인상 공식 가능성 높음 (FOMC minutes 암시) · S&P500 PER 22배 영역 유지 중 · 채권수익률 부진 시 성장주 모멘텀 급속 약화 리스크 | 일시적이나 7월 말 Big Tech 실적 기준</div>
-</div>
-</div>
-<div class="risk-divider">🇰🇷 한국</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">⑥ 환율 리스크 — USD/KRW 1,498.27원</div>
-<div class="risk-desc">원화 강세 국면 전환 (직전 1,506.55원) · 외국인 순매수 복귀 신호 · 그러나 중동 긴장 확대 시 달러 회귀 위험 · 반도체 수출 가격경쟁력 개선 vs. 수입인플레 재가속 불균형</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">⑦ 반도체/수출 리스크</div>
-<div class="risk-desc">삼성전자 Q2 호실적 (영업이익 +49% YoY) · 하이닉스 메모리 균형 회복 · BUT: 2027년 메모리칩 공급과잉 우려 · 미중 규제 재강화 신호 (중국 AI칩 자체개발 가속화) → 7월말 Big Tech 실적 기준 재평가</div>
-</div>
-</div>
-<div class="risk-item">
-<div class="dot dot-yellow"></div>
-<div>
-<div class="risk-label">⑧ 외국인 수급 리스크</div>
-<div class="risk-desc">최근 3일 기준 외국인 순매수 전환 · KOSPI 2.52% 상승으로 기관·개인 동반 매수 · 그러나 비중상위주(삼성전자) 집중매수 → 분산약화 리스크 · 중동/중국 뉴스 부정적 시 일괄 매도 우려</div>
-</div>
-</div>
-</div>
-<div class="risk-summary">
-<div class="score">5/8</div>
-<div class="phase">경계 국면 → 주의로 전환 중</div>
-</div>
+  <div style="grid-column: 1/-1;">
+    <div class="section-title">🎯 리스크 체크리스트</div>
+  </div>
+  <div style="grid-column: 1/-1; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+    <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">🌐 글로벌</span>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">① 호르무즈 해협 긴장 재점화</div>
+      <div class="risk-desc">트럼프 '휴전 끝' 발언 → WTI 급등(+4.99%) · 유가 74.29→78.0$ · 인플레 재악화 우려 · S&P500 -0.79%, 방어주 강세</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">② 반도체 수급 조정 심화</div>
+      <div class="risk-desc">SK하이닉스 나스닥 상장 후 국내 ADR 차익실현 · 메모리 수급 불확실성 확대 · 나스닥 -1.88% · Micron, Marvell 등 메모리주 약세</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">③ AI 투자 버블 경계심</div>
+      <div class="risk-desc">마진 레버리지 사상 최고(1.42조$ 5월) · 기술주 고평가 우려 · 코스피 차익실현 -8.95% 반영 · 반도체주 이익 성장성 vs 밸류에이션 괴리</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">④ 연방준비제도의 높은 금리 기조 유지</div>
+      <div class="risk-desc">10Y 금리 4.61% 유지 · Fed 6월 회의록 '인플레 상향 위험' 강조 · 차입비용 상승 영향 가중 · 주택 시장 약세(기존주택판매 -2.4% MoM)</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-green"></div>
+    <div>
+      <div class="risk-label">⑤ 미국 고용 시장 안정성</div>
+      <div class="risk-desc">초장 실업수당청구 215,000명 예상치 이하 · 노동시장 탄력성 유지 · 임금 성장 vs 주택가격 격차 좁혀지는 중</div>
+    </div>
+  </div>
+  <div style="grid-column: 1/-1; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 10px;">
+    <span style="font-size: 0.75rem; font-weight: 600; color: var(--muted);">🇰🇷 한국</span>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">⑥ 외국인 대규모 순매도 심화</div>
+      <div class="risk-desc">코스피 매도 확산 · 반도체 차익실현 · 기관과 동반 매도 → 매도 사이드카·서킷브레이커 발동 · 외국인 수급 약 5월 이후 최악</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">⑦ 반도체주 급락 및 차익실현</div>
+      <div class="risk-desc">삼성전자 -10.70% · SK하이닉스 -15%+ · 200만원선 붕괴 · 나스닥 ADR 상장 이후 포지셔닝 조정 · AI 메모리 전망 불확실화</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">⑧ 레버리지 ETF 연쇄 청산 압력</div>
+      <div class="risk-desc">반도체 고점 이후 레버리지 상품 손실 심화 · 강제결제 우려 · 코스피 7,000 붕괴 이후 추가 낙폭 가능성</div>
+    </div>
+  </div>
+  <div class="risk-summary">
+    <div class="score">6 / 8</div>
+    <div class="phase">고경계 — 현실화된 리스크 多</div>
+  </div>
 </div>
 
-<div style="margin-bottom: 14px;">
-<h2 class="section-title">🇰🇷 한국 수급 현황</h2>
+<div class="section-title" style="margin-top: 28px;">🇰🇷 한국 수급 현황</div>
+
 <div class="kr-grid">
-<div class="card">
-<div class="label">KOSPI 수급</div>
-<div class="value">7,475.94</div>
-<div class="change"><span class="up">▲</span> <span class="up">+2.52%</span> · <span class="up">+184.03pt</span></div>
-<div class="sub">외국인 순매수 · 기관 동반 매수 · 개인 흡수</div>
-<div style="font-size: 0.75rem; color: #8b949e; margin-top: 8px;">거래대금 약 13조원 · 52주 고점比 79%</div>
-</div>
-<div class="card">
-<div class="label">KOSDAQ 수급</div>
-<div class="value">837.43</div>
-<div class="change"><span class="up">▲</span> <span class="up">+5.47%</span> · <span class="up">+43.43pt</span></div>
-<div class="sub">중소형 동반 반등 — 2차전지·바이오 매수</div>
-<div style="font-size: 0.75rem; color: #8b949e; margin-top: 8px;">기관 흡수 · 개인 순매도 지속</div>
-</div>
-</div>
-</div>
-
-<div style="margin-bottom: 14px;">
-<h2 class="section-title">📈 오늘의 섹터 동향</h2>
-<div class="card">
-<div class="label">강세 섹터</div>
-<div style="font-size: 0.85rem; color: #3fb950; margin-top: 10px;">
-반도체 +3.2% · 통신장비 +2.8% · 전기전자 +2.1%
-</div>
-</div>
-<div class="card">
-<div class="label">약세 섹터</div>
-<div style="font-size: 0.85rem; color: #f85149; margin-top: 10px;">
-금융 -1.3% · 화학 -0.9% · 운송 -0.6%
-</div>
-</div>
+  <div class="card">
+    <div class="label">KOSPI 수급</div>
+    <div class="value">6,806.93</div>
+    <div class="change"><span class="down">▼ -8.95%</span> · -669.01pt</div>
+    <div class="sub">외국인 순매도 · 기관 순매도 · 개인 순매수</div>
+    <div class="sub">거래대금 약 24조원 · 52주 고점比 약 80%</div>
+  </div>
+  <div class="card">
+    <div class="label">KOSDAQ 수급</div>
+    <div class="value">799.36</div>
+    <div class="change"><span class="down">▼ -4.55%</span> · -38.07pt</div>
+    <div class="sub">중소형주 약세 · 외국인 미약한 매도세 · 기관 순매도</div>
+    <div class="sub">코스피 vs 코스닥 수익률 격차 확대 중 (코스피 +178% vs 코스닥 +91% YTD)</div>
+  </div>
 </div>
 
-<div style="margin-bottom: 14px;">
-<h2 class="section-title">📰 이번 주 핵심 이슈</h2>
+<div class="section-title">📈 오늘의 섹터 동향</div>
+
+<div class="kr-grid">
+  <div class="card">
+    <div class="label">강세 섹터</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+      <div class="sector-box">
+        <div class="slabel">금융</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--up);">+1.2%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">헬스케어</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--up);">+0.8%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">에너지</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--up);">+4.5%</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">약세 섹터</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+      <div class="sector-box">
+        <div class="slabel">반도체</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--down);">-12.4%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">IT/통신</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--down);">-9.2%</div>
+      </div>
+      <div class="sector-box">
+        <div class="slabel">자동차</div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--down);">-7.5%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">📰 이번 주 핵심 이슈</div>
+
 <div class="news-list">
-<div class="news-item">
-<div class="news-text">
-<strong>🇺🇸 Blue Origin 창립 외부 투자 라운드 — $10B 신규 펀딩</strong>
-제프 베조스 Blue Origin이 창립 이후 첫 외부 투자 진행 중 · 기업가치 $130B로 평가 (SpaceX 후행) · Coatue Management $4B 투자 확정, 추가 $4B 수요 폭발 → 우주항공 인프라 투자 대폭 가속 신호 · 관련주: VSAT, MAXR, RTX 수혜 예상
-</div>
-<div class="badge badge-pos">기술</div>
-</div>
-<div class="news-item">
-<div class="news-text">
-<strong>🇺🇸 Samsung 반도체 호실적도 주가 부진 — 2027 공급과잉 우려</strong>
-Q2 영업이익 +49% YoY 달성 · 메모리칩 가격 반등 → 그러나 시장은 2027년 DRAM/NAND 과잉투자 경고 · DeepSeek AI칩 자체개발 뉴스로 NVIDIA 독점 우려 재점화 → 반도체 섹터 중장기 성장성 재평가 필요
-</div>
-<div class="badge badge-neu">산업</div>
-</div>
-<div class="news-item">
-<div class="news-text">
-<strong>🌐 US-Iran 휴전 협상 "상태 악화" — 중동 지정학적 리스크 상존</strong>
-트럼프 NATO 정상회담에서 "이란과의 휴전 끝" 발언 → 유가 급등 → 직후 협상 재개 가능성 언급으로 급락 · 불확실성 장기화 → 에너지 변동성 확대 · 방산주(한화에어로스페이스 +8.2%) 단기 수혜
-</div>
-<div class="badge badge-neg">정치</div>
-</div>
-<div class="news-item">
-<div class="news-text">
-<strong>🇰🇷 현대차 자율주행 합작법인 Motional 로보택시 진전</strong>
-아이오닉5 기반 로보택시 양산 체제 돌입 · 2026년 내 상용 서비스 시작 예정 → 자율주행/로봇택시 대규모 자본지출 가시화 · 통신인프라(5G/6G), 반도체 수요 촉발
-</div>
-<div class="badge badge-kr">기술</div>
-</div>
-<div class="news-item">
-<div class="news-text">
-<strong>🇰🇷 K-바이오 수출 상반기 사상 최대 실적 — 바이오테크 랠리 지속</strong>
-상반기 바이오의약품 수출액 사상 최고 기록 · 유전자치료(알테오젠) 임상진전 · mRNA 플랫폼 기업들 글로벌 파트너십 확대 → 후반기 임상진행 호재 기대
-</div>
-<div class="badge badge-kr">의료</div>
-</div>
-</div>
+  <div class="news-item">
+    <div class="news-text"><span class="badge badge-neg">🇺🇸 글로벌</span> <strong>호르무즈 해협 긴장 재점화 & 유가 급등</strong> — 트럼프 "이란 휴전 끝" 발언으로 중동 위기 수위 상향 · WTI 급등(+4.99%) 74.29→78.0$ · 전주 +4% 이상 누적 · 유럽 Stoxx600 -2% 급락, 마진 거래 손실 현실화 · 인플레 재악화 우려로 Fed 인하 기대감 후퇴 → 장기 금리 상승압</div>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><span class="badge badge-neg">🇺🇸 글로벌</span> <strong>SK하이닉스 나스닥 상장 후 메모리 반도체 수급 조정 심화</strong> — SK하이닉스 ADR 공모가 $149 → 첫 거래 $170 (+14%) · 국내주는 역으로 차익실현 · $26.5B 자금 유출 영향 · Micron, 마벨 등 경쟁사 주가도 동반 약세 · HBM 수요 낙관론 vs 범용 메모리 공급 과잉 우려 교차</div>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><span class="badge badge-neu">🌐 글로벌</span> <strong>AI 투자 거품 경계심 & 마진 레버리지 사상 최고</strong> — 마진 데빗 잔액 1.42조$ (5월) · 1년 전比 +53.7% · 과거 닷컴 버블(2000), 금융위기(2007) 정점 근처 · 기술주 고평가 우려 → 급락시 강제결제 폭포 현실화 가능 · 나스닥 -1.88%, 마이크로캡 -15%+ 낙폭</div>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><span class="badge badge-kr">🇰🇷 한국</span> <strong>코스피 8.95% 급락 & 매도 사이드카·서킷브레이커 발동</strong> — 코스피 7,475→6,806 (5월 이후 최저) · 삼성전자 -10.70%, SK하이닉스 -15%+ · 매도 사이드카 10:34분 발동, 이후 서킷브레이커까지 확대 · 외국인 차익실현 + 기관 동반 매도 + 반도체 차입금 강제결제 3중 쇼크 · 250만원→200만원선 붕괴</div>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><span class="badge badge-kr">🇰🇷 한국</span> <strong>AI 투자 버블 우려 & 실적 기대치 하향 신호</strong> — 시장 가장 큰 우려: AI 버블 경계심 · 반도체 업황 선순환 vs 고평가 괴리 확대 · Micron, Marvell 등 미국 칩주 약세 신호 전달 · 코스닥 외국인 매수세는 긍정적(YTD +3.9조 순매수)이나 코스피 대형주 이탈이 더 강함</div>
+  </div>
 </div>
 
-<div style="margin-bottom: 14px;">
-<h2 class="section-title">📅 주요 경제 이벤트</h2>
+<div class="section-title" style="margin-top: 28px;">📅 주요 경제 이벤트</div>
+
 <table class="cal-table">
-<thead>
-<tr>
-<th>날짜/시간</th>
-<th>이벤트</th>
-<th>예상치 / 이전값</th>
-<th>중요도</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>7월14일 14:30 EST</td>
-<td>🔥 미국 CPI (6월)</td>
-<td>0.1% MoM / 0.0% | 2.9% YoY / 3.0%</td>
-<td class="imp-high">★★★</td>
-</tr>
-<tr>
-<td>7월15일 08:30 EST</td>
-<td>생산자물가지수 (PPI)</td>
-<td>-0.2% MoM / -0.1%</td>
-<td class="imp-high">★★★</td>
-</tr>
-<tr>
-<td>7월15일 12:00 EST</td>
-<td>ASML 2Q 실적</td>
-<td>마진 악화 우려 / Q1 54% | 가이던스 보수적</td>
-<td class="imp-high">★★★</td>
-</tr>
-<tr>
-<td>7월14~15일</td>
-<td>JP Morgan/Goldman/Wells Fargo 어닝</td>
-<td>금리 수익 회복 / 투자은행 부진</td>
-<td class="imp-high">★★★</td>
-</tr>
-<tr>
-<td>7월16일 08:30 EST</td>
-<td>소매판매지수 (June)</td>
-<td>0.2% MoM / -0.3%</td>
-<td class="imp-high">★★★</td>
-</tr>
-<tr>
-<td>7월17일 10:00 EST</td>
-<td>미시간대 소비자심리 (July)</td>
-<td>71.0 / 70.2</td>
-<td class="imp-med">★★☆</td>
-</tr>
-<tr>
-<td>7월16일 16:30 EST</td>
-<td>Netflix 2Q 실적</td>
-<td>광고수익 가속화 / 가입자 +4.3M</td>
-<td class="imp-med">★★☆</td>
-</tr>
-</tbody>
+  <thead>
+    <tr>
+      <th>날짜/시간</th>
+      <th>이벤트</th>
+      <th>예상치 / 이전값</th>
+      <th>중요도</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>7/14 08:30</td>
+      <td>🔥 Consumer Price Index (CPI) & Core CPI</td>
+      <td>-20.4% WTI 하락의 영향으로 모듈레이션 예상 / -</td>
+      <td class="imp-high">★★★</td>
+    </tr>
+    <tr>
+      <td>7/14 10:00</td>
+      <td>🔥 Fed Chair Kevin Warsh Congressional Testimony</td>
+      <td>House Financial Services Comm. / -</td>
+      <td class="imp-high">★★★</td>
+    </tr>
+    <tr>
+      <td>7/15 10:00</td>
+      <td>Fed Chair Warsh Senate Banking Committee</td>
+      <td>Kevin Warsh (新 연준의장 첫 상원 증언) / -</td>
+      <td class="imp-high">★★★</td>
+    </tr>
+    <tr>
+      <td>7/16 08:30</td>
+      <td>Initial Jobless Claims</td>
+      <td>215,000 / 215,000</td>
+      <td class="imp-med">★★☆</td>
+    </tr>
+    <tr>
+      <td>7/17 10:00</td>
+      <td>Michigan Consumer Sentiment (Preliminary)</td>
+      <td>예상치 기대 / -</td>
+      <td class="imp-low">★☆☆</td>
+    </tr>
+  </tbody>
 </table>
-</div>
 
-<div style="margin-bottom: 14px;">
+<div class="section-title" style="margin-top: 28px;">🧭 투자 방향성 코멘트</div>
+
 <div class="direction-card">
-<h2 class="section-title">🧭 투자 방향성 코멘트</h2>
+  <div class="phase-tag">⚡ 현재 국면: "중동 긴장+유가 급등+반도체 버블 경계심 3중 쇼크로 고경계 국면 진입"</div>
+  <div>
+    <div style="font-size: 0.9rem; color: var(--text); line-height: 1.6;">
+    <strong>시장상황</strong> — 글로벌은 기술주 약세와 방어주 강세의 섹터 로테이션 초입 (S&P500 -0.79% 완만) 대비, 한국은 반도체 차익실현+외국인 매도+기관 동반매도로 코스피 -8.95% 급락 (7,000선 붕괴). WTI +4.99% 에너지 랠리 속 유가 인플레 재악화 우려 가중. Fed 6월 회의록 '인플레 상향 위험' 강조 = 하반기 인하 연기 신호. 미국 주식은 아직 지지선 위 (7,500 근처), 한국만 낙폭 심함 = 외국인 자금 이탈 가시화.
+    </div>
+  </div>
 
-<div class="phase-tag">현재 국면: "공포탐욕 중립진입 + 반도체 섹터 반등 + CPI 인플레이션 데이터 기대" (2026.07.10~07.14)</div>
+  <div class="dir-row">
+    <div class="dir-block">
+      <div class="tag" style="color: var(--up);">✅ 지금 유리한 자산/섹터</div>
+      <ul>
+        <li><strong>유가 연동 에너지주</strong> — WTI +4.99%, 우리 에너지 섹터 +4.5% · 한화에어로스페이스, 두산에너빌리티 중기 상승 가능성</li>
+        <li><strong>금융주 (방어 + 실적)</strong> — 금융 +1.2% 강세 · 기준금리 고수 = 대출금리 이득폭 확대 · KB금융, 신한지주 배당 매력</li>
+        <li><strong>헬스케어 방어주</strong> — 헬스케어 +0.8% 약보 강세 · 경기민감주 회피 → 의료용품, 바이오 저평가 매수 기회</li>
+        <li><strong>미국 S&P500 추적 ETF (장기)</strong> — 국내 소폭 조정이 미국 구조적 강세(AI 인프라) 약화 신호 아님 · 추후 반등시 나스닥 기술주 역로테이션 가능</li>
+        <li><strong>금 (안전자산)</strong> — 지정학 리스크 가중 → 금 약세(-1.44%)는 단기 현상 · 인플레 재악화 시나리오 대비용</li>
+      </ul>
+    </div>
+    <div class="dir-block">
+      <div class="tag" style="color: var(--down);">❌ 지금 불리한 자산/섹터</div>
+      <ul>
+        <li><strong>반도체주 (단기)</strong> — 반도체 -12.4% 급락 · 삼성전자 -10.70%, SK하이닉스 -15%+ · 차익실현+기대치 하향 이중 타격 · 28일 미국 빅테크 실적 이전까지 약세 지속 가능</li>
+        <li><strong>IT/통신 (기술주)</strong> — IT -9.2% 약세 · 나스닥 연동 낙폭 · 7월 중반 기술주 정산 거쳐야 반등 가능</li>
+        <li><strong>자동차 (현대차, 기아)</strong> — 자동차 -7.5% · 현대차 -12% 급락 · EV/반도체 수급 악화 + 금리 고정 = 원가 압박</li>
+        <li><strong>고레버리지 ETF (반도체 레버)</strong> — 강제결제 실현 위험 · 반도체 추가 낙폭시 심한 손실</li>
+        <li><strong>코스닥 성장주 (단기)</strong> — 코스닥 -4.55% 약세이나 외국인 매수 신호(YTD +3.9조)는 긍정 · 단기는 약하되 중기는 회복 기대</li>
+      </ul>
+    </div>
+  </div>
 
-<div style="background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-<div style="font-size: 0.85rem; line-height: 1.6; color: #e6edf3;">
-글로벌 시장은 공포탐욕지수 49(중립)로 진입하면서 순매수세 전환 신호를 보내고 있다. S&P500은 +0.42%, 나스닥은 +0.33% 상승했으나 은행주 약세(금융 -1.3%)로 수익성 개선 기대감이 제약된 상태. 반도체 섹터는 SMH +2.5% 반등 (ASML, MICRON +4% 상회)했으나, 삼성전자 호실적에도 KOSPI 일시적 급락했던 점에서 차입금 활용 초과매수 불안감이 존재. 이란-미국 휴전 협상 불확실성이 유가 변동성을 유발 중이며, 7월14일 CPI 발표가 인플레이션 재점화 우려를 해소할 핵심 지표가 될 예정.
-</div>
-</div>
+  <div class="dir-block" style="flex: 1;">
+    <div class="tag" style="color: var(--accent);">📌 단기 변수 (오늘~1주)</div>
+    <ul>
+      <li><strong>7/14 08:30 (미국)</strong> — CPI & Core CPI 발표 · 유가 급등 이후 인플레 악화 신호 가능성 높음 · 만약 CPI 상향 → 달러 강세, 신흥국 자금유출 심화 가능</li>
+      <li><strong>7/14 10:00, 7/15 10:00</strong> — Fed 의장 Kevin Warsh 첫 의회 증언 · 인플레 기조 강조 가능성 → 시장 심리 악화 직결</li>
+      <li><strong>이번 주 중반 (7/16~17)</strong> — 실업수당청구 & 미시간 소비자심리 발표 · 노동시장 체력 확인 기회 · 약약할 경우 위험자산 추가 약세</li>
+      <li><strong>주말 중동 상황 모니터링</strong> — 호르무즈 해협 재도발 신호 없을 경우 유가 후퇴, 반도체 일부 회복 가능</li>
+    </ul>
+  </div>
 
-<div class="dir-row">
-<div class="dir-block">
-<div class="tag">✅ 지금 유리한 자산/섹터</div>
-<ul>
-<li><strong>반도체 ETF (SOXX, SMH)</strong> — 과매도 반등 국면 · ASML, MICRON 등 기관 쏠림 · 2주 내 추가 5-8% 상승 여력</li>
-<li><strong>금융주 (은행 + 증권)</strong> — 금리 4.57% 안정화로 NIM 개선 예상 · JPM, GS 실적 발표 이후 재평가</li>
-<li><strong>방산주 (한화에어로스페이스, RTX)</strong> — 중동 긴장 확대 시 방어 자산 · NATO 방위비 증액 → 장기 성장성 확실</li>
-<li><strong>한국 소형주 (KOSDAQ)</strong> — +5.47% 반등 · 기관 외국인 쏠림 완화 시 개별주 기회</li>
-<li><strong>원화 자산</strong> — USD/KRW 1,498원 강세국면 · 외국인 재진입 신호</li>
-</ul>
-</div>
+  <div class="dir-block" style="flex: 1;">
+    <div class="tag" style="color: var(--accent);">⚠️ 중기 리스크 (1~3개월)</div>
+    <ul>
+      <li><strong>AI 버블 현실화 & 고평가 정정</strong> — 마진 1.42조$ 사상 최고 · 기술주 PER 19~25x 범위 · 실적 성장 vs 밸류에이션 격차 해소 과정 3~6개월 소요 가능</li>
+      <li><strong>Fed 금리 기조 전환 지연</strong> — 6월 회의록 '인플레 상향' 강조 · 하반기 인하 기대감 5% → 0% 급락 · 차입비용 고수 = 성장주 장기 약세</li>
+      <li><strong>한국 외국인 자금 회수 가속</strong> — YTD 코스피 외국인 -28조 순매도 · 반도체 이익 성장성 의심 단계 진입 · 코스닥 +3.9조 매수는 미약한 대비</li>
+      <li><strong>중동 전쟁 2차 발발 위험</strong> — 휴전 상태 지속 불확실 · 만약 전면전 → 유가 $100+ 돌파, 스태그플레이션 시나리오 가동</li>
+    </ul>
+  </div>
 
-<div class="dir-block">
-<div class="tag">❌ 지금 불리한 자산/섹터</div>
-<ul>
-<li><strong>성장주 (Tech Heavy Index)</strong> — NASDAQ Composite 여전히 -0.5~-1.2% 변동 · AI 수익화 지연 우려</li>
-<li><strong>채권 (장기)</strong> — 10Y금리 4.57% 상승 · 인플레이션 재점화 우려 시 5% 돌파 가능성</li>
-<li><strong>금 (Gold)</strong> — -0.38% 약세 · 지정학적 프리미엄 해제 · $4,000 아래 탈락 위험</li>
-<li><strong>금융 위크(은행 소형주)</strong> — Fed 추가 인상 우려 · NIM 확대 제약</li>
-</ul>
-</div>
-</div>
+  <div class="dir-conclusion">
+    <div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
+    <p><strong>"반도체 차익실현+중동 긴장+AI 버블 경계심으로 고경계 국면 → 단기 하락에 관성매매 피하고, CPI 발표 이후 저점 확인 후 분할 매수 전략 필수"</strong></p>
+    <div style="margin-top: 12px; font-size: 0.85rem; line-height: 1.6;">
+      <div style="margin-bottom: 8px;"><strong>① 지금 당장:</strong> 현금 30%~40% 확보 · 반도체·기술주 공매도 금지 · 기존 포지션 손실 구간에서 나이프 캐칭 금지</div>
+      <div style="margin-bottom: 8px;"><strong>② 7/14 CPI 이후:</strong> 상향 = 달러 강세 → K반도체 일시 추가 약세 · 하향 또는 평탄 = 차입금 강제결제 마침 → 반등 신호</div>
+      <div style="margin-bottom: 8px;"><strong>③ 반등 타이밍 (CPI 이후 5~10거래일):</strong> 에너지주+금융주 먼저 매수 · 그 다음 저평가 반도체 분할 진입 · 코스피 6,500 근처 확정시 나스닥 추적 ETF 추가 물량</div>
+      <div><strong>④ 중기 (1개월+):</strong> Fed 인하 기대감 회복 신호까지 기술주 비중 60% 이하 · 헬스케어/금융/에너지 방어 비중 40% 유지 · 7월말 마이크론 실적 이후 반도체 재평가</div>
+    </div>
+  </div>
 
-<div class="dir-block" style="margin-top: 10px;">
-<div class="tag">📌 단기 변수 (오늘~1주)</div>
-<ul>
-<li><strong>7월14일 14:30 EST · 미국 CPI 발표</strong> — 시장 기대치 0.1% MoM (6월 0% 대비 가속 신호) → 인플레이션 재점화 우려 해소 여부가 향후 1주 방향 결정 · S&P500 +/-1% 변동 예상</li>
-<li><strong>7월15일 12:00 EST · ASML 2Q 실적</strong> — 마진 부진 경고 시 나스닥 -1~-2% 추가 낙폭 · 반도체 섹터 재평가</li>
-<li><strong>7월14~15일 · JPM/GS/Wells Fargo 어닝</strong> — 금리 수익(NIM) 회복 신호 → 금융주 재평가</li>
-<li><strong>7월14일 24:00까지 · 중동 긴장 모니터링</strong> — 이란 추가 공격 시 유가 $75 상향 · 에너지 변동성 확대</li>
-</ul>
-</div>
-
-<div class="dir-block" style="margin-top: 10px;">
-<div class="tag">⚠️ 중기 리스크 (1~3개월)</div>
-<ul>
-<li><strong>반도체 2027년 공급과잉 본격화</strong> — 2Q 호실적에도 2027년 메모리칩 가격 약세 예상 · ASML, MICRON 2026년 4Q 재평가 필요</li>
-<li><strong>AI 인프라 에너지 병목 현실화</strong> — 2027년 데이터센터 전력수요 4배 증가 → 유틸리티주 수혜 vs. 에너지인플레이션 우려 혼조</li>
-<li><strong>Fed 하반기 추가 인상 가능성</strong> — 현재 시장 이미 인하 1~2회 선반영 중 · 인상 시그널 시 높은 변동성</li>
-</ul>
-</div>
-</div>
-
-<div class="dir-conclusion">
-<div class="tag">💡 결론 — 오늘 투자자가 취해야 할 포지션</div>
-<p><strong>"반도체 과매도 반등 + CPI 인플레이션 진정 확인 국면 → 기술주 단기 수익 실현 후 금리민감주로 포지션 전환 추천"</strong></p>
-
-<p style="margin-top: 10px;">
-<strong>① 오늘 당장 할 액션:</strong> 나스닥/성장주 보유분 일부 수익실현 (목표 +3% 달성 시) → SOXX/SMH 기술주 집중 매수(ASML, MICRON 개별주) 또는 금융주 ETF로 포지션 전환<br>
-<strong>② 오늘 당장 할 액션:</strong> KOSPI 2.52% 반등 시 한국 은행주(KB, 신한, 우리) 단기 매수 기회 → Fed 인상 시까지 홀딩<br>
-<strong>③ 오늘 당장 할 액션:</strong> 원화 강세(USD/KRW 1,498원) 기조 확인 후 한국 수출주(삼성전자, SK하이닉스) 매수 → 외국인 순매수 지속 여부 모니터링<br>
-<strong>④ 오늘 당장 할 액션:</strong> 방산주(한화에어로스페이스) 단기 포지션 추가 → 중동 리스크 헤지용 장기 보유 고려<br>
-</p>
-
-<p style="margin-top: 10px;">
-<strong>핵심 체크포인트:</strong> CPI 0.1% 이하 확인 + 반도체 약세 저항 불패 + 원화 1,500원 아래 수성 = 매수 신호 강화 / CPI 0.3% 이상 + 유가 $75 돌파 + 달러 1,510원 상향 = 즉시 차익실현 후 관망
-</p>
+  <div style="margin-top: 12px; background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 10px; padding: 10px 12px;">
+    <div style="font-size: 0.75rem; color: var(--muted); font-weight: 600;">핵심 체크포인트</div>
+    <div style="font-size: 0.8rem; color: var(--text); margin-top: 4px;"><strong>CPI 발표 (7/14) + 매도 강도 (사이드카 재발동 여부) + 달러 방향 (USD/KRW 1,500 돌파)</strong></div>
+  </div>
 </div>
 
-<div class="footer">
-※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.
-데이터 기준: CoinGecko · CNN Fear&Greed · CME FedWatch · Yahoo Finance · Investing.com — 2026.07.10 KST
-</div>
-</body>
-</html>
+<div class="portfolio-section">
+  <div class="section-title">💼 내 포트폴리오 현황</div>
+  
+  <div class="account-group">
+    <div class="account-title">홍창우_일반</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SPYM</td>
+          <td>199주</td>
+          <td>$79.78</td>
+          <td>$88.18</td>
+          <td class="gain-up">+10.53%</td>
+        </tr>
+        <tr>
+          <td>ACE KRX금현물</td>
+          <td>197주</td>
+          <td>₩18,612</td>
+          <td>₩18,612</td>
+          <td>0.0%</td>
+        </tr>
+        <tr>
+          <td>GLTR</td>
+          <td>14주</td>
+          <td>$239.67</td>
+          <td>$179.7</td>
+          <td class="gain-down">-25.02%</td>
+        </tr>
+        <tr>
+          <td>하나금융지주</td>
+          <td>17주</td>
+          <td>₩114,703</td>
+          <td>₩114,703</td>
+          <td>0.0%</td>
+        </tr>
+        <tr>
+          <td>HD현대마린솔루션</td>
+          <td>8주</td>
+          <td>₩222,953</td>
+          <td>₩193,600</td>
+          <td class="gain-down">-13.17%</td>
+        </tr>
+        <tr>
+          <td>메리츠금융지주</td>
+          <td>17주</td>
+          <td>₩120,345</td>
+          <td>₩117,000</td>
+          <td class="gain-down">-2.78%</td>
+        </tr>
+        <tr>
+          <td>기아</td>
+          <td>9주</td>
+          <td>₩158,631</td>
+          <td>₩143,500</td>
+          <td class="gain-down">-9.54%</td>
+        </tr>
+        <tr>
+          <td>HD한국조선해양</td>
+          <td>3주</td>
+          <td>₩381,044</td>
+          <td>₩341,500</td>
+          <td class="gain-down">-10.38%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="account-summary">
+      <div style="flex: 1;">
+        <div style="font-size: 0.7rem; color: var(--muted);">계좌 합계</div>
+        <div style="font-size: 1rem; font-weight: 700;">₩41,505,956</div>
+      </div>
+      <div style="flex: 1; text-align: right;">
+        <div style="font-size: 0.7rem; color: var(--muted);">손익</div>
+        <div style="font-size: 1rem; font-weight: 700; color: var(--up);">₩699,051 (+1.71%)</div>
+      </div>
+    </div>
+    <div class="portfolio-comment">SPYM 미국주 매수 타이밍 좋음 — 오늘 나스닥 -1.88% 약세에도 강세 유지 · GLTR 금관련 ETF는 안전자산이나 단기 약세 (-25%) 지속 예상 · 반도체주 없음이 오늘 최고 방어 요소</div>
+  </div>
+
+  <div class="account-group">
+    <div class="account-title">홍창우_연금</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ACE 미국빅테크TOP7 Plus</td>
+          <td>1,031주</td>
+          <td>₩15,957</td>
+          <td>₩26,855</td>
+          <td class="gain-up">+68.30%</td>
+        </tr>
+        <tr>
+          <td>TIGER 미국S&P500</td>
+          <td>750주</td>
+          <td>₩17,584</td>
+          <td>₩28,235</td>
+          <td class="gain-up">+60.57%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="account-summary">
+      <div style="flex: 1;">
+        <div style="font-size: 0.7rem; color: var(--muted);">계좌 합계</div>
+        <div style="font-size: 1rem; font-weight: 700;">₩48,863,755</div>
+      </div>
+      <div style="flex: 1; text-align: right;">
+        <div style="font-size: 0.7rem; color: var(--muted);">손익</div>
+        <div style="font-size: 1rem; font-weight: 700; color: var(--up);">₩19,224,088 (+64.86%)</div>
+      </div>
+    </div>
+    <div class="portfolio-comment">미국 대형주 추적 ETF 장기 신뢰 자산 — 오늘 S&P500 -0.79%는 미약 · 빅테크 +68% 수익은 AI 버블이 아닌 기본 가치에 기인 · 차익실현 타이밍이지만 장기 보유 강력 권고</div>
+  </div>
+
+  <div class="account-group">
+    <div class="account-title">김지민_ISA</div>
+    <table class="portfolio-table">
+      <thead>
+        <tr>
+          <th>종목</th>
+          <th>수량</th>
+          <th>매수평균</th>
+          <th>현재가</th>
+          <th>수익률</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>KODEX 미국우주항공</td>
+          <td>2,419주</td>
+          <td>₩12,777</td>
+          <td>₩12,777</td>
+          <td>0.0%</td>
+        </tr>
+        <tr>
+          <td>KODEX 미국나스닥100</td>
+          <td>139주</td>
+          <td>₩24,361</td>
+          <td>₩29,370</td>
+          <td class="gain-up">+20.56%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="account-summary">
+      <div style="flex: 1;">
+        <div style="font-size: 0.7rem; color: var(--muted);">계좌 합계</div>
+        <div style="font-size: 1rem; font-weight: 700;">₩34,989,993</div>
+      </div>
+      <div style="flex: 1; text-align: right;">
+        <div style="font-size: 0.7rem; color: var(--muted);">손익</div>
+        <div style="font-size: 1rem; font-weight: 700; color: var(--up);">₩696,251 (+2.03%)</div>
+      </div>
+    </div>
+    <div class="portfolio-comment">나스닥100 +20.56% 선전 — 오늘 나스닥 -1.88% 낙폭도 소화 · 우주항공은 관성 보유 상태 · 다음 상승장에서는 우주항공 비중 축소 후 나스닥100 매수로 전환 고려</div>
+  </div>
+
+  <div class="account-group">
+    <div class="account-title">김지민_일반</div>
