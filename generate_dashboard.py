@@ -518,7 +518,7 @@ def build_summary(data: dict, llm: dict) -> str:
 
     btc = data["btc"]
     if btc.get("ok"):
-        dot = "🔴" if btc["change_24h"] > 0 else ("🔵" if btc["change_24h"] < 0 else "⚪")
+        dot = "▲" if btc["change_24h"] > 0 else ("▼" if btc["change_24h"] < 0 else "⚪")
         out.append(f"· BTC: <b>₩{btc['krw']:,}</b> {dot} {btc['change_24h']:+.2f}% "
                    f"(ATH 대비 {btc['ath_change']}%)")
 
