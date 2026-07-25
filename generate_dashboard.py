@@ -143,6 +143,166 @@ FRESHNESS_GROUPS = {
 }
 
 
+# ──────────────────────────────────────────────────────────────
+# 슬롯별 검색 세트 — 하루 3회 실행이므로 시간대마다 다른 영역을 겨냥한다.
+# 검색 1회당 $0.01 이 붙으므로 개수는 4건으로 고정하고 '무엇을 볼지'만 바꾼다.
+# ──────────────────────────────────────────────────────────────
+SEARCH_SETS = {
+    "morning": {   # KST 07:00 — 미국장 마감 직후
+        "label": "미국 마감 + 지정학",
+        "queries": [
+            "CNN fear and greed index today",
+            "US stock market close [[TODAY_ISO]]",
+            "geopolitical risk war conflict news [[TODAY_ISO]]",
+            "economic calendar this week [[TODAY_ISO]]",
+        ],
+    },
+    "midday": {    # KST 11:40 — 한국 장중
+        "label": "한국 증시 + 정부정책·부동산",
+        "queries": [
+            "CNN fear and greed index today",
+            "코스피 증시 뉴스 [[TODAY_ISO]]",
+            "정부 정책 발표 부동산 대책 규제 [[TODAY_ISO]]",
+            "economic calendar this week [[TODAY_ISO]]",
+        ],
+    },
+    "evening": {   # KST 19:00 — 한국 마감 후, 유럽 장중
+        "label": "중국·일본·유럽 + 무역",
+        "queries": [
+            "CNN fear and greed index today",
+            "China Japan Europe economy news [[TODAY_ISO]]",
+            "trade tariff export controls news [[TODAY_ISO]]",
+            "economic calendar this week [[TODAY_ISO]]",
+        ],
+    },
+}
+
+
+def slot_of(now: datetime) -> str:
+    """실행 시각(KST)으로 슬롯을 정한다. 스케줄 지연을 감안해 넓게 잡는다."""
+    h = now.hour
+    if h < 10:
+        return "morning"
+    if h < 16:
+        return "midday"
+    return "evening"
+
+
+# ──────────────────────────────────────────────────────────────
+# 시사점 룰북 — (카테고리 × 압력) → 전달경로.
+#
+# Haiku 는 카테고리와 압력만 고른다(각각 고정 선택지). 서술은 전부 여기서 나온다.
+# 교과서적 인과만 담아 환각 여지를 없앤다. 매수·매도 지시는 넣지 않는다
+# (validate_html 의 FORBIDDEN 검사에 걸린다).
+#
+# pressure 는 '한국 투자자 자산 관점'에서의 방향이다 — 유리 / 불리 / 중립.
+# ──────────────────────────────────────────────────────────────
+NEWS_CATEGORIES = [
+    "유가", "금리·중앙은행", "환율·달러", "지정학·전쟁", "반도체·AI",
+    "중국경제", "미국경제", "한국정책·규제", "부동산·건설", "무역·관세",
+    "일본·엔화", "유럽경제",
+]
+NEWS_PRESSURES = ["유리", "불리", "중립"]
+
+IMPLICATION_RULES = {
+    ("유가", "불리"):
+        "항공·운송 원가 부담 확대. 헤드라인 물가 압력이 커지면 금리 인하 기대가 후퇴해 "
+        "성장주 밸류에이션에 부담. 정유는 정제마진 개선으로 상대적 수혜.",
+    ("유가", "유리"):
+        "운송·항공·석유화학 원가 부담 완화. 물가 압력 둔화로 금리 인하 여지 확대 → "
+        "성장주에 우호적. 산유국 재정 악화 시 중동 발주 둔화는 별도 관찰 필요.",
+    ("금리·중앙은행", "불리"):
+        "할인율 상승으로 성장주·장기채 부담. 은행은 예대마진 개선. "
+        "한미 금리차 확대 시 원화 약세 압력과 외국인 수급 이탈 경로.",
+    ("금리·중앙은행", "유리"):
+        "할인율 하락으로 성장주·장기채 유리. 은행 예대마진은 축소. "
+        "부동산·건설 금융비용 부담 완화.",
+    ("환율·달러", "불리"):
+        "원화 약세 → 수출주 환산 실적에는 우호적이나 외국인 자금 이탈 압력. "
+        "원자재 수입 원가 상승으로 내수·항공·정유 부담.",
+    ("환율·달러", "유리"):
+        "원화 강세 → 외국인 수급에 우호적, 수입 원가 부담 완화. "
+        "수출주 환산 실적에는 역풍.",
+    ("지정학·전쟁", "불리"):
+        "안전자산 선호로 금·달러 강세, 원화 등 신흥국 통화 약세. "
+        "방산은 수주 기대. 유가·해상운임 경로로 원가 전가 발생 가능.",
+    ("지정학·전쟁", "유리"):
+        "위험선호 회복으로 신흥국 자금 유입 여건 개선. 안전자산 프리미엄 축소로 "
+        "금·달러 강세 되돌림. 유가·운임 안정 시 운송·항공 원가 부담 완화.",
+    ("반도체·AI", "불리"):
+        "국내 지수 시총 비중이 큰 섹터라 지수 자체에 직접 타격. "
+        "설비투자 축소 시 반도체 소재·부품·장비까지 후행 영향.",
+    ("반도체·AI", "유리"):
+        "국내 지수 시총 비중이 큰 섹터라 지수 상방에 직접 기여. "
+        "설비투자 확대 시 소재·부품·장비로 온기 확산.",
+    ("중국경제", "불리"):
+        "대중 수출 비중 큰 화학·철강·기계·화장품 실적 하향 압력. "
+        "위안 약세 시 원화 동반 약세 경향. 중국 증시와 코스피 동조 구간 주의.",
+    ("중국경제", "유리"):
+        "대중 수출 비중 큰 화학·철강·기계 업황 개선 기대. "
+        "위안 강세는 원화에도 우호적. 원자재 수요 회복 시 소재주 수혜.",
+    ("미국경제", "불리"):
+        "미 증시 조정은 코스피에 익일 갭으로 전이되는 경향. "
+        "경기 둔화 신호면 수출 중심 한국 기업 실적 전망에 하향 압력.",
+    ("미국경제", "유리"):
+        "미 증시 강세는 코스피 위험선호에 우호적. "
+        "다만 지표 호조가 금리 인하 지연으로 해석되면 성장주엔 역풍일 수 있음.",
+    ("한국정책·규제", "불리"):
+        "해당 산업 규제 강도에 따라 밸류에이션 디스카운트. "
+        "세제·배당 정책은 지주사·금융주 재평가 경로와 직결.",
+    ("한국정책·규제", "유리"):
+        "규제 완화·세제 지원은 해당 섹터 재평가 요인. "
+        "밸류업·배당 확대 기조는 저PBR 금융·지주사에 우호적.",
+    ("부동산·건설", "불리"):
+        "건설·시멘트·가구 등 전방 수요 위축. PF 부실 확대 시 증권·저축은행 "
+        "신용 리스크로 전이. 가계 자산효과 축소로 내수 소비에도 후행 영향.",
+    ("부동산·건설", "유리"):
+        "건설·시멘트·가구 등 전방 수요 개선. PF 리스크 완화 시 증권·건설 "
+        "신용 스프레드 축소. 가계 자산효과로 내수 소비에 우호적.",
+    ("무역·관세", "불리"):
+        "관세·수출통제는 자동차·철강·반도체 등 대미·대중 수출주에 직접 타격. "
+        "공급망 재편 비용 발생. 환율 방어 필요성 커지며 통화정책 제약.",
+    ("무역·관세", "유리"):
+        "관세 인하·협상 타결은 자동차·철강·반도체 수출주에 직접 수혜. "
+        "공급망 불확실성 축소로 설비투자 재개 여건 개선.",
+    ("일본·엔화", "불리"):
+        "엔 약세는 자동차·철강·기계에서 한국 기업과 가격 경쟁 심화. "
+        "엔 캐리 청산 국면이면 글로벌 위험자산 전반에 유동성 축소 압력.",
+    ("일본·엔화", "유리"):
+        "엔 강세는 일본과 경쟁하는 자동차·철강·기계의 상대 가격 경쟁력 개선. "
+        "엔 캐리 확대 국면은 위험자산 유동성에 우호적.",
+    ("유럽경제", "불리"):
+        "대유럽 수출 비중 큰 자동차·배터리·조선 수요 둔화. "
+        "ECB 정책 변화는 달러 지수를 통해 원화에 간접 영향.",
+    ("유럽경제", "유리"):
+        "대유럽 수출 비중 큰 자동차·배터리·조선 수요 개선. "
+        "유로 강세는 달러 지수 하락으로 이어져 신흥국 통화에 우호적.",
+}
+
+
+def build_implication(category: str, pressure: str, market: dict) -> dict | None:
+    """룰북 서술 + 시장 반영 여부를 붙인다. 반영 여부는 KOSPI 등락과 대조한다."""
+    if pressure == "중립":
+        return None
+    rule = IMPLICATION_RULES.get((category, pressure))
+    if not rule:
+        return None
+
+    reflected = None
+    k = market.get("KOSPI", {})
+    if k.get("ok") and k.get("change_pct") is not None:
+        pct = k["change_pct"]
+        if pct == 0:
+            reflected = None
+        elif (pressure == "유리") == (pct > 0):
+            reflected = f"KOSPI {pct:+.2f}% · 방향 일치 (반영 중)"
+        else:
+            reflected = f"KOSPI {pct:+.2f}% · 방향 불일치 (아직 미반영)"
+
+    return {"category": category, "pressure": pressure,
+            "channel": rule, "reflected": reflected}
+
+
 def _kr_nontrading(d: date) -> bool:
     """주말이거나 한국 공휴일이면 True. holidays 미설치 시 주말만 판정."""
     if d.weekday() >= 5:
@@ -323,7 +483,19 @@ def _issue(d, data: dict | None = None) -> dict | None:
                 print(f"  ⚠️ 이슈 폐기({where}): {w[0]}")
                 return None
 
-    return {"title": t, "body": b, "source": _clip(d.get("source"), LIMITS["source"])}
+    out = {"title": t, "body": b, "source": _clip(d.get("source"), LIMITS["source"])}
+
+    # 카테고리·압력은 고정 선택지에서만 받는다. 벗어나면 시사점 없이 이슈만 살린다.
+    cat = str(d.get("category") or "").strip()
+    pre = str(d.get("pressure") or "").strip()
+    if data and cat in NEWS_CATEGORIES and pre in NEWS_PRESSURES:
+        imp = build_implication(cat, pre, data.get("market", {}))
+        if imp:
+            out["implication"] = imp
+    elif cat or pre:
+        print(f"  · 분류값 무시(선택지 밖): category={cat!r} pressure={pre!r}")
+
+    return out
 
 
 def _event(d, today: date) -> dict | None:
@@ -715,7 +887,15 @@ def build_summary(data: dict, llm: dict) -> str:
     issues = (llm.get("issues_global") or []) + (llm.get("issues_korea") or [])
     if issues:
         out += ["", "<b>핵심 이슈</b>"]
-        out += [f"· {_esc(i['title'])}" for i in issues]
+        for i in issues:
+            out.append(f"· {_esc(i['title'])}")
+            imp = i.get("implication")
+            if imp:
+                tag = "🔺유리" if imp["pressure"] == "유리" else "🔻불리"
+                out.append(f"   <i>[{_esc(imp['category'])} · {tag}]</i>")
+                out.append(f"   ↳ {_esc(imp['channel'])}")
+                if imp.get("reflected"):
+                    out.append(f"   ↳ <i>{_esc(imp['reflected'])}</i>")
 
     cal = llm.get("calendar") or []
     if cal:
@@ -775,7 +955,7 @@ def send_telegram(data: dict, llm: dict, html_path: str) -> None:
 # 4. LLM 호출
 # ========================================================================
 
-def load_prompt(is_sunday: bool, data: dict) -> str:
+def load_prompt(is_sunday: bool, data: dict, now: datetime | None = None) -> str:
     """prompt.md 로드. [[IF_SUNDAY]]...[[END_SUNDAY]] 구간을 요일에 따라 남기거나 지운다."""
     with open(os.path.join(BASE_DIR, "prompt.md"), encoding="utf-8") as f:
         p = f.read()
@@ -788,13 +968,21 @@ def load_prompt(is_sunday: bool, data: dict) -> str:
     meta = data["meta"]
     max_date = (date.fromisoformat(meta["date_iso"]) + timedelta(days=8)).isoformat()
 
+    # 슬롯별 검색어 — 검색 개수는 4건 고정, 겨냥하는 영역만 바꾼다.
+    slot = slot_of(now or datetime.now(KST))
+    sset = SEARCH_SETS[slot]
+    block = "\n".join(f"{i}. {q}" for i, q in enumerate(sset["queries"], 1))
+    print(f"  검색 슬롯: {slot} ({sset['label']})")
+
     constraints = build_directional_constraints(data)
     print("\n── 프롬프트 주입 제약 ──")
     print(constraints.strip())
     print("──────────────────────\n")
 
     p = constraints + "\n" + p
-    return (p.replace("[[TODAY_ISO]]", meta["date_iso"])
+    return (p.replace("[[SEARCH_QUERIES]]", block)
+             .replace("[[SLOT_LABEL]]", sset["label"])
+             .replace("[[TODAY_ISO]]", meta["date_iso"])
              .replace("[[TODAY_LABEL]]", meta["date_label"])
              .replace("[[DATA_ASOF]]", meta["data_asof"])
              .replace("[[MARKET_DIGEST]]", dc.market_digest(data))
@@ -902,7 +1090,7 @@ def main() -> int:
     print(f"프롬프트: {'일요일(트렌드 레이더 포함)' if is_sunday else '평일'}")
 
     try:
-        llm_raw = call_llm(load_prompt(is_sunday, data))
+        llm_raw = call_llm(load_prompt(is_sunday, data, now))
     except Exception as e:
         # 뉴스 섹션만 비우고 나머지는 정상 발행한다. 전체 중단은 과잉이다.
         print(f"  LLM 실패 → 뉴스/일정 섹션 없이 발행: {e}")
