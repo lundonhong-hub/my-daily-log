@@ -23,10 +23,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
 
       - name: 패키지 설치
-        run: pip install anthropic yfinance requests pandas pykrx jinja2
+        run: pip install anthropic yfinance requests jinja2
 
       - name: 대시보드 생성 + 검증
         env:
