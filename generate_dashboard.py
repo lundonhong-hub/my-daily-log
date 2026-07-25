@@ -484,7 +484,7 @@ def _esc(s) -> str:
 def _line_market(label: str, rec: dict, unit: str = "") -> str | None:
     if not rec.get("ok"):
         return f"{_esc(label)}: <i>조회실패</i>"
-    dot = "🔴" if rec["change_pct"] > 0 else ("🔵" if rec["change_pct"] < 0 else "⚪")
+    dot = "▲" if rec["change_pct"] > 0 else ("▼" if rec["change_pct"] < 0 else "⚪")
     return (f"{_esc(label)}: <b>{unit}{rec['close']:,.2f}</b> "
             f"{dot} {rec['change_pct']:+.2f}%")
 
