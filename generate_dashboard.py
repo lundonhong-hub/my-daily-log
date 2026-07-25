@@ -303,6 +303,69 @@ def build_implication(category: str, pressure: str, market: dict) -> dict | None
             "channel": rule, "reflected": reflected}
 
 
+# ──────────────────────────────────────────────────────────────
+# 확정 일정 — 몇 년 전 공표되고 바뀌지 않는 이벤트는 검색에 맡기지 않는다.
+#
+# 실측 사고: FOMC 날짜가 실행 3회에서 7/30 → 7/28 → 7/27 로 매번 달랐다.
+# 실제 2026년 FOMC 는 7/28~29 회의, 결정 발표는 7/29 미 동부시간 14:00
+# (= KST 7/30 03:00). 검색 결과에 의존하는 한 이 오류는 계속 재발한다.
+#
+# 갱신 주기: 연 1회. FOMC 는 federalreserve.gov, 금통위는 bok.or.kr 공표 기준.
+# ──────────────────────────────────────────────────────────────
+FIXED_EVENTS = [
+    # (KST 날짜, KST 시각, 이벤트명, 중요도)
+    # FOMC: 회의 2일차 미 동부시간 14:00 발표 → KST 익일 새벽
+    #       (11월 첫 일요일 이전은 EDT라 03:00, 이후는 EST라 04:00)
+    ("2026-07-30", "03:00", "미국 FOMC 정책금리 결정", 3),
+    ("2026-09-17", "03:00", "미국 FOMC 정책금리 결정", 3),
+    ("2026-10-29", "03:00", "미국 FOMC 정책금리 결정", 3),
+    ("2026-12-10", "04:00", "미국 FOMC 정책금리 결정", 3),
+    # 한국은행 금융통화위원회 통화정책방향 결정회의
+    ("2026-08-27", "09:00", "한국은행 금통위 기준금리 결정", 3),
+    ("2026-10-22", "09:00", "한국은행 금통위 기준금리 결정", 3),
+    ("2026-11-26", "09:00", "한국은행 금통위 기준금리 결정", 3),
+]
+
+# 시스템이 직접 공급하므로 LLM 이 낸 같은 주제 항목은 버린다.
+FIXED_EVENT_KEYWORDS = [
+    "fomc", "연준", "연방준비", "fed ", "미국 금리", "미국 기준금리",
+    "금통위", "한국은행", "한은 ", "기준금리",
+]
+
+
+def merge_calendar(llm_events: list, today: date, horizon_days: int = 8) -> list:
+    """확정 일정을 주입하고, LLM 이 낸 중복 주제 항목을 걷어낸다."""
+    kept = []
+    for e in llm_events:
+        text = f"{e.get('event','')}".lower()
+        if any(k in text for k in FIXED_EVENT_KEYWORDS):
+            print(f"  · 캘린더 교체(확정 일정 우선): {e.get('event')}")
+            continue
+        kept.append(e)
+
+    hi = today + timedelta(days=horizon_days)
+    for iso, hhmm, name, stars in FIXED_EVENTS:
+        d = date.fromisoformat(iso)
+        if today <= d <= hi:
+            kept.append({
+                "date_label": fmt_md_weekday(d),
+                "date_iso": iso,
+                "time_kst": hhmm,
+                "event": name,
+                "expected": "",
+                "stars": stars,
+            })
+
+    kept.sort(key=lambda x: (x["date_iso"], x.get("time_kst") or ""))
+
+    # 목록 소진 경고 — 연 1회 갱신을 놓치면 조용히 비어버린다.
+    last = max(date.fromisoformat(i) for i, *_ in FIXED_EVENTS)
+    if today > last - timedelta(days=30):
+        print(f"  ⚠️ FIXED_EVENTS 갱신 필요: 마지막 등록 일정이 {last} 입니다")
+
+    return kept
+
+
 def _kr_nontrading(d: date) -> bool:
     """주말이거나 한국 공휴일이면 True. holidays 미설치 시 주말만 판정."""
     if d.weekday() >= 5:
@@ -485,16 +548,21 @@ def _issue(d, data: dict | None = None) -> dict | None:
 
     out = {"title": t, "body": b, "source": _clip(d.get("source"), LIMITS["source"])}
 
-    # 카테고리·압력은 고정 선택지에서만 받는다. 벗어나면 시사점 없이 이슈만 살린다.
+    # 카테고리·압력은 고정 선택지에서만 받는다.
+    # 분류가 안 되는 이슈는 폐기한다 — 실측상 분류 실패 항목은
+    # "S&P500 미세 상승·기타 지수 약세"(지수 재진술, R14 위반),
+    # "Fed 금리 결정 임박"(캘린더 중복)처럼 정보가치가 없는 것들이었다.
     cat = str(d.get("category") or "").strip()
     pre = str(d.get("pressure") or "").strip()
-    if data and cat in NEWS_CATEGORIES and pre in NEWS_PRESSURES:
-        imp = build_implication(cat, pre, data.get("market", {}))
-        if imp:
-            out["implication"] = imp
-    elif cat or pre:
-        print(f"  · 분류값 무시(선택지 밖): category={cat!r} pressure={pre!r}")
+    if not data:
+        return out
+    if cat not in NEWS_CATEGORIES or pre not in NEWS_PRESSURES:
+        print(f"  ⚠️ 이슈 폐기(분류 불가): {t[:30]} · category={cat!r} pressure={pre!r}")
+        return None
 
+    imp = build_implication(cat, pre, data.get("market", {}))
+    if imp:
+        out["implication"] = imp
     return out
 
 
@@ -603,7 +671,9 @@ def normalize_llm(raw: dict, data: dict) -> dict:
         "cnn_fear_greed": fg,
         "issues_global":  take("issues_global", lambda d: _issue(d, data), COUNTS["issues_global"]),
         "issues_korea":   take("issues_korea",  lambda d: _issue(d, data), COUNTS["issues_korea"]),
-        "calendar":       take("calendar", lambda d: _event(d, today), COUNTS["calendar"]),
+        "calendar":       merge_calendar(
+                              take("calendar", lambda d: _event(d, today), COUNTS["calendar"]),
+                              today),
         "trend_radar":    take("trend_radar", lambda d: _trend(d), COUNTS["trend_radar"]),
         "_rejected":      rejected,
     }
