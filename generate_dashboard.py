@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -142,6 +143,17 @@ FRESHNESS_GROUPS = {
 }
 
 
+def _kr_nontrading(d: date) -> bool:
+    """주말이거나 한국 공휴일이면 True. holidays 미설치 시 주말만 판정."""
+    if d.weekday() >= 5:
+        return True
+    try:
+        import holidays
+        return d in holidays.KR(years=[d.year])
+    except Exception:
+        return False
+
+
 def check_freshness(data: dict) -> dict:
     """자산군 안에서 기준일이 어긋나는지 본다.
 
@@ -175,11 +187,18 @@ def check_freshness(data: dict) -> dict:
             print(f"    {gname}: {uniq[-1]}")
 
     # 한국 증시가 미국 증시보다 뒤처지면 수집 지연이다 (2026-07-25 사고 패턴).
+    # 단, 그 사이가 전부 한국 휴장일이면 정상이므로 경고하지 않는다.
     kr, us = groups.get("한국 증시"), groups.get("미국 증시")
     if kr and us and kr < us:
-        gap = (date.fromisoformat(us) - date.fromisoformat(kr)).days
-        print(f"    ⚠️ 한국 증시가 미국 증시보다 {gap}일 뒤처짐 — 수집 지연 의심")
-        problems["_kr_lag"] = gap
+        kd, ud = date.fromisoformat(kr), date.fromisoformat(us)
+        gap_days = [kd + timedelta(days=i) for i in range(1, (ud - kd).days + 1)]
+        unexplained = [d for d in gap_days if not _kr_nontrading(d)]
+        if unexplained:
+            print(f"    ⚠️ 한국 증시가 미국 증시보다 {(ud - kd).days}일 뒤처짐 — 수집 지연 의심"
+                  f" (휴장일로 설명 안 되는 날: {', '.join(d.isoformat() for d in unexplained)})")
+            problems["_kr_lag"] = (ud - kd).days
+        else:
+            print(f"    한국 증시 {kr} / 미국 증시 {us} — 한국 휴장일로 설명됨 (정상)")
 
     if not problems:
         print("    → 이상 없음")
@@ -219,8 +238,8 @@ def build_directional_constraints(data: dict) -> str:
         "R-B. 상승인 자산을 하락/급락으로, 하락인 자산을 상승/급등으로 쓰지 않는다.\n"
         "     headline 뿐 아니라 issues_global · issues_korea 의 title 과 body 에도\n"
         "     똑같이 적용된다. 어긴 항목은 시스템이 폐기한다.\n"
-        "R-C. 장중 급등락과 종가 방향이 다르면 종가 방향을 쓴다.\n"
-        "     (예: 장중 유가 급등했어도 종가가 하락이면 '유가 하락'으로 쓴다)\n"
+        "R-C. 기사에 나온 장중 급등락과 위 표의 방향이 다르면 위 표를 따른다.\n"
+        "     (예: 장중 유가가 급등했어도 위 표가 하락이면 '유가 하락'으로 쓴다)\n"
         "R-D. 위 목록에 있는 자산의 등락률 숫자를 headline 에 직접 쓰지 않는다.\n"
         "     (시스템이 카드로 따로 표시한다)\n"
         "======================================================================\n"
@@ -447,6 +466,7 @@ def render_dashboard(data: dict, llm_raw: dict) -> tuple[str, dict]:
         alerts=data["alerts"],
         llm=llm,
         is_sunday=data["meta"]["is_sunday"],
+        freshness_warning=data.get("freshness_warning"),
     )
     return html, llm
 
@@ -660,6 +680,13 @@ def build_summary(data: dict, llm: dict) -> str:
     out = [
         f"📊 <b>시장 대시보드</b> · {_esc(meta['date_label'])}",
         f"<i>데이터 기준 {_esc(meta['data_asof'])}</i>",
+    ]
+
+    fw = data.get("freshness_warning")
+    if fw:
+        out.append(f"⚠️ <b>{_esc(fw)}</b>")
+
+    out += [
         "",
         f"⚡ {_esc(llm.get('headline', ''))}",
         "",
@@ -842,12 +869,35 @@ def main() -> int:
     is_sunday = data["meta"]["is_sunday"]
 
     fresh = check_freshness(data)
+
+    # 뒤처진 지표가 있으면 한 번 재수집을 시도한다. 야후가 세션을 늦게
+    # 채우는 경우 수 분 뒤 재요청이면 해결되는 일이 실제로 있었다.
+    # (2026-07-25: 검사만 하고 아무 조치도 하지 않아 낡은 KOSPI가 그대로 발행된 사고)
+    if not fresh["ok"] and "_kr_lag" in fresh["stale"]:
+        print("  기준일 지연 감지 → 재수집 시도")
+        time.sleep(20)
+        retry_market = dc.collect_market()
+        stale_keys = [k for k, g in FRESHNESS_GROUPS.items()
+                      if k == "한국 증시" for k in g[0]]
+        for k in stale_keys:
+            if retry_market.get(k, {}).get("ok"):
+                data["market"][k] = retry_market[k]
+        fresh = check_freshness(data)
+
     data["freshness"] = fresh
-    # 대표 기준일은 증시 기준으로 잡는다. 환율은 주말에도 거래돼 하루 앞서 찍힌다.
     rep = fresh["groups"].get("한국 증시") or fresh["groups"].get("미국 증시")
     if rep and data["meta"].get("data_asof") != rep:
         print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {rep} (증시 기준)")
         data["meta"]["data_asof"] = rep
+
+    if not fresh["ok"]:
+        # 재시도로도 못 고치면 발행은 하되 화면에 경고를 남긴다.
+        # 조용히 낡은 데이터를 내보내는 것보다, 사람이 알아채는 편이 낫다.
+        print(f"  ⚠️ 기준일 불일치가 재시도 후에도 남음: {list(fresh['stale'])}")
+        data["freshness_warning"] = (
+            "일부 지표가 최신 종가를 반영하지 못했을 수 있습니다 "
+            f"(불일치: {', '.join(k for k in fresh['stale'] if not k.startswith('_')) or '한국 증시'})"
+        )
 
     print(f"프롬프트: {'일요일(트렌드 레이더 포함)' if is_sunday else '평일'}")
 
