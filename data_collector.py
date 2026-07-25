@@ -48,9 +48,7 @@ THRESHOLDS = {
     # 유가
     "wti_red":               95.0,
     "wti_yellow":            85.0,
-    # 외국인 수급 (억원, 순매도 절대값)
-    "foreign_sell_red_eok":   10000,   # 1조 이상 순매도
-    "foreign_sell_yellow_eok": 5000,
+    # 외국인 수급 임계값은 pykrx 인증 문제로 제외 (아래 3절 참고)
     # BTC
     "btc_ath_gap_yellow":   -40.0,
     # 52주 위치(%)
@@ -210,84 +208,42 @@ def collect_crypto_fng() -> dict:
 
 
 # ──────────────────────────────────────────────────────────────
-# 3. 한국 수급 — pykrx 실측. 구 버전은 이 숫자를 웹검색(=환각)으로 채웠다.
+# 3. 차트 — S&P500 / 나스닥100 / KOSPI / USD-KRW / WTI 최근 1개월
 # ──────────────────────────────────────────────────────────────
-def _last_business_day(asof: date) -> str:
-    from pykrx import stock
-    return stock.get_nearest_business_day_in_a_week(
-        date=asof.strftime("%Y%m%d"), prev=True
-    )
+CHART_KEYS = ["SP500", "NASDAQ", "KOSPI", "USDKRW", "WTI"]
+CHART_LABELS = {"SP500": "S&P 500", "NASDAQ": "나스닥 100", "KOSPI": "KOSPI",
+                "USDKRW": "USD/KRW", "WTI": "WTI 원유"}
 
 
-def collect_kr_flow(asof: date) -> dict:
-    """KOSPI/KOSDAQ 투자자별 순매수 (억원)"""
-    out = {"ok": False, "markets": {}}
-    try:
-        from pykrx import stock
-        bd = _last_business_day(asof)
-        out["asof"] = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
+def collect_chart_series(period: str = "1mo") -> dict:
+    """차트용 종가 시계열. 실패한 지표는 키 자체를 비워 프런트에서 숨긴다."""
+    import yfinance as yf
 
-        for mkt in ("KOSPI", "KOSDAQ"):
-            df = stock.get_market_trading_value_by_investor(bd, bd, mkt)
-            if df is None or df.empty or "순매수" not in df.columns:
-                raise ValueError(f"{mkt} 수급 응답 이상")
-
-            def pick(*names):
-                for n in names:
-                    if n in df.index:
-                        return int(round(df.loc[n, "순매수"] / 1e8))  # 원 → 억원
-                return None
-
-            out["markets"][mkt] = {
-                "foreign_eok": pick("외국인", "외국인합계"),
-                "inst_eok":    pick("기관합계", "기관"),
-                "indiv_eok":   pick("개인"),
+    out = {}
+    for key in CHART_KEYS:
+        symbol = TICKERS[key]
+        try:
+            hist = yf.Ticker(symbol).history(period=period, auto_adjust=False)
+            closes = hist["Close"].dropna()
+            if closes.empty:
+                raise ValueError("빈 시계열")
+            out[key] = {
+                "ok": True,
+                "label": CHART_LABELS[key],
+                "dates": [d.strftime("%m/%d") for d in closes.index],
+                "values": [round(float(v), 2) for v in closes],
             }
-        out["ok"] = True
-        print(f"  OK  한국 수급 ({out['asof']})")
-    except Exception as e:
-        out["error"] = str(e)
-        print(f"  FAIL 한국 수급: {e}  → 해당 섹션 미표시")
-    return out
-
-
-def collect_sectors(asof: date, top_n: int = 3) -> dict:
-    """KOSPI 업종지수 등락률 상하위. 정렬은 파이썬이 한다.
-    (구 버전은 '강세 섹터' 칸에 -2.34% 같은 음수가 들어갔다)"""
-    out = {"ok": False, "up": [], "down": []}
-    try:
-        from pykrx import stock
-        bd = _last_business_day(asof)
-        prev = stock.get_nearest_business_day_in_a_week(
-            date=(datetime.strptime(bd, "%Y%m%d").date() - timedelta(days=1)).strftime("%Y%m%d"),
-            prev=True,
-        )
-        df = stock.get_index_price_change(prev, bd, market="KOSPI")
-        if df is None or df.empty or "등락률" not in df.columns:
-            raise ValueError("업종지수 응답 이상")
-
-        rows = [
-            {"name": str(idx), "pct": round(float(r["등락률"]), 2)}
-            for idx, r in df.iterrows()
-            if "코스피" not in str(idx)          # 대표지수 제외, 업종만
-        ]
-        rows.sort(key=lambda x: x["pct"], reverse=True)
-        # 부호로 강제 분리 — 양수만 강세, 음수만 약세
-        out["up"] = [r for r in rows if r["pct"] > 0][:top_n]
-        out["down"] = [r for r in rows if r["pct"] < 0][-top_n:][::-1]
-        out["asof"] = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
-        out["ok"] = bool(out["up"] or out["down"])
-        print(f"  OK  섹터 ({len(rows)}개 업종)")
-    except Exception as e:
-        out["error"] = str(e)
-        print(f"  FAIL 섹터: {e}  → 해당 섹션 미표시")
+            print(f"  OK  차트 {key}: {len(closes)}개 포인트")
+        except Exception as e:
+            out[key] = {"ok": False, "label": CHART_LABELS[key], "error": str(e)}
+            print(f"  FAIL 차트 {key}: {e}")
     return out
 
 
 # ──────────────────────────────────────────────────────────────
 # 4. 리스크 플래그 — 전부 조건문. 서술은 포맷 문자열로 고정.
 # ──────────────────────────────────────────────────────────────
-def build_risk_flags(market: dict, btc: dict, fng: dict, kr_flow: dict) -> dict:
+def build_risk_flags(market: dict, btc: dict, fng: dict) -> dict:
     T = THRESHOLDS
     flags = []
 
@@ -369,17 +325,6 @@ def build_risk_flags(market: dict, btc: dict, fng: dict, kr_flow: dict) -> dict:
             add("yellow", "유가 상승 부담", f"WTI ${w}")
         else:
             add("green", "유가 안정", f"WTI ${w}")
-
-    # 외국인 수급
-    if kr_flow.get("ok"):
-        f = kr_flow["markets"].get("KOSPI", {}).get("foreign_eok")
-        if f is not None:
-            if f <= -T["foreign_sell_red_eok"]:
-                add("red", "외국인 대량 순매도", f"KOSPI 외국인 {f:,}억원")
-            elif f <= -T["foreign_sell_yellow_eok"]:
-                add("yellow", "외국인 순매도", f"KOSPI 외국인 {f:,}억원")
-            elif f > 0:
-                add("green", "외국인 순매수", f"KOSPI 외국인 +{f:,}억원")
 
     # BTC
     if btc.get("ok") and btc.get("ath_change") is not None:
@@ -484,10 +429,9 @@ def collect_all(asof_kst: datetime | None = None) -> dict:
     market = collect_market()
     btc = collect_btc()
     fng = collect_crypto_fng()
-    kr_flow = collect_kr_flow(today)
-    sectors = collect_sectors(today)
-    risk = build_risk_flags(market, btc, fng, kr_flow)
+    risk = build_risk_flags(market, btc, fng)
     alerts = build_alerts(market, risk)
+    charts = collect_chart_series()
 
     data_asof = None
     for k in ("KOSPI", "SP500"):
@@ -508,10 +452,9 @@ def collect_all(asof_kst: datetime | None = None) -> dict:
         "market":   market,
         "btc":      btc,
         "fng":      fng,
-        "kr_flow":  kr_flow,
-        "sectors":  sectors,
         "risk":     risk,
         "alerts":   alerts,
+        "charts":   charts,
         "thresholds": THRESHOLDS,
     }
 

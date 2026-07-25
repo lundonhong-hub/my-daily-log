@@ -264,8 +264,7 @@ def render_dashboard(data: dict, llm_raw: dict) -> tuple[str, dict]:
         market=data["market"],
         btc=data["btc"],
         fng=data["fng"],
-        kr_flow=data["kr_flow"],
-        sectors=data["sectors"],
+        charts=data["charts"],
         risk=data["risk"],
         alerts=data["alerts"],
         llm=llm,
@@ -417,9 +416,11 @@ def _cross_check(html: str, text: str, data: dict) -> list[str]:
             p.append(f"{key} 종가 {s} 가 문서에 없음 (수집값과 표시값 불일치)")
 
     # 같은 지표가 서로 다른 값으로 두 번 나오면 안 된다
+    # (종가 문자열 바로 뒤 30자 이내만 본다 — "KOSPI" 뒤 80자는 다음 카드까지 걸려 오탐났었다)
     rec = data.get("market", {}).get("KOSPI", {})
     if rec.get("ok"):
-        pcts = set(re.findall(r"KOSPI[^\n]{0,80}?([+-]\d+\.\d+)%", text))
+        close_s = re.escape(f"{rec['close']:,.2f}")
+        pcts = set(re.findall(close_s + r"[^\n]{0,30}?([+-]\d+\.\d+)%", text))
         want = f"{rec['change_pct']:+.2f}"
         bad = [v for v in pcts if v != want]
         if bad:
@@ -429,12 +430,6 @@ def _cross_check(html: str, text: str, data: dict) -> list[str]:
     m = re.search(r"⚡\s*([^\n]+)", text)
     if m and len(m.group(1).strip()) > MAX_HEADLINE:
         p.append(f"헤드라인 {len(m.group(1).strip())}자 (상한 {MAX_HEADLINE})")
-
-    # 조회 실패 섹션은 숫자를 만들어내면 안 된다
-    if not data.get("kr_flow", {}).get("ok") and "외국인" in text:
-        blk = _section_after(text, "한국 수급 현황", ["업종 동향"])
-        if re.search(r"\d+[,\d]*억", blk):
-            p.append("수급 조회 실패 상태인데 금액이 표시됨 (환각 의심)")
 
     return p
 
@@ -524,20 +519,6 @@ def build_summary(data: dict, llm: dict) -> str:
     if btc.get("ok"):
         out.append(f"· BTC: <b>₩{btc['krw']:,}</b> {btc['arrow']} {btc['change_24h']:+.2f}% "
                    f"(ATH 대비 {btc['ath_change']}%)")
-
-    kf = data["kr_flow"]
-    if kf.get("ok"):
-        k = kf["markets"].get("KOSPI", {})
-        out += ["", "<b>KOSPI 수급</b>",
-                f"· 외국인 {_esc(eok(k.get('foreign_eok')))} · "
-                f"기관 {_esc(eok(k.get('inst_eok')))} · "
-                f"개인 {_esc(eok(k.get('indiv_eok')))}"]
-
-    sec = data["sectors"]
-    if sec.get("ok"):
-        up = " · ".join(f"{_esc(s['name'])} {s['pct']:+.2f}%" for s in sec["up"]) or "없음"
-        dn = " · ".join(f"{_esc(s['name'])} {s['pct']:+.2f}%" for s in sec["down"]) or "없음"
-        out += ["", f"<b>업종</b>", f"· 강세: {up}", f"· 약세: {dn}"]
 
     issues = (llm.get("issues_global") or []) + (llm.get("issues_korea") or [])
     if issues:
