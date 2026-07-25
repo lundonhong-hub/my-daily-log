@@ -788,11 +788,29 @@ def normalize_llm(raw: dict, data: dict) -> dict:
             rejected.append(f"{key}({len(src[:n]) - len(out)}건 폐기)")
         return out
 
+    issues_g = take("issues_global", lambda d: _issue(d, data), COUNTS["issues_global"])
+    issues_k = take("issues_korea",  lambda d: _issue(d, data), COUNTS["issues_korea"])
+
+    # 같은 (카테고리, 압력) 조합의 시사점은 문구가 완전히 동일하다.
+    # 같은 사건의 앞뒤가 이슈 두 건으로 들어오면 같은 문단이 반복되므로
+    # 첫 건에만 남기고 이후는 뗀다. 제목은 정보가 있으니 그대로 둔다.
+    seen_imp = set()
+    for it in issues_g + issues_k:
+        imp = it.get("implication")
+        if not imp:
+            continue
+        key = (imp["category"], imp["pressure"])
+        if key in seen_imp:
+            it["implication_dup"] = imp     # 태그 표시용으로만 남긴다
+            del it["implication"]
+        else:
+            seen_imp.add(key)
+
     return {
         "headline":       headline,
         "cnn_fear_greed": fg,
-        "issues_global":  take("issues_global", lambda d: _issue(d, data), COUNTS["issues_global"]),
-        "issues_korea":   take("issues_korea",  lambda d: _issue(d, data), COUNTS["issues_korea"]),
+        "issues_global":  issues_g,
+        "issues_korea":   issues_k,
         "calendar":       merge_calendar(
                               take("calendar", lambda d: _event(d, today), COUNTS["calendar"]),
                               today),
@@ -1088,6 +1106,10 @@ def build_summary(data: dict, llm: dict) -> str:
                 out.append(f"   ↳ {_esc(imp['channel'])}")
                 if imp.get("reflected"):
                     out.append(f"   ↳ <i>{_esc(imp['reflected'])}</i>")
+            elif i.get("implication_dup"):
+                dup = i["implication_dup"]
+                tag = "🔺유리" if dup["pressure"] == "유리" else "🔻불리"
+                out.append(f"   <i>[{_esc(dup['category'])} · {tag}] (위와 같은 영향 경로)</i>")
 
     cal = llm.get("calendar") or []
     if cal:
