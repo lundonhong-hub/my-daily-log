@@ -1,0 +1,57 @@
+# ⚠️ 이 파일은 레포에서 아래 경로에 두어야 합니다 (GitHub Actions 규칙):
+#     .github/workflows/dashboard.yml
+# 나머지 4개 파일(data_collector.py / generate_dashboard.py /
+# dashboard_template.html / prompt.md)은 레포 루트에 둡니다.
+
+name: 대시보드 생성 (매일 05:50 KST)
+
+on:
+  schedule:
+    - cron: '50 20 * * *'   # UTC 20:50 = KST 05:50 (다음날)
+  workflow_dispatch:
+
+# 실패 시 커밋도 발송도 하지 않는다. 깨진 대시보드가 나가는 것보다 안 나가는 게 낫다.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Seoul          # ★ 러너 전역 TZ. 구 버전은 셸 스텝에만 걸어서 파이썬이 UTC로 돌았다.
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: 패키지 설치
+        run: pip install anthropic yfinance requests pandas pykrx jinja2
+
+      - name: 대시보드 생성 + 검증
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}   # 선택. GitHub Pages 주소 등
+          FILENAME: index.html
+        run: python generate_dashboard.py
+
+      - name: GitHub에 저장
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add index.html
+          git commit -m "dashboard $(date +'%Y-%m-%d')" || echo "변경 없음"
+          git push
+
+      - name: 실패 알림
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -sS -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="⚠️ 대시보드 생성 실패 — ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
