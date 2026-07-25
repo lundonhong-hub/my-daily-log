@@ -45,19 +45,30 @@ jobs:
           event_name = '${{ github.event_name }}'
           # 연말/연초 대비 올해와 내년 공휴일 함께 로드
           kr_holidays = holidays.KR(years=[now.year, now.year + 1])
-          is_holiday_or_weekend = (now.date() in kr_holidays) or (now.weekday() >= 5)
+          is_saturday = (now.weekday() == 5)
+          is_holiday_or_sunday = (now.date() in kr_holidays) or (now.weekday() == 6)
           print(f'실행 유형: {event_name}')
-          print(f'현재 KST 시간: {now.strftime(\"%Y-%m-%d %H:%M\")}')
-          print(f'공휴일/주말 여부: {is_holiday_or_weekend}')
+          print(f'현재 KST 시간: {now.strftime(\"%Y-%m-%d %H:%M\")} ({\"월화수목금토일\"[now.weekday()]}요일)')
+          print(f'토요일 여부: {is_saturday} / 일요일·공휴일 여부: {is_holiday_or_sunday}')
           skip = 'false'
           # 수동 실행이 아닌 '스케줄' 실행일 때만 조건 검사
           if event_name == 'schedule':
-              # 공휴일/주말에는 아침 슬롯(KST 07:00 예정)만 발행한다.
-              # hour == 7 등호 비교는 위험하다 — GitHub Actions 스케줄은 부하 시
-              # 수십 분에서 한 시간 넘게 밀리고, 그때 일요일판이 통째로 스킵된다.
-              # 05~10시 범위로 판정해 지연 3시간까지 견디게 한다.
-              if is_holiday_or_weekend and not (5 <= now.hour <= 10):
-                  print('>> [스케줄 실행] 공휴일/주말 점심 및 저녁 실행은 스킵합니다.')
+              # 토요일: 시각과 무관하게 항상 건너뛴다.
+              #   금요일 미국장은 한국시간 새벽 5시(서머타임 기준)에 마감되므로
+              #   '금요일 저녁에 다 끝난다'는 전제는 틀렸고, 토요일 07:00 실행이
+              #   금요일 미국 마감을 가장 먼저 반영하는 시점이다. 그럼에도 불구하고
+              #   주말엔 거래가 없어 토요일판과 일요일판의 시황 수치는 동일하므로,
+              #   중복을 줄이는 대신 확인 시점이 최대 하루 늦어지는 것을 감수하고
+              #   일요일 07:00 한 번으로 통합한다. (사용자 결정, 2026-07-25)
+              if is_saturday:
+                  print('>> [스케줄 실행] 토요일은 항상 건너뜁니다.')
+                  skip = 'true'
+              # 일요일·공휴일: 아침 슬롯(KST 07:00 예정)만 발행한다.
+              #   hour == 7 등호 비교는 위험하다 — GitHub Actions 스케줄은 부하 시
+              #   수십 분에서 한 시간 넘게 밀리고, 그때 일요일판이 통째로 스킵된다.
+              #   05~10시 범위로 판정해 지연 3시간까지 견디게 한다.
+              elif is_holiday_or_sunday and not (5 <= now.hour <= 10):
+                  print('>> [스케줄 실행] 공휴일/일요일 점심 및 저녁 실행은 스킵합니다.')
                   skip = 'true'
           # GitHub Actions 변수로 전달
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
