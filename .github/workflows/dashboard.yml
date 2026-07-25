@@ -29,7 +29,7 @@ jobs:
           python-version: '3.11'
 
       - name: 패키지 설치
-        run: pip install anthropic yfinance requests jinja2 holidays
+        run: pip install anthropic yfinance requests jinja2 holidays pandas
 
       - name: 공휴일 및 실행 시간 검증
         id: check_schedule
