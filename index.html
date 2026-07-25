@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시장 모니터링 대시보드 | 2026년 7월 25일 (토)</title>
+<style>
+:root { --bg: #0d1117; --card: #161b22; --border: #21262d; --up: #3fb950; --down: #f85149; --warn: #d29922; --accent: #58a6ff; --text: #e6edf3; --muted: #8b949e; --trend: #a371f7; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
+.header { text-align: center; margin-bottom: 28px; }
+.header h1 { font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+.header .subtitle { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+.header .alert-banner { display: inline-block; margin-top: 12px; background: rgba(248,81,73,0.15); border: 1px solid var(--down); border-radius: 8px; padding: 8px 20px; font-size: 0.82rem; color: var(--down); font-weight: 600; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) { .grid-4 { grid-template-columns: 1fr; }
+}
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.card .value { font-size: 1.55rem; font-weight: 700; line-height: 1; }
+.card .change { font-size: 0.82rem; margin-top: 5px; }
+.card .sub { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+.up { color: var(--up); }
+.down { color: var(--down); }
+.neutral { color: var(--warn); }
+.gauge-wrap { margin-top: 10px; }
+.gauge-bar-bg { height: 7px; border-radius: 4px; background: linear-gradient(to right, #f85149, #d29922, #3fb950); }
+.gauge-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--muted); margin-top: 6px; }
+.section-title { font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.btc-main { background: linear-gradient(135deg, #161b22 0%, #1a2035 100%); border: 1px solid #2d3a5a; border-radius: 12px; padding: 20px 22px; margin-bottom: 14px; }
+.btc-price-hero { font-size: 2.6rem; font-weight: 800; color: #f0b429; line-height: 1; }
+.btc-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btc-meta-item { background: rgba(0,0,0,0.3); border: 1px solid #2d3a5a; border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 110px; }
+.btc-meta-item .ml { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.btc-meta-item .mv { font-size: 1.05rem; font-weight: 700; margin-top: 4px; }
+.risk-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 600px) { .risk-grid { grid-template-columns: 1fr; }
+}
+.risk-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+.dot-red { background: var(--down); box-shadow: 0 0 6px rgba(248,81,73,0.6); }
+.dot-yellow { background: var(--warn); box-shadow: 0 0 6px rgba(210,153,34,0.6); }
+.dot-green { background: var(--up); box-shadow: 0 0 6px rgba(63,185,80,0.6); }
+.risk-label { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+.risk-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+.risk-divider { grid-column: 1 / -1; border-top: 1px dashed var(--border); padding-top: 6px; font-size: 0.7rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
+.risk-summary { margin-top: 14px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 10px; padding: 12px 16px; text-align: center; }
+.risk-summary .score { font-size: 1.8rem; font-weight: 800; color: var(--down); }
+.risk-summary .phase { font-size: 0.9rem; color: var(--warn); font-weight: 600; margin-top: 2px; }
+.news-list { display: flex; flex-direction: column; gap: 10px; }
+.news-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.news-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+.badge { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.badge-neg { background: rgba(248,81,73,0.15); color: var(--down); border: 1px solid rgba(248,81,73,0.3); }
+.badge-pos { background: rgba(63,185,80,0.15); color: var(--up); border: 1px solid rgba(63,185,80,0.3); }
+.badge-neu { background: rgba(210,153,34,0.15); color: var(--warn); border: 1px solid rgba(210,153,34,0.3); }
+.badge-btc { background: rgba(240,180,41,0.15); color: #f0b429; border: 1px solid rgba(240,180,41,0.3); }
+.badge-kr { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
+.cal-table { width: 100%; border-collapse: collapse; }
+.cal-table th { font-size: 0.73rem; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.cal-table td { font-size: 0.8rem; padding: 10px; border-bottom: 1px solid rgba(33,38,45,0.5); }
+.cal-table tr:last-child td { border-bottom: none; }
+.imp-high { color: var(--down); font-weight: 700; }
+.imp-med { color: var(--warn); }
+.imp-low { color: var(--muted); }
+.direction-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.dir-row { display: flex; gap: 14px; }
+@media (max-width: 700px) { .dir-row { flex-direction: column; }
+}
+.dir-block { flex: 1; background: #0d1117; border-radius: 10px; padding: 14px; border: 1px solid var(--border); }
+.dir-block .tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.dir-block ul { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.dir-block li { font-size: 0.8rem; color: var(--text); line-height: 1.5; padding-left: 14px; position: relative; }
+.dir-block li::before { content: '›'; position: absolute; left: 0; }
+.dir-conclusion { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 10px; padding: 14px 16px; }
+.dir-conclusion .tag { font-size: 0.7rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
+.dir-conclusion p { font-size: 0.85rem; line-height: 1.6; color: var(--text); }
+.phase-tag { display: inline-block; background: rgba(248,81,73,0.15); color: var(--down); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; margin-bottom: 10px; }
+.kr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+.chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 600px) { .chart-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .kr-grid { grid-template-columns: 1fr; }
+}
+.sector-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sector-box { background: #0d1117; border-radius: 8px; padding: 10px; border: 1px solid var(--border); }
+.sector-box .slabel { font-size: 0.68rem; color: var(--muted); margin-bottom: 4px; }
+.footer { text-align: center; margin-top: 28px; font-size: 0.72rem; color: var(--muted); }
+.chart-wrap { position: relative; height: 140px; margin-top: 8px; }
+.alert-list {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+.alert-item {
+background: rgba(210,153,34,0.08);
+border: 1px solid rgba(210,153,34,0.3);
+border-radius: 10px;
+padding: 11px 14px;
+font-size: 0.8rem;
+line-height: 1.5;
+}
+.na {
+color: var(--muted);
+font-style: normal;
+}
+.src {
+font-size: 0.68rem;
+color: var(--muted);
+margin-top: 4px;
+word-break: break-all;
+}
+.sub-note {
+font-size: 0.7rem;
+color: var(--muted);
+margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<div style="text-align:right; color:#8b949e; padding:6px 20px 0; font-size:0.75rem;">
+  최종 업데이트: 2026-07-25 10:46:08 KST
+</div><div class="header">
+  <h1>📊 시장 모니터링 대시보드</h1>
+  <div class="subtitle">2026년 7월 25일 (토) · 데이터 기준: 2026-07-24 KST</div>
+  <div class="alert-banner">⚡ 중동 갈등 심화로 석유 급등 — 코스피 5.72% 하락</div>
+</div><div class="grid-4">
+
+  <div class="card">
+    <div class="label">공포탐욕지수 (CNN)</div>
+      <div class="value down">41</div>
+      <div class="change down">● Fear</div>
+      <div class="gauge-wrap">
+        <div class="gauge-bar-bg"></div>
+        <div class="gauge-labels"><span>공포</span><span>중립</span><span>탐욕</span></div>
+      </div>
+  </div>
+
+  <div class="card">
+  <div class="label">VIX 공포지수</div>  <div class="value">18.58</div>
+  <div class="change down">▼ -0.64% · 전일 18.70</div><div class="sub">안정 구간 · 기준 20.0/30.0</div></div>
+  <div class="card">
+  <div class="label">S&amp;P 500</div>  <div class="value">7,411.98</div>
+  <div class="change up">▲ +0.05% · 전일 7,408.30</div><div class="sub">52주 위치 85.2% (52주 중립대) · 20일 이격도 99.0 (정상)</div></div>
+  <div class="card">
+  <div class="label">나스닥 100</div>  <div class="value">28,128.34</div>
+  <div class="change down">▼ -1.15% · 전일 28,454.81</div><div class="sub">52주 위치 67.4% (52주 중립대) · 20일 이격도 96.1 (정상)</div></div>
+</div>
+
+<div class="grid-4">
+  <div class="card">
+  <div class="label">금 (Gold)</div>  <div class="value">$4,055.70</div>
+  <div class="change up">▲ +0.22% · 전일 4,046.60</div><div class="sub">52주 위치 34.1% (52주 중립대)</div></div>
+  <div class="card">
+  <div class="label">WTI 원유</div>  <div class="value">$90.47</div>
+  <div class="change down">▼ -1.87% · 전일 92.19</div><div class="sub">52주 위치 55.0% (52주 중립대)</div></div>
+  <div class="card">
+  <div class="label">KOSPI</div>  <div class="value">6,690.62</div>
+  <div class="change down">▼ -5.72% · 전일 7,096.89</div><div class="sub">52주 위치 57.3% (52주 중립대) · 20일 이격도 90.0 (과매도)</div></div>
+  <div class="card">
+  <div class="label">USD/KRW</div>  <div class="value">1,459.42</div>
+  <div class="change down">▼ -1.10% · 전일 1,475.63</div><div class="sub">52주 위치 51.6% (52주 중립대)</div></div>
+</div><div class="section-title">₿ Bitcoin</div>
+<div class="btc-main">
+  <div class="btc-price-hero">₩93,506,774</div>
+  <div class="change down" style="margin-top:8px;">
+    ≈ $64,065 USD · ▼ -1.55% (24h)
+  </div>
+  <div class="btc-meta">
+    <div class="btc-meta-item"><div class="ml">ATH 대비</div>
+      <div class="mv down">-47.43%</div></div>
+    <div class="btc-meta-item"><div class="ml">크립토 공포탐욕</div>
+      <div class="mv down">
+        27 (Fear)</div></div>
+    <div class="btc-meta-item"><div class="ml">24h 고점</div>
+      <div class="mv">₩95,959,084</div></div>
+    <div class="btc-meta-item"><div class="ml">24h 저점</div>
+      <div class="mv">₩92,975,328</div></div>
+    <div class="btc-meta-item"><div class="ml">전월 대비</div>
+      <div class="mv up">
+        +5.52%</div></div>
+  </div>
+</div>
+<div class="section-title">🎯 리스크 체크리스트 <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">임계값 자동 판정</span></div>
+<div class="risk-grid">
+  <div class="risk-item">
+    <div class="dot dot-green"></div>
+    <div>
+      <div class="risk-label">변동성 안정</div>
+      <div class="risk-desc">VIX 18.58 · 20.0 미만 정상범주</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-green"></div>
+    <div>
+      <div class="risk-label">크립토 심리 중립</div>
+      <div class="risk-desc">공포탐욕 27</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">KOSPI 급락</div>
+      <div class="risk-desc">-5.72% · -2.0% 이하 급락</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">KOSPI 단기 과매도</div>
+      <div class="risk-desc">20일 이격도 90.0 · 95.0 이하</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-red"></div>
+    <div>
+      <div class="risk-label">원화 약세 위험</div>
+      <div class="risk-desc">USD/KRW 1,459.42 · 1,450 이상</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">장기금리 부담</div>
+      <div class="risk-desc">US 10Y 4.68%</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">유가 상승 부담</div>
+      <div class="risk-desc">WTI $90.47</div>
+    </div>
+  </div>
+  <div class="risk-item">
+    <div class="dot dot-yellow"></div>
+    <div>
+      <div class="risk-label">BTC 고점 대비 낙폭</div>
+      <div class="risk-desc">ATH 대비 -47.43%</div>
+    </div>
+  </div>
+</div>
+<div class="risk-summary">
+  <div class="score">5.0</div>
+  <div class="phase">경계 · 적색 2 / 황색 4 / 전체 8</div>
+  <div class="sub-note">산출식: (적색 + 황색×0.5) ÷ 전체 × 10</div>
+</div><div class="section-title" style="margin-top:24px;">📉 최근 1개월 추이</div>
+<div class="chart-grid">
+  <div class="card">
+    <div class="label">S&amp;P 500</div>
+    <div class="chart-wrap"><canvas id="chart-SP500"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="label">나스닥 100</div>
+    <div class="chart-wrap"><canvas id="chart-NASDAQ"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="label">KOSPI</div>
+    <div class="chart-wrap"><canvas id="chart-KOSPI"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="label">USD/KRW</div>
+    <div class="chart-wrap"><canvas id="chart-USDKRW"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="label">WTI 원유</div>
+    <div class="chart-wrap"><canvas id="chart-WTI"></canvas></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function () {
+  var CH = {"KOSPI": {"dates": ["06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/03", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/20", "07/21", "07/22", "07/23", "07/24"], "label": "KOSPI", "ok": true, "values": [8471.02, 8930.3, 8411.21, 8394.65, 8476.48, 8303.41, 7648.09, 8088.34, 8051.33, 7656.31, 7246.79, 7291.91, 7475.94, 6806.93, 6856.83, 7284.41, 6820.6, 6516.27, 6747.95, 6797.7, 7096.89, 6690.62]}, "NASDAQ": {"dates": ["06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24"], "label": "\ub098\uc2a4\ub2e5 100", "ok": true, "values": [29440.32, 29118.24, 29774.75, 30276.35, 29809.13, 29329.21, 29697.87, 29173.02, 29252.56, 29727.1, 29825.11, 29264.1, 29586.29, 29502.6, 29025.77, 28592.66, 28604.23, 29155.18, 28998.1, 28454.81, 28128.34]}, "SP500": {"dates": ["06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24"], "label": "S\u0026P 500", "ok": true, "values": [7357.49, 7354.02, 7440.43, 7499.36, 7483.23, 7483.24, 7537.43, 7503.85, 7482.71, 7543.64, 7575.39, 7515.34, 7543.59, 7572.4, 7533.77, 7457.69, 7443.28, 7509.2, 7498.96, 7408.3, 7411.98]}, "USDKRW": {"dates": ["06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/03", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24"], "label": "USD/KRW", "ok": true, "values": [1535.25, 1542.76, 1546.48, 1535.24, 1541.73, 1548.61, 1551.81, 1542.13, 1531.0, 1528.76, 1519.86, 1503.35, 1505.91, 1498.48, 1497.7, 1487.88, 1486.2, 1478.85, 1487.39, 1475.01, 1479.72, 1475.63, 1459.42]}, "WTI": {"dates": ["06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24"], "label": "WTI \uc6d0\uc720", "ok": true, "values": [70.34, 71.92, 69.23, 70.75, 69.5, 68.58, 68.69, 68.55, 70.44, 73.52, 72.08, 71.41, 78.14, 79.34, 79.6, 78.95, 82.49, 83.23, 84.91, 86.83, 92.19, 90.47]}};
+  var UP = getComputedStyle(document.documentElement).getPropertyValue('--up').trim();
+  var DOWN = getComputedStyle(document.documentElement).getPropertyValue('--down').trim();
+  var MUTED = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+
+  Object.keys(CH).forEach(function (key) {
+    var c = CH[key];
+    if (!c.ok) return;
+    var el = document.getElementById('chart-' + key);
+    if (!el) return;
+    var first = c.values[0], last = c.values[c.values.length - 1];
+    var color = last >= first ? UP : DOWN;
+
+    new Chart(el.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: c.dates,
+        datasets: [{
+          data: c.values,
+          borderColor: color,
+          backgroundColor: color + '22',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.15,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: MUTED, maxTicksLimit: 6, font: { size: 9 } },
+               grid: { display: false } },
+          y: { ticks: { color: MUTED, font: { size: 9 } },
+               grid: { color: 'rgba(139,148,158,0.15)' } }
+        }
+      }
+    });
+  });
+})();
+</script><div class="section-title" style="margin-top:24px;">📰 핵심 이슈</div>
+<div class="news-list">
+  <div class="news-item">
+    <div class="news-text"><b>미국-이란 갈등 격화로 유가 급등</b><br>미국이 이란을 대상으로 11번째 연속 타격을 가하면서 유가가 3% 이상 상승했다.
+<div class="src">https://www.cnbc.com/2026/07/21/stock-market-today-live-updates.html</div></div>
+    <span class="badge badge-neu">글로벌</span>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><b>알파벳, AI 지출 증가로 실적 우려 제기</b><br>알파벳이 분기 실적에서 7% 하락하며 AI 투자 비용 증가에 대한 우려를 낳았다.
+<div class="src">https://www.cnbc.com/2026/07/22/stock-market-today-live-updates.html</div></div>
+    <span class="badge badge-neu">글로벌</span>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><b>반도체주 약세로 나스닥 낙폭 확대</b><br>칩 관련 주식들이 약세를 보이면서 나스닥이 2.15% 하락하며 투자 심리를 악화시켰다.
+<div class="src">https://www.cnbc.com/2026/07/22/stock-market-today-live-updates.html</div></div>
+    <span class="badge badge-neu">글로벌</span>
+  </div>
+  <div class="news-item">
+    <div class="news-text"><b>코스피 5.7% 급락, 글로벌 약세 영향</b><br>코스피는 미국 증시 약세와 중동 긴장으로 6690.62에서 마감하며 주간 낙폭을 기록했다.
+<div class="src">https://www.hankyung.com/article/2026072445416</div></div>
+    <span class="badge badge-kr">한국</span>
+  </div>
+</div><div class="section-title" style="margin-top:24px;">📅 주요 경제 이벤트</div>
+<table class="cal-table">
+  <tr><th>날짜</th><th>이벤트</th><th>예상 / 이전</th><th>중요도</th></tr>
+  <tr>
+    <td>7월 29일 (수)<br><span class="imp-low">06:30 KST</span></td>
+    <td>호주 CPI</td>
+    <td>—</td>
+    <td class="imp-med">
+      ★★☆</td>
+  </tr>
+  <tr>
+    <td>7월 29일 (수)<br><span class="imp-low">22:00 KST</span></td>
+    <td>연방준비제도 기준금리 결정</td>
+    <td>—</td>
+    <td class="imp-high">
+      ★★★</td>
+  </tr>
+  <tr>
+    <td>7월 30일 (목)<br><span class="imp-low">19:00 KST</span></td>
+    <td>독일 GDP</td>
+    <td>—</td>
+    <td class="imp-med">
+      ★★☆</td>
+  </tr>
+  <tr>
+    <td>7월 30일 (목)<br><span class="imp-low">20:00 KST</span></td>
+    <td>유로존 GDP</td>
+    <td>—</td>
+    <td class="imp-med">
+      ★★☆</td>
+  </tr>
+  <tr>
+    <td>7월 31일 (금)<br><span class="imp-low">07:30 KST</span></td>
+    <td>중국 PMI</td>
+    <td>—</td>
+    <td class="imp-low">
+      ★☆☆</td>
+  </tr>
+</table><div class="section-title" style="margin-top:24px;">🔔 임계값 점검 트리거</div>
+<div class="alert-list">
+  <div class="alert-item">KOSPI 6,690.62 · 20일선(7,433) 이격도 90.0 — 95.0 이하 과매도 구간 진입, 분할 접근 여부 점검</div>
+  <div class="alert-item">USD/KRW 1,459.42 — 1,450 돌파. 달러자산 환헤지 여부 점검</div>
+</div>
+<div class="sub-note">규칙 기반 자동 산출입니다. 매수·매도 지시가 아니라 확인이 필요한 항목입니다.</div><div class="footer">
+  ※ 본 대시보드는 투자 참고용 정보이며 투자 권유가 아닙니다. 최종 투자 판단은 본인 책임입니다.<br>
+  시세: Yahoo Finance · CoinGecko · 수급/업종: KRX · 크립토 심리: alternative.me — 2026-07-24 기준<br>
+  뉴스·일정 섹션은 웹검색 결과이며 출처 링크를 함께 표기합니다.
+</div>
+
+</body>
+</html>
