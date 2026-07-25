@@ -377,13 +377,56 @@ def _kr_nontrading(d: date) -> bool:
         return False
 
 
-def check_freshness(data: dict) -> dict:
-    """자산군 안에서 기준일이 어긋나는지 본다.
+def expected_last_kr_session(now: datetime) -> date:
+    """KST 기준 지금 시점에서 '마지막으로 마감된' 한국 거래일.
 
-    자산군을 넘어선 비교는 하지 않는다 — 환율은 주말에도 거래되고 미 증시와
-    한국 증시는 휴장일이 다르므로, 섞어서 비교하면 정상인데 경고가 뜬다.
-    같은 자산군(코스피/코스닥, S&P/나스닥/VIX)은 항상 같은 날 거래되므로
-    여기서 어긋나면 확실한 수집 오류다.
+    한국장 마감 15:30 + 데이터 반영 여유를 감안해 16시 이후에만 당일 종가를 기대한다.
+    """
+    d = now.date()
+    if now.hour < 16:
+        d -= timedelta(days=1)
+    while _kr_nontrading(d):
+        d -= timedelta(days=1)
+    return d
+
+
+def expected_last_us_session(now: datetime) -> date:
+    """KST 기준 마지막으로 마감된 미국 거래일(미국 현지 날짜).
+
+    미 정규장 마감은 KST 새벽 05~06시. 06시 전이면 아직 하루 더 앞선 세션이 최신이다.
+    미국 공휴일은 반영하지 않는다(주말만) — 그래서 경고용으로만 쓴다.
+    """
+    d = now.date() - timedelta(days=1)
+    if now.hour < 6:
+        d -= timedelta(days=1)
+    while d.weekday() >= 5:
+        d -= timedelta(days=1)
+    return d
+
+
+def sessions_behind(asof: str, expected: date) -> int:
+    """asof 가 기대 거래일보다 몇 거래일 뒤처졌는지."""
+    a = date.fromisoformat(asof)
+    if a >= expected:
+        return 0
+    n, d = 0, a + timedelta(days=1)
+    while d <= expected:
+        if not _kr_nontrading(d):
+            n += 1
+        d += timedelta(days=1)
+    return n
+
+
+def check_freshness(data: dict, now: datetime | None = None) -> dict:
+    """기준일이 어긋나는지 두 방향으로 본다.
+
+    (1) 절대 기준 — 실행 시각으로 계산한 '마지막 마감 거래일'과 대조.
+        전 자산군이 동시에 하루 뒤처지면 상대 비교로는 못 잡는다.
+        2026-07-25 사고: 한국·미국 증시가 함께 7/23 에 멈췄는데
+        서로 같다는 이유로 '이상 없음' 처리되어 그대로 발행됐다.
+    (2) 상대 기준 — 같은 자산군(코스피/코스닥, S&P/나스닥/VIX)은 항상
+        같은 날 거래되므로 여기서 어긋나면 확실한 수집 오류다.
+        자산군을 넘어선 비교는 하지 않는다(환율은 주말에도 거래됨).
     """
     # (종목들, 허용 오차 일수) — 증시는 반드시 같은 날, 24시간 거래되는
     # 환율·원자재는 야후 반영 시점 차이로 하루까지 벌어질 수 있어 허용한다.
@@ -409,7 +452,26 @@ def check_freshness(data: dict) -> dict:
         else:
             print(f"    {gname}: {uniq[-1]}")
 
-    # 한국 증시가 미국 증시보다 뒤처지면 수집 지연이다 (2026-07-25 사고 패턴).
+    # ── 절대 기준: 실행 시각으로 계산한 기대 거래일과 대조 ──
+    # 전 자산군이 함께 뒤처지는 경우는 상대 비교로 잡히지 않으므로 이쪽이 주 게이트다.
+    if now is not None:
+        exp_kr = expected_last_kr_session(now)
+        exp_us = expected_last_us_session(now)
+        print(f"    기대 거래일: 한국 {exp_kr} / 미국 {exp_us} (실행 {now:%Y-%m-%d %H:%M} KST)")
+
+        kr_asof = groups.get("한국 증시")
+        if kr_asof:
+            behind = sessions_behind(kr_asof, exp_kr)
+            if behind > 0:
+                print(f"    ⚠️ 한국 증시 {kr_asof} — 기대 {exp_kr} 보다 {behind}거래일 뒤처짐")
+                problems["_kr_stale"] = behind
+
+        us_asof = groups.get("미국 증시")
+        if us_asof and date.fromisoformat(us_asof) < exp_us:
+            # 미국 공휴일을 반영하지 않으므로 경고만 남기고 게이트로 쓰지 않는다.
+            print(f"    · 미국 증시 {us_asof} — 기대 {exp_us} 보다 이전 (미 휴장일 가능성)")
+
+    # 한국 증시가 미국 증시보다 뒤처지면 수집 지연이다.
     # 단, 그 사이가 전부 한국 휴장일이면 정상이므로 경고하지 않는다.
     kr, us = groups.get("한국 증시"), groups.get("미국 증시")
     if kr and us and kr < us:
@@ -1126,21 +1188,23 @@ def main() -> int:
     data = dc.collect_all(now)
     is_sunday = data["meta"]["is_sunday"]
 
-    fresh = check_freshness(data)
+    fresh = check_freshness(data, now)
 
-    # 뒤처진 지표가 있으면 한 번 재수집을 시도한다. 야후가 세션을 늦게
-    # 채우는 경우 수 분 뒤 재요청이면 해결되는 일이 실제로 있었다.
-    # (2026-07-25: 검사만 하고 아무 조치도 하지 않아 낡은 KOSPI가 그대로 발행된 사고)
-    if not fresh["ok"] and "_kr_lag" in fresh["stale"]:
-        print("  기준일 지연 감지 → 재수집 시도")
-        time.sleep(20)
+    # 뒤처진 지표가 있으면 재수집한다. 야후가 최근 세션을 늦게 채우는 경우가 있어
+    # 잠시 뒤 재요청이면 해결되는 일이 실제로 있었다.
+    # 부분 갱신이 아니라 전 종목을 다시 받는다 — 2026-07-25 사고는 한국·미국이
+    # 함께 뒤처진 케이스라 한국만 재수집하면 못 고친다.
+    for attempt in range(1, 4):
+        if fresh["ok"] or "_kr_stale" not in fresh["stale"]:
+            break
+        wait = 20 * attempt
+        print(f"  기준일 지연 감지 → {wait}초 대기 후 재수집 ({attempt}/3)")
+        time.sleep(wait)
         retry_market = dc.collect_market()
-        stale_keys = [k for k, g in FRESHNESS_GROUPS.items()
-                      if k == "한국 증시" for k in g[0]]
-        for k in stale_keys:
-            if retry_market.get(k, {}).get("ok"):
-                data["market"][k] = retry_market[k]
-        fresh = check_freshness(data)
+        for k, v in retry_market.items():
+            if v.get("ok"):
+                data["market"][k] = v
+        fresh = check_freshness(data, now)
 
     data["freshness"] = fresh
     rep = fresh["groups"].get("한국 증시") or fresh["groups"].get("미국 증시")
@@ -1148,9 +1212,19 @@ def main() -> int:
         print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {rep} (증시 기준)")
         data["meta"]["data_asof"] = rep
 
+    # 기대 거래일보다 뒤처진 채로는 발행하지 않는다.
+    # KOSPI 가 +4.40% 로 표시됐는데 실제로는 -5.72% 였던 사고를 막기 위한 게이트다.
+    # 잘못된 대시보드가 나가는 것보다 안 나가고 실패 알림이 오는 편이 낫다.
+    if "_kr_stale" in fresh["stale"]:
+        behind = fresh["stale"]["_kr_stale"]
+        print(f"\n❌ 발행 중단: 한국 증시 데이터가 기대 거래일보다 {behind}거래일 뒤처짐")
+        print(f"   수집값 {fresh['groups'].get('한국 증시')} / 기대 "
+              f"{expected_last_kr_session(now)}")
+        print("   재수집 3회로도 해결되지 않았습니다. 야후 지연이면 다음 회차에 정상화됩니다.")
+        return 1
+
     if not fresh["ok"]:
-        # 재시도로도 못 고치면 발행은 하되 화면에 경고를 남긴다.
-        # 조용히 낡은 데이터를 내보내는 것보다, 사람이 알아채는 편이 낫다.
+        # 그 밖의 불일치(자산군 내 어긋남 등)는 발행하되 화면에 경고를 남긴다.
         print(f"  ⚠️ 기준일 불일치가 재시도 후에도 남음: {list(fresh['stale'])}")
         data["freshness_warning"] = (
             "일부 지표가 최신 종가를 반영하지 못했을 수 있습니다 "
