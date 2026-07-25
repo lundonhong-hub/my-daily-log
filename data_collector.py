@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
 import requests
