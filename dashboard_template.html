@@ -142,6 +142,9 @@ margin-top: 8px;
 <div class="header">
   <h1>📊 시장 모니터링 대시보드</h1>
   <div class="subtitle">{{ meta.date_label }} · 데이터 기준: {{ meta.data_asof }} KST</div>
+  {% if freshness_warning %}
+  <div class="alert-banner">⚠️ {{ freshness_warning }}</div>
+  {% endif %}
   <div class="alert-banner">⚡ {{ llm.headline }}</div>
 </div>
 
