@@ -366,6 +366,61 @@ def merge_calendar(llm_events: list, today: date, horizon_days: int = 8) -> list
     return kept
 
 
+# ──────────────────────────────────────────────────────────────
+# 지표 재진술 탐지 — 시스템이 이미 카드로 보여주는 값을 이슈로 다시 쓴 것.
+#
+# 실측: "한국 지수 약세 지속", "원/달러 환율 소폭 하락" 같은 항목이 계속 나온다.
+# 프롬프트 X1 로 금지해도 안 지켜지고, 분류를 필수로 만들자 폐기를 피하려고
+# 엉뚱한 카테고리를 갖다 붙였다("한국 지수 약세 지속" → 한국정책·규제).
+#
+# 판별: 제목에서 '우리가 이미 보여주는 자산명 + 방향어 + 정도부사'를 지운 뒤
+#       남는 알맹이가 없으면 재진술로 본다.
+# ──────────────────────────────────────────────────────────────
+RESTATEMENT_ASSETS = [
+    "코스피", "KOSPI", "코스닥", "KOSDAQ", "한국 지수", "국내 지수", "지수",
+    "원/달러", "원달러", "환율", "S&P500", "S&P 500", "S&P", "나스닥", "NASDAQ",
+    "NDX", "다우", "미국 증시", "뉴욕증시", "국제유가", "유가", "WTI", "금값",
+    "비트코인", "BTC", "VIX", "국채금리", "미 국채",
+]
+RESTATEMENT_MOVES = [
+    "상승", "하락", "급등", "급락", "폭등", "폭락", "강세", "약세", "반등",
+    "조정", "보합", "혼조", "마감", "지속", "전환", "확대", "축소", "둔화",
+]
+RESTATEMENT_DEGREE = [
+    "소폭", "대폭", "큰 폭", "큰폭", "일제히", "동반", "미세", "소규모",
+    "장중", "전일", "오늘", "기타", "및", "속", "등",
+]
+RESTATEMENT_MIN_REMAIN = 3   # 남는 알맹이가 이 글자 수 이하면 재진술로 본다
+
+
+def is_restatement(title: str) -> bool:
+    s = title
+    for w in sorted(RESTATEMENT_ASSETS + RESTATEMENT_MOVES + RESTATEMENT_DEGREE,
+                    key=len, reverse=True):
+        s = s.replace(w, " ")
+    s = re.sub(r"[\s,·—\-~/()\[\]0-9.%]+", "", s)
+    return len(s) <= RESTATEMENT_MIN_REMAIN
+
+
+# ──────────────────────────────────────────────────────────────
+# 중요도 정규화 — R9 를 코드로 강제한다.
+# 실측: "미국 GDP 확정치"가 ★★★ 로 나왔으나 규칙상 ★★ 다.
+# ──────────────────────────────────────────────────────────────
+STARS_3 = ["정책금리", "기준금리", "fomc", "금통위", "고용", "실업", "비농업",
+           "cpi", "pce", "소비자물가", "물가지수"]
+STARS_2 = ["gdp", "국내총생산", "pmi", "소매판매", "무역수지", "ppi",
+           "생산자물가", "소비자신뢰"]
+
+
+def normalize_stars(event: str, fallback: int = 1) -> int:
+    e = event.lower()
+    if any(k in e for k in STARS_3):
+        return 3
+    if any(k in e for k in STARS_2):
+        return 2
+    return fallback
+
+
 def _kr_nontrading(d: date) -> bool:
     """주말이거나 한국 공휴일이면 True. holidays 미설치 시 주말만 판정."""
     if d.weekday() >= 5:
@@ -599,6 +654,11 @@ def _issue(d, data: dict | None = None) -> dict | None:
     if not any(c.isdigit() for c in b):        # 프롬프트 R4의 코드측 강제
         return None
 
+    # 지표 재진술 폐기 — 시스템이 카드로 이미 보여주는 내용이다.
+    if is_restatement(t):
+        print(f"  ⚠️ 이슈 폐기(지표 재진술): {t}")
+        return None
+
     # 절 단위 방향 검사 — 제목·본문 각각. 창(window) 방식과 달리 옆 절의
     # 방향 단어를 삼키지 않으므로 "유가 급등에 항공주 약세" 같은 정상 문장은 통과한다.
     if data:
@@ -645,7 +705,7 @@ def _event(d, today: date) -> dict | None:
         stars = int(d.get("stars", 2))
     except Exception:
         stars = 2
-    stars = min(3, max(1, stars))
+    stars = normalize_stars(ev, fallback=min(3, max(1, stars)))
     t = str(d.get("time_kst") or "").strip()
     if t and not (len(t) == 5 and t[2] == ":"):
         t = ""
