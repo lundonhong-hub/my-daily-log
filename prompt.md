@@ -6,11 +6,9 @@
 시세 요약(참고용, 다시 계산하지 마라): [[MARKET_DIGEST]]
 
 ## 검색
-아래 4건만 실행한다. 그 외 검색 금지.
-1. CNN fear and greed index today
-2. stock market news [[TODAY_ISO]]
-3. 코스피 증시 뉴스 [[TODAY_ISO]]
-4. economic calendar this week [[TODAY_ISO]]
+이번 회차 주제: [[SLOT_LABEL]]
+아래 검색만 실행한다. 그 외 검색 금지.
+[[SEARCH_QUERIES]]
 [[IF_SUNDAY]]5. emerging investment themes 2026 institutional capital flows
 [[END_SUNDAY]]
 
@@ -19,10 +17,12 @@
   "headline": "문자열",
   "cnn_fear_greed": {"value": 정수, "label": "문자열"},
   "issues_global": [
-    {"title": "문자열", "body": "문자열", "source": "URL"}
+    {"title": "문자열", "body": "문자열", "source": "URL",
+     "category": "선택지 중 1개", "pressure": "유리|불리|중립"}
   ],
   "issues_korea": [
-    {"title": "문자열", "body": "문자열", "source": "URL"}
+    {"title": "문자열", "body": "문자열", "source": "URL",
+     "category": "선택지 중 1개", "pressure": "유리|불리|중립"}
   ],
   "calendar": [
     {"date": "YYYY-MM-DD", "time_kst": "HH:MM", "event": "문자열", "expected": "문자열", "stars": 정수}
@@ -53,6 +53,20 @@ R11. headline 형식: "<핵심 사건> — <영향 자산> <방향>".
 R12. 항목이 부족하면 짧은 배열로 둔다. 개수를 맞추려고 내용을 만들어내지 않는다.
 R13. issues_global과 issues_korea에 같은 사건을 중복해서 넣지 않는다.
 R14. 수급 금액, 지수 등락률, 환율, 유가 수치는 쓰지 않는다. 시스템이 별도로 표시한다.
+
+## 이슈 분류 (category / pressure)
+C1. category 는 아래 12개 중 정확히 하나를 그대로 쓴다. 다른 값·조합·신조어 금지.
+    유가 / 금리·중앙은행 / 환율·달러 / 지정학·전쟁 / 반도체·AI / 중국경제 /
+    미국경제 / 한국정책·규제 / 부동산·건설 / 무역·관세 / 일본·엔화 / 유럽경제
+C2. pressure 는 "유리" "불리" "중립" 중 하나만 쓴다.
+    기준은 '한국 투자자가 보유한 자산(한국 주식·금융상품) 관점'이다.
+    그 사건이 한국 자산에 우호적이면 유리, 부담이면 불리, 판단이 안 서면 중립.
+C3. pressure 는 '사건이 앞으로 미칠 방향 압력'이다. 오늘 종가 방향과 달라도 된다.
+    예: 중동 분쟁 격화는 오늘 유가가 하락 마감했더라도 pressure="불리" 로 둔다.
+C4. body 에는 오늘 종가 방향과 반대되는 서술을 쓰지 않는다(R-B 참조).
+    사건의 방향성은 body 가 아니라 pressure 로 표현한다.
+C5. 어느 카테고리에도 확실히 속하지 않으면 그 이슈를 배열에서 제외한다.
+    억지로 끼워 맞추지 않는다.
 
 [[IF_SUNDAY]]## 트렌드 레이더 규칙 (일요일 전용)
 T1. horizon은 "단기" "중기" "장기" 중 하나만 쓴다. 다른 값 금지.
