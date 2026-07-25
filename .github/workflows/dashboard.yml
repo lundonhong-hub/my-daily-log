@@ -28,39 +28,37 @@ jobs:
         with:
           python-version: '3.11'
 
+      # pandas 는 data_collector._fetch_hist 가 직접 import 한다.
+      # yfinance 의존성으로 딸려오긴 하지만 명시하지 않으면 나중에 깨진다.
       - name: 패키지 설치
-        run: pip install anthropic yfinance requests jinja2 holidays pandas
+        run: pip install anthropic yfinance requests jinja2 pandas holidays
 
       - name: 공휴일 및 실행 시간 검증
         id: check_schedule
         run: |
           python -c "
           import datetime, zoneinfo, holidays, os
-
           # KST 기준 현재 시간 가져오기
           kst = zoneinfo.ZoneInfo('Asia/Seoul')
           now = datetime.datetime.now(kst)
-
           # 이벤트 타입 확인 ('workflow_dispatch'는 수동 실행)
           event_name = '${{ github.event_name }}'
-
           # 연말/연초 대비 올해와 내년 공휴일 함께 로드
           kr_holidays = holidays.KR(years=[now.year, now.year + 1])
           is_holiday_or_weekend = (now.date() in kr_holidays) or (now.weekday() >= 5)
-
           print(f'실행 유형: {event_name}')
           print(f'현재 KST 시간: {now.strftime(\"%Y-%m-%d %H:%M\")}')
           print(f'공휴일/주말 여부: {is_holiday_or_weekend}')
-
           skip = 'false'
-
           # 수동 실행이 아닌 '스케줄' 실행일 때만 조건 검사
           if event_name == 'schedule':
-              # 공휴일/주말이고, 아침 7시(hour == 7) 실행이 아니면 스킵
-              if is_holiday_or_weekend and now.hour != 7:
+              # 공휴일/주말에는 아침 슬롯(KST 07:00 예정)만 발행한다.
+              # hour == 7 등호 비교는 위험하다 — GitHub Actions 스케줄은 부하 시
+              # 수십 분에서 한 시간 넘게 밀리고, 그때 일요일판이 통째로 스킵된다.
+              # 05~10시 범위로 판정해 지연 3시간까지 견디게 한다.
+              if is_holiday_or_weekend and not (5 <= now.hour <= 10):
                   print('>> [스케줄 실행] 공휴일/주말 점심 및 저녁 실행은 스킵합니다.')
                   skip = 'true'
-
           # GitHub Actions 변수로 전달
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'skip={skip}\n')
