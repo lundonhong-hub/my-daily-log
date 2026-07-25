@@ -217,7 +217,11 @@ def build_directional_constraints(data: dict) -> str:
         "\n"
         "R-A. 위 수치와 방향은 확정된 사실이다. 검색 기사와 다르면 위 수치를 따른다.\n"
         "R-B. 상승인 자산을 하락/급락으로, 하락인 자산을 상승/급등으로 쓰지 않는다.\n"
-        "R-C. 위 목록에 있는 자산의 등락률 숫자를 headline 에 직접 쓰지 않는다.\n"
+        "     headline 뿐 아니라 issues_global · issues_korea 의 title 과 body 에도\n"
+        "     똑같이 적용된다. 어긴 항목은 시스템이 폐기한다.\n"
+        "R-C. 장중 급등락과 종가 방향이 다르면 종가 방향을 쓴다.\n"
+        "     (예: 장중 유가 급등했어도 종가가 하락이면 '유가 하락'으로 쓴다)\n"
+        "R-D. 위 목록에 있는 자산의 등락률 숫자를 headline 에 직접 쓰지 않는다.\n"
         "     (시스템이 카드로 따로 표시한다)\n"
         "======================================================================\n"
     )
@@ -281,7 +285,7 @@ def check_headline_direction(text: str, data: dict) -> list[str]:
     return warns
 
 
-def _issue(d) -> dict | None:
+def _issue(d, data: dict | None = None) -> dict | None:
     if not isinstance(d, dict):
         return None
     t = _clip(d.get("title"), LIMITS["issue_title"])
@@ -290,6 +294,16 @@ def _issue(d) -> dict | None:
         return None
     if not any(c.isdigit() for c in b):        # 프롬프트 R4의 코드측 강제
         return None
+
+    # 절 단위 방향 검사 — 제목·본문 각각. 창(window) 방식과 달리 옆 절의
+    # 방향 단어를 삼키지 않으므로 "유가 급등에 항공주 약세" 같은 정상 문장은 통과한다.
+    if data:
+        for part, where in ((t, "제목"), (b, "본문")):
+            w = check_headline_direction(part, data)
+            if w:
+                print(f"  ⚠️ 이슈 폐기({where}): {w[0]}")
+                return None
+
     return {"title": t, "body": b, "source": _clip(d.get("source"), LIMITS["source"])}
 
 
@@ -396,8 +410,8 @@ def normalize_llm(raw: dict, data: dict) -> dict:
     return {
         "headline":       headline,
         "cnn_fear_greed": fg,
-        "issues_global":  take("issues_global", lambda d: _issue(d), COUNTS["issues_global"]),
-        "issues_korea":   take("issues_korea",  lambda d: _issue(d), COUNTS["issues_korea"]),
+        "issues_global":  take("issues_global", lambda d: _issue(d, data), COUNTS["issues_global"]),
+        "issues_korea":   take("issues_korea",  lambda d: _issue(d, data), COUNTS["issues_korea"]),
         "calendar":       take("calendar", lambda d: _event(d, today), COUNTS["calendar"]),
         "trend_radar":    take("trend_radar", lambda d: _trend(d), COUNTS["trend_radar"]),
         "_rejected":      rejected,
