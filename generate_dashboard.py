@@ -127,6 +127,126 @@ def build_card_subs(market: dict) -> None:
 # ──────────────────────────────────────────────────────────────
 # LLM 출력 검증
 # ──────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────
+# 기준일 신선도 — 종목 간 asof 를 대조해 뒤처진 지표를 잡는다
+#
+# 2026-07-25 사고: KOSPI 만 7/23 에 멈춰 7,096.89(+4.40%) 로 나갔는데
+# 뉴스는 7/24 의 6,690.62(-5.72%) 급락을 정확히 실었다. 지표가 낡은 게 원인이지
+# 표현이 틀린 게 아니었다. 공휴일 달력 없이도 잡으려고 종목 간 상대 비교를 쓴다.
+# ──────────────────────────────────────────────────────────────
+def check_freshness(data: dict) -> dict:
+    market = data.get("market", {})
+    asofs = {k: v["asof"] for k, v in market.items()
+             if v.get("ok") and v.get("asof")}
+    if not asofs:
+        return {"ok": True, "latest": None, "stale": {}}
+
+    latest = max(asofs.values())
+    stale = {k: a for k, a in asofs.items() if a < latest}
+
+    if stale:
+        print("  ⚠️ 기준일 불일치 — 아래 지표가 뒤처져 있습니다:")
+        for k, a in sorted(stale.items(), key=lambda x: x[1]):
+            print(f"       {k}: {a}  (최신 {latest})")
+    else:
+        print(f"  기준일 일치: 전 종목 {latest}")
+
+    return {"ok": not stale, "latest": latest, "stale": stale, "asofs": asofs}
+
+
+# ──────────────────────────────────────────────────────────────
+# 방향성 사전 제약 — 수집된 실제 수치를 프롬프트 최상단에 못박는다
+# ──────────────────────────────────────────────────────────────
+CONSTRAINT_ASSETS = [
+    ("KOSPI", "코스피"), ("KOSDAQ", "코스닥"), ("SP500", "S&P500"),
+    ("NASDAQ", "나스닥100"), ("WTI", "WTI 유가"), ("USDKRW", "원/달러 환율"),
+    ("VIX", "VIX"), ("GOLD", "금"),
+]
+
+
+def build_directional_constraints(data: dict) -> str:
+    m = data.get("market", {})
+    rows = []
+    for key, name in CONSTRAINT_ASSETS:
+        rec = m.get(key, {})
+        if not rec.get("ok"):
+            continue
+        pct = rec["change_pct"]
+        state = "상승" if pct > 0 else ("하락" if pct < 0 else "보합")
+        rows.append(f"- {name}: {rec['close']:,.2f} ({pct:+.2f}%) = {state} "
+                    f"[기준일 {rec.get('asof', '?')}]")
+
+    return (
+        "======================================================================\n"
+        "[최우선 사실 — 아래 수치와 방향을 반드시 따른다]\n"
+        f"{chr(10).join(rows)}\n"
+        "\n"
+        "R-A. 위 수치와 방향은 확정된 사실이다. 검색 기사와 다르면 위 수치를 따른다.\n"
+        "R-B. 상승인 자산을 하락/급락으로, 하락인 자산을 상승/급등으로 쓰지 않는다.\n"
+        "R-C. 위 목록에 있는 자산의 등락률 숫자를 headline 에 직접 쓰지 않는다.\n"
+        "     (시스템이 카드로 따로 표시한다)\n"
+        "======================================================================\n"
+    )
+
+
+# ──────────────────────────────────────────────────────────────
+# 헤드라인 방향 검사 — 헤드라인에만 적용한다
+#
+# 이슈 본문에는 적용하지 않는다. 뉴스는 원래 자산 간 인과를 서술하므로
+# ("유가 급등 → 항공주 약세") 단어만 세면 맞는 문장이 대량으로 폐기된다.
+# 헤드라인은 한 문장·단문이라 오탐 위험이 낮고, 폴백 대체재도 있다.
+# ──────────────────────────────────────────────────────────────
+DIRECTION_KEYWORDS = [
+    ("KOSPI",  ["코스피", "KOSPI"]),
+    ("KOSDAQ", ["코스닥", "KOSDAQ"]),
+    ("SP500",  ["S&P500", "S&P 500", "S&P"]),
+    ("NASDAQ", ["나스닥", "NASDAQ"]),
+    ("WTI",    ["유가", "WTI", "원유"]),
+    # 환율은 제외한다. "환율 하락 = 원화 강세" 처럼 표현마다 의미가 뒤집혀
+    # 단어만으로는 판정이 안 된다. 잘못 잡으면 맞는 헤드라인을 버리게 된다.
+]
+UP_WORDS = ["상승", "급등", "폭등", "강세", "반등", "오르", "올라", "올랐", "상향"]
+DOWN_WORDS = ["하락", "급락", "폭락", "약세", "내리", "내려", "떨어", "하향", "붕괴"]
+
+# 절 구분자 — 한 절 안에는 보통 자산 하나와 방향 하나만 들어간다.
+# 창(window) 방식은 "유가 상승, S&P500 하락" 에서 옆 절의 단어까지 삼켜 오판했다.
+CLAUSE_SPLIT = re.compile(
+    r"[,，·;、]|\s+및\s+|\s+반면\s+|\s+그러나\s+|\s+하지만\s+|\s+속\s+|\s+가운데\s+|\s+와중\s+"
+)
+
+
+def check_headline_direction(text: str, data: dict) -> list[str]:
+    """절 단위로 자산과 방향 단어를 짝지어 모순만 잡는다."""
+    warns = []
+    m = data.get("market", {})
+    if not text:
+        return warns
+
+    clauses = [c for c in CLAUSE_SPLIT.split(text) if c and c.strip()]
+
+    for key, keywords in DIRECTION_KEYWORDS:
+        rec = m.get(key, {})
+        if not rec.get("ok") or not rec.get("change_pct"):
+            continue
+        pct = rec["change_pct"]
+        agree = UP_WORDS if pct > 0 else DOWN_WORDS
+        clash = DOWN_WORDS if pct > 0 else UP_WORDS
+
+        for clause in clauses:
+            if not any(kw in clause for kw in keywords):
+                continue
+            if any(w in clause for w in agree):
+                continue                      # 같은 방향 단어가 있으면 정상
+            hit = next((w for w in clash if w in clause), None)
+            if hit:
+                warns.append(
+                    f"{key} {pct:+.2f}%({'상승' if pct > 0 else '하락'})인데 "
+                    f"'{clause.strip()}' 로 서술"
+                )
+                break
+    return warns
+
+
 def _issue(d) -> dict | None:
     if not isinstance(d, dict):
         return None
@@ -207,7 +327,17 @@ def normalize_llm(raw: dict, data: dict) -> dict:
     today = date.fromisoformat(data["meta"]["date_iso"])
     rejected = []
 
-    headline = _clip(raw.get("headline"), LIMITS["headline"]) or _fallback_headline(data)
+    headline = _clip(raw.get("headline"), LIMITS["headline"])
+    if not headline:
+        headline = _fallback_headline(data)
+    else:
+        hw = check_headline_direction(headline, data)
+        if hw:
+            for w in hw:
+                print(f"  ⚠️ 헤드라인 방향 모순: {w}")
+            print("  → 안전 폴백 헤드라인으로 교체")
+            rejected.append("headline(방향모순)")
+            headline = _fallback_headline(data)
 
     fg = None
     try:
@@ -434,21 +564,6 @@ def _cross_check(html: str, text: str, data: dict) -> list[str]:
     return p
 
 
-def main() -> int:
-    if len(sys.argv) < 2:
-        print("usage: python validate_output.py <html> [data.json]")
-        return 2
-    html = open(sys.argv[1], encoding="utf-8").read()
-    data = json.load(open(sys.argv[2], encoding="utf-8")) if len(sys.argv) > 2 else None
-    problems = validate_html(html, data)
-    if problems:
-        print(f"FAIL ({len(problems)}건)")
-        for x in problems:
-            print("  -", x)
-        return 1
-    print("PASS")
-    return 0
-
 # ========================================================================
 # 3. 텔레그램 발송 (구 메일 발송 대체)
 # ========================================================================
@@ -597,6 +712,13 @@ def load_prompt(is_sunday: bool, data: dict) -> str:
 
     meta = data["meta"]
     max_date = (date.fromisoformat(meta["date_iso"]) + timedelta(days=8)).isoformat()
+
+    constraints = build_directional_constraints(data)
+    print("\n── 프롬프트 주입 제약 ──")
+    print(constraints.strip())
+    print("──────────────────────\n")
+
+    p = constraints + "\n" + p
     return (p.replace("[[TODAY_ISO]]", meta["date_iso"])
              .replace("[[TODAY_LABEL]]", meta["date_label"])
              .replace("[[DATA_ASOF]]", meta["data_asof"])
@@ -670,6 +792,13 @@ def main() -> int:
 
     data = dc.collect_all(now)
     is_sunday = data["meta"]["is_sunday"]
+
+    fresh = check_freshness(data)
+    data["freshness"] = fresh
+    if fresh["latest"] and data["meta"].get("data_asof") != fresh["latest"]:
+        print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {fresh['latest']}")
+        data["meta"]["data_asof"] = fresh["latest"]
+
     print(f"프롬프트: {'일요일(트렌드 레이더 포함)' if is_sunday else '평일'}")
 
     try:
