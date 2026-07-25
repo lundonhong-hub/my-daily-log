@@ -134,24 +134,58 @@ def build_card_subs(market: dict) -> None:
 # 뉴스는 7/24 의 6,690.62(-5.72%) 급락을 정확히 실었다. 지표가 낡은 게 원인이지
 # 표현이 틀린 게 아니었다. 공휴일 달력 없이도 잡으려고 종목 간 상대 비교를 쓴다.
 # ──────────────────────────────────────────────────────────────
+FRESHNESS_GROUPS = {
+    "한국 증시":   (["KOSPI", "KOSDAQ"], 0),
+    "미국 증시":   (["SP500", "NASDAQ", "VIX"], 0),
+    "환율":        (["USDKRW", "USDJPY"], 1),
+    "원자재·금리": (["GOLD", "WTI", "TNX"], 1),
+}
+
+
 def check_freshness(data: dict) -> dict:
+    """자산군 안에서 기준일이 어긋나는지 본다.
+
+    자산군을 넘어선 비교는 하지 않는다 — 환율은 주말에도 거래되고 미 증시와
+    한국 증시는 휴장일이 다르므로, 섞어서 비교하면 정상인데 경고가 뜬다.
+    같은 자산군(코스피/코스닥, S&P/나스닥/VIX)은 항상 같은 날 거래되므로
+    여기서 어긋나면 확실한 수집 오류다.
+    """
+    # (종목들, 허용 오차 일수) — 증시는 반드시 같은 날, 24시간 거래되는
+    # 환율·원자재는 야후 반영 시점 차이로 하루까지 벌어질 수 있어 허용한다.
     market = data.get("market", {})
     asofs = {k: v["asof"] for k, v in market.items()
              if v.get("ok") and v.get("asof")}
     if not asofs:
-        return {"ok": True, "latest": None, "stale": {}}
+        return {"ok": True, "latest": None, "stale": {}, "groups": {}}
 
-    latest = max(asofs.values())
-    stale = {k: a for k, a in asofs.items() if a < latest}
+    groups, problems = {}, {}
+    print("  기준일:")
+    for gname, (keys, tol) in FRESHNESS_GROUPS.items():
+        got = {k: asofs[k] for k in keys if k in asofs}
+        if not got:
+            continue
+        uniq = sorted(set(got.values()))
+        groups[gname] = uniq[-1]
+        spread = (date.fromisoformat(uniq[-1]) - date.fromisoformat(uniq[0])).days
+        if spread > tol:
+            problems.update({k: a for k, a in got.items() if a < uniq[-1]})
+            print(f"    {gname}: {' / '.join(f'{k} {a}' for k, a in sorted(got.items()))}"
+                  f"  ⚠️ 기준일 불일치")
+        else:
+            print(f"    {gname}: {uniq[-1]}")
 
-    if stale:
-        print("  ⚠️ 기준일 불일치 — 아래 지표가 뒤처져 있습니다:")
-        for k, a in sorted(stale.items(), key=lambda x: x[1]):
-            print(f"       {k}: {a}  (최신 {latest})")
-    else:
-        print(f"  기준일 일치: 전 종목 {latest}")
+    # 한국 증시가 미국 증시보다 뒤처지면 수집 지연이다 (2026-07-25 사고 패턴).
+    kr, us = groups.get("한국 증시"), groups.get("미국 증시")
+    if kr and us and kr < us:
+        gap = (date.fromisoformat(us) - date.fromisoformat(kr)).days
+        print(f"    ⚠️ 한국 증시가 미국 증시보다 {gap}일 뒤처짐 — 수집 지연 의심")
+        problems["_kr_lag"] = gap
 
-    return {"ok": not stale, "latest": latest, "stale": stale, "asofs": asofs}
+    if not problems:
+        print("    → 이상 없음")
+
+    return {"ok": not problems, "latest": max(asofs.values()),
+            "stale": problems, "groups": groups, "asofs": asofs}
 
 
 # ──────────────────────────────────────────────────────────────
@@ -795,9 +829,11 @@ def main() -> int:
 
     fresh = check_freshness(data)
     data["freshness"] = fresh
-    if fresh["latest"] and data["meta"].get("data_asof") != fresh["latest"]:
-        print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {fresh['latest']}")
-        data["meta"]["data_asof"] = fresh["latest"]
+    # 대표 기준일은 증시 기준으로 잡는다. 환율은 주말에도 거래돼 하루 앞서 찍힌다.
+    rep = fresh["groups"].get("한국 증시") or fresh["groups"].get("미국 증시")
+    if rep and data["meta"].get("data_asof") != rep:
+        print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {rep} (증시 기준)")
+        data["meta"]["data_asof"] = rep
 
     print(f"프롬프트: {'일요일(트렌드 레이더 포함)' if is_sunday else '평일'}")
 
