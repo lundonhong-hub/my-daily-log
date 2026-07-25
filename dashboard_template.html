@@ -19,13 +19,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>시장 모니터링 대시보드 | {{ meta.date_label }}</title>
 <style>
-:root { --bg: #0d1117; --card: #161b22; --border: #21262d; --up: #3fb950; --down: #f85149; --warn: #d29922; --accent: #58a6ff; --text: #e6edf3; --muted: #8b949e; --trend: #a371f7; }
+:root { --bg: #0d1117; --card: #161b22; --border: #21262d; --up: #f85149; --down: #4b9dff; --danger: #f85149; --safe: #3fb950; --warn: #d29922; --accent: #58a6ff; --text: #e6edf3; --muted: #8b949e; --trend: #a371f7; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
 .header { text-align: center; margin-bottom: 28px; }
 .header h1 { font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
 .header .subtitle { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
-.header .alert-banner { display: inline-block; margin-top: 12px; background: rgba(248,81,73,0.15); border: 1px solid var(--down); border-radius: 8px; padding: 8px 20px; font-size: 0.82rem; color: var(--down); font-weight: 600; }
+.header .alert-banner { display: inline-block; margin-top: 12px; background: rgba(248,81,73,0.15); border: 1px solid var(--danger); border-radius: 8px; padding: 8px 20px; font-size: 0.82rem; color: var(--danger); font-weight: 600; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
 @media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
@@ -54,21 +54,21 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-
 }
 .risk-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px; }
 .dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
-.dot-red { background: var(--down); box-shadow: 0 0 6px rgba(248,81,73,0.6); }
+.dot-red { background: var(--danger); box-shadow: 0 0 6px rgba(248,81,73,0.6); }
 .dot-yellow { background: var(--warn); box-shadow: 0 0 6px rgba(210,153,34,0.6); }
-.dot-green { background: var(--up); box-shadow: 0 0 6px rgba(63,185,80,0.6); }
+.dot-green { background: var(--safe); box-shadow: 0 0 6px rgba(63,185,80,0.6); }
 .risk-label { font-size: 0.78rem; font-weight: 600; color: var(--text); }
 .risk-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
 .risk-divider { grid-column: 1 / -1; border-top: 1px dashed var(--border); padding-top: 6px; font-size: 0.7rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
 .risk-summary { margin-top: 14px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 10px; padding: 12px 16px; text-align: center; }
-.risk-summary .score { font-size: 1.8rem; font-weight: 800; color: var(--down); }
+.risk-summary .score { font-size: 1.8rem; font-weight: 800; color: var(--danger); }
 .risk-summary .phase { font-size: 0.9rem; color: var(--warn); font-weight: 600; margin-top: 2px; }
 .news-list { display: flex; flex-direction: column; gap: 10px; }
 .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .news-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
 .badge { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
-.badge-neg { background: rgba(248,81,73,0.15); color: var(--down); border: 1px solid rgba(248,81,73,0.3); }
-.badge-pos { background: rgba(63,185,80,0.15); color: var(--up); border: 1px solid rgba(63,185,80,0.3); }
+.badge-neg { background: rgba(248,81,73,0.15); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
+.badge-pos { background: rgba(63,185,80,0.15); color: var(--safe); border: 1px solid rgba(63,185,80,0.3); }
 .badge-neu { background: rgba(210,153,34,0.15); color: var(--warn); border: 1px solid rgba(210,153,34,0.3); }
 .badge-btc { background: rgba(240,180,41,0.15); color: #f0b429; border: 1px solid rgba(240,180,41,0.3); }
 .badge-kr { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
@@ -76,7 +76,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-
 .cal-table th { font-size: 0.73rem; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
 .cal-table td { font-size: 0.8rem; padding: 10px; border-bottom: 1px solid rgba(33,38,45,0.5); }
 .cal-table tr:last-child td { border-bottom: none; }
-.imp-high { color: var(--down); font-weight: 700; }
+.imp-high { color: var(--danger); font-weight: 700; }
 .imp-med { color: var(--warn); }
 .imp-low { color: var(--muted); }
 .direction-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -91,7 +91,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-
 .dir-conclusion { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 10px; padding: 14px 16px; }
 .dir-conclusion .tag { font-size: 0.7rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
 .dir-conclusion p { font-size: 0.85rem; line-height: 1.6; color: var(--text); }
-.phase-tag { display: inline-block; background: rgba(248,81,73,0.15); color: var(--down); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; margin-bottom: 10px; }
+.phase-tag { display: inline-block; background: rgba(248,81,73,0.15); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; margin-bottom: 10px; }
 .kr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
 .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
 @media (max-width: 600px) { .chart-grid { grid-template-columns: 1fr; } }
@@ -237,7 +237,9 @@ margin-top: 8px;
   {% endfor %}
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+{% include 'chart.umd.js' %}
+</script>
 <script>
 (function () {
   var CH = {{ charts | tojson }};

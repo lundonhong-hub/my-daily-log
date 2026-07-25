@@ -294,7 +294,7 @@ generate_dashboard.py 가 저장 직전에 호출한다.
 WEEKDAY_KR = ["월", "화", "수", "목", "금", "토", "일"]
 
 MIN_LEN = 3000
-MAX_LEN = 60000
+MAX_LEN = 400000   # Chart.js(~205KB)를 인라인 내장하므로 상향. 잘림 검출은 닫는 태그 검사가 담당.
 MAX_HEADLINE = 70
 
 # 투자 지시로 읽힐 수 있는 표현 — 규칙 기반 알림으로 바꾼 뒤엔 나오면 안 된다
@@ -484,8 +484,9 @@ def _esc(s) -> str:
 def _line_market(label: str, rec: dict, unit: str = "") -> str | None:
     if not rec.get("ok"):
         return f"{_esc(label)}: <i>조회실패</i>"
+    dot = "🔴" if rec["change_pct"] > 0 else ("🔵" if rec["change_pct"] < 0 else "⚪")
     return (f"{_esc(label)}: <b>{unit}{rec['close']:,.2f}</b> "
-            f"{rec['arrow']} {rec['change_pct']:+.2f}%")
+            f"{dot} {rec['change_pct']:+.2f}%")
 
 
 def build_summary(data: dict, llm: dict) -> str:
@@ -517,7 +518,8 @@ def build_summary(data: dict, llm: dict) -> str:
 
     btc = data["btc"]
     if btc.get("ok"):
-        out.append(f"· BTC: <b>₩{btc['krw']:,}</b> {btc['arrow']} {btc['change_24h']:+.2f}% "
+        dot = "🔴" if btc["change_24h"] > 0 else ("🔵" if btc["change_24h"] < 0 else "⚪")
+        out.append(f"· BTC: <b>₩{btc['krw']:,}</b> {dot} {btc['change_24h']:+.2f}% "
                    f"(ATH 대비 {btc['ath_change']}%)")
 
     issues = (llm.get("issues_global") or []) + (llm.get("issues_korea") or [])
