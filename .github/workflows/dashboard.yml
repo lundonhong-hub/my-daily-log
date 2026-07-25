@@ -9,7 +9,7 @@ on:
     - cron: '0 22 * * *'   # KST 07:00 (전날 UTC 22:00)
     - cron: '40 2 * * *'   # KST 11:40 (당일 UTC 02:40)
     - cron: '0 10 * * *'   # KST 19:00 (당일 UTC 10:00)
-  workflow_dispatch:
+  workflow_dispatch:        # 버튼 눌러 수동 실행 가능
 
 jobs:
   build:
@@ -31,25 +31,37 @@ jobs:
         id: check_schedule
         run: |
           python -c "
-          import datetime, zoneinfo, holidays, sys
+          import datetime, zoneinfo, holidays, os
 
           # KST 기준 현재 시간 가져오기
           kst = zoneinfo.ZoneInfo('Asia/Seoul')
           now = datetime.datetime.now(kst)
 
-          kr_holidays = holidays.KR(years=now.year)
-          is_holiday_or_weekend = (now.date() in kr_holidays) or (now.weekday() >= 5) # 토(5), 일(6)
+          # 이벤트 타입 확인 ('workflow_dispatch'는 수동 실행)
+          event_name = '${{ github.event_name }}'
 
+          kr_holidays = holidays.KR(years=now.year)
+          is_holiday_or_weekend = (now.date() in kr_holidays) or (now.weekday() >= 5)
+
+          print(f'실행 유형: {event_name}')
           print(f'현재 KST 시간: {now.strftime(\"%Y-%m-%d %H:%M\")}')
           print(f'공휴일/주말 여부: {is_holiday_or_weekend}')
 
-          # 공휴일이나 주말일 경우, 아침 7시 실행(6:00~7:59 사이)이 아니면 스킵
-          if is_holiday_or_weekend and not (6 <= now.hour < 8):
-              print('>> 공휴일/주말 점심 및 저녁 실행은 스킵합니다.')
-              sys.exit(78) # 78 코드 반환시 정상 종료 및 이후 스텝 스킵
+          skip = 'false'
+
+          # 수동 실행이 아닌 '스케줄' 실행일 때만 조건 검사
+          if event_name == 'schedule':
+              if is_holiday_or_weekend and not (6 <= now.hour < 8):
+                  print('>> [스케줄 실행] 공휴일/주말 점심 및 저녁 실행은 스킵합니다.')
+                  skip = 'true'
+
+          # GitHub Actions 변수로 전달 (정상 종료 0 사용)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f'skip={skip}\n')
           "
 
       - name: 대시보드 생성 + 검증
+        if: steps.check_schedule.outputs.skip != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -59,6 +71,7 @@ jobs:
         run: python generate_dashboard.py
 
       - name: GitHub에 저장
+        if: steps.check_schedule.outputs.skip != 'true'
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
