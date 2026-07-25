@@ -109,14 +109,38 @@ def _r(v, n=2):
 # ──────────────────────────────────────────────────────────────
 # 1. 시장 지표 — 52주 위치·20일 이격도까지 여기서 계산
 # ──────────────────────────────────────────────────────────────
-def collect_market() -> dict:
+def _fetch_hist(symbol):
+    """1y(파생지표용) + 5d(최신성 확보용)를 병합한다.
+
+    period='1y' 단독 호출은 야후가 최근 세션을 아직 채우지 않은 경우가 있어
+    하루 뒤처진 종가를 그대로 쓰게 된다(2026-07-25 실행에서 KOSPI가 7/23에 멈춘 사고).
+    짧은 구간은 갱신이 빠르므로 둘을 합치고 같은 날짜는 5d 쪽을 우선한다.
+    """
+    import pandas as pd
     import yfinance as yf
 
+    t = yf.Ticker(symbol)
+    frames = []
+    for period in ("1y", "5d"):
+        try:
+            h = t.history(period=period, auto_adjust=False)
+            if h is not None and not h.empty:
+                frames.append(h)
+        except Exception:
+            pass
+    if not frames:
+        return None
+    hist = pd.concat(frames).sort_index()
+    hist = hist[~hist.index.duplicated(keep="last")]   # 같은 날짜는 5d(뒤) 우선
+    return hist
+
+
+def collect_market() -> dict:
     out = {}
     print("시장 데이터 수집")
     for key, symbol in TICKERS.items():
         try:
-            hist = yf.Ticker(symbol).history(period="1y", auto_adjust=False)
+            hist = _fetch_hist(symbol)
             if hist is None or hist.empty or len(hist) < 2:
                 raise ValueError("빈 시계열")
 
@@ -147,96 +171,15 @@ def collect_market() -> dict:
                 "ma60":        _r(ma60),
                 "disparity20": _r(disparity20, 1),
                 "asof":        closes.index[-1].strftime("%Y-%m-%d"),
+                "prev_asof":   closes.index[-2].strftime("%Y-%m-%d"),
                 "ok":          True,
             }
             rec.update(direction_of(rec["change_pct"]))
             out[key] = rec
-            print(f"  OK  {key}: {rec['close']} ({rec['change_pct']:+.2f}%)")
+            print(f"  OK  {key}: {rec['close']} ({rec['change_pct']:+.2f}%) [{rec['asof']}]")
         except Exception as e:
             out[key] = {"ok": False, "error": str(e), **direction_of(None)}
             print(f"  FAIL {key}: {e}")
-    return out
-
-
-# ──────────────────────────────────────────────────────────────
-# 2. 비트코인
-# ──────────────────────────────────────────────────────────────
-def collect_btc() -> dict:
-    try:
-        r = requests.get(
-            "https://api.coingecko.com/api/v3/coins/bitcoin"
-            "?localization=false&tickers=false&market_data=true"
-            "&community_data=false&developer_data=false",
-            timeout=15,
-        )
-        r.raise_for_status()
-        md = r.json()["market_data"]
-        krw = md["current_price"]["krw"]
-        ch24 = round(float(md["price_change_percentage_24h"]), 2)
-        rec = {
-            "ok":           True,
-            "krw":          int(krw),
-            "usd":          int(md["current_price"]["usd"]),
-            "change_24h":   ch24,
-            "change_30d":   _r(md.get("price_change_percentage_30d")),
-            "high_24h_krw": int(md["high_24h"]["krw"]),
-            "low_24h_krw":  int(md["low_24h"]["krw"]),
-            "ath_krw":      int(md["ath"]["krw"]),
-            "ath_change":   _r(md["ath_change_percentage"]["krw"]),
-            "prev_krw":     int(krw / (1 + ch24 / 100)),
-        }
-        rec.update(direction_of(ch24))
-        print(f"  OK  BTC: {rec['krw']:,}원 ({ch24:+.2f}%)")
-        return rec
-    except Exception as e:
-        print(f"  FAIL BTC: {e}")
-        return {"ok": False, "error": str(e), **direction_of(None)}
-
-
-def collect_crypto_fng() -> dict:
-    try:
-        r = requests.get("https://api.alternative.me/fng/?limit=1", timeout=10)
-        r.raise_for_status()
-        d = r.json()["data"][0]
-        v = int(d["value"])
-        return {"ok": True, "value": v, "label": d["value_classification"],
-                "cls": "down" if v <= THRESHOLDS["fng_fear"]
-                       else ("up" if v >= THRESHOLDS["fng_greed"] else "neutral")}
-    except Exception as e:
-        print(f"  FAIL 크립토 공포탐욕: {e}")
-        return {"ok": False, "error": str(e)}
-
-
-# ──────────────────────────────────────────────────────────────
-# 3. 차트 — S&P500 / 나스닥100 / KOSPI / USD-KRW / WTI 최근 1개월
-# ──────────────────────────────────────────────────────────────
-CHART_KEYS = ["SP500", "NASDAQ", "KOSPI", "USDKRW", "WTI"]
-CHART_LABELS = {"SP500": "S&P 500", "NASDAQ": "나스닥 100", "KOSPI": "KOSPI",
-                "USDKRW": "USD/KRW", "WTI": "WTI 원유"}
-
-
-def collect_chart_series(period: str = "1mo") -> dict:
-    """차트용 종가 시계열. 실패한 지표는 키 자체를 비워 프런트에서 숨긴다."""
-    import yfinance as yf
-
-    out = {}
-    for key in CHART_KEYS:
-        symbol = TICKERS[key]
-        try:
-            hist = yf.Ticker(symbol).history(period=period, auto_adjust=False)
-            closes = hist["Close"].dropna()
-            if closes.empty:
-                raise ValueError("빈 시계열")
-            out[key] = {
-                "ok": True,
-                "label": CHART_LABELS[key],
-                "dates": [d.strftime("%m/%d") for d in closes.index],
-                "values": [round(float(v), 2) for v in closes],
-            }
-            print(f"  OK  차트 {key}: {len(closes)}개 포인트")
-        except Exception as e:
-            out[key] = {"ok": False, "label": CHART_LABELS[key], "error": str(e)}
-            print(f"  FAIL 차트 {key}: {e}")
     return out
 
 
@@ -433,11 +376,9 @@ def collect_all(asof_kst: datetime | None = None) -> dict:
     alerts = build_alerts(market, risk)
     charts = collect_chart_series()
 
-    data_asof = None
-    for k in ("KOSPI", "SP500"):
-        if market.get(k, {}).get("ok"):
-            data_asof = market[k]["asof"]
-            break
+    # 종목별로 기준일이 다를 수 있다. 가장 최신 기준일을 대표값으로 쓴다.
+    asofs = [v["asof"] for v in market.values() if v.get("ok") and v.get("asof")]
+    data_asof = max(asofs) if asofs else None
 
     return {
         "meta": {
