@@ -1046,6 +1046,17 @@ def _esc(s) -> str:
     return _html.escape(str(s), quote=False)
 
 
+def _issue_title_line(issue: dict) -> str:
+    """제목을 원문 링크로 감싼다. source 가 http(s) URL 이 아니면 그냥 텍스트만 낸다."""
+    title = _esc(issue.get("title", ""))
+    src = str(issue.get("source") or "").strip()
+    if src.startswith(("http://", "https://")) and " " not in src:
+        # 텔레그램은 href 안에서 " 와 & 를 각각 이스케이프해야 링크가 안 깨진다.
+        safe_url = src.replace("&", "&amp;").replace('"', "%22")
+        return f'<a href="{safe_url}">{title}</a>'
+    return title
+
+
 def _line_market(label: str, rec: dict, unit: str = "") -> str | None:
     if not rec.get("ok"):
         return f"{_esc(label)}: <i>조회실패</i>"
@@ -1098,7 +1109,7 @@ def build_summary(data: dict, llm: dict) -> str:
     if issues:
         out += ["", "<b>핵심 이슈</b>"]
         for i in issues:
-            out.append(f"· {_esc(i['title'])}")
+            out.append(f"· {_issue_title_line(i)}")
             imp = i.get("implication")
             if imp:
                 tag = "🔺유리" if imp["pressure"] == "유리" else "🔻불리"
@@ -1276,10 +1287,11 @@ def main() -> int:
     # 잠시 뒤 재요청이면 해결되는 일이 실제로 있었다.
     # 부분 갱신이 아니라 전 종목을 다시 받는다 — 2026-07-25 사고는 한국·미국이
     # 함께 뒤처진 케이스라 한국만 재수집하면 못 고친다.
+    # 재시도 간격을 늘린다(20/40/60초 → 30/60/90초). 야후 지연이 짧으면 여기서 잡힌다.
     for attempt in range(1, 4):
         if fresh["ok"] or "_kr_stale" not in fresh["stale"]:
             break
-        wait = 20 * attempt
+        wait = 30 * attempt
         print(f"  기준일 지연 감지 → {wait}초 대기 후 재수집 ({attempt}/3)")
         time.sleep(wait)
         retry_market = dc.collect_market()
@@ -1294,19 +1306,23 @@ def main() -> int:
         print(f"  data_asof 보정: {data['meta'].get('data_asof')} → {rep} (증시 기준)")
         data["meta"]["data_asof"] = rep
 
-    # 기대 거래일보다 뒤처진 채로는 발행하지 않는다.
-    # KOSPI 가 +4.40% 로 표시됐는데 실제로는 -5.72% 였던 사고를 막기 위한 게이트다.
-    # 잘못된 대시보드가 나가는 것보다 안 나가고 실패 알림이 오는 편이 낫다.
+    # 재시도 5분으로도 안 풀리면 발행은 하되 경고를 아주 눈에 띄게 붙인다.
+    # 이전엔 여기서 완전히 중단시켰는데, 실전에서 야후 지연이 재시도 시간보다
+    # 길게 가는 경우가 있어 '아예 안 오는 것'이 '오래된 수치로 오는 것'보다
+    # 오히려 더 불편했다(2026-07-26 실측). 하루 3회 중 다음 회차가 곧 있으므로
+    # 완전 차단 대신 강한 경고로 낮춘다.
     if "_kr_stale" in fresh["stale"]:
         behind = fresh["stale"]["_kr_stale"]
-        print(f"\n❌ 발행 중단: 한국 증시 데이터가 기대 거래일보다 {behind}거래일 뒤처짐")
-        print(f"   수집값 {fresh['groups'].get('한국 증시')} / 기대 "
-              f"{expected_last_kr_session(now)}")
-        print("   재수집 3회로도 해결되지 않았습니다. 야후 지연이면 다음 회차에 정상화됩니다.")
-        return 1
-
-    if not fresh["ok"]:
-        # 그 밖의 불일치(자산군 내 어긋남 등)는 발행하되 화면에 경고를 남긴다.
+        exp = expected_last_kr_session(now)
+        got = fresh["groups"].get("한국 증시")
+        print(f"  ⚠️ 한국 증시 데이터가 {behind}거래일 뒤처짐 (수집 {got} / 기대 {exp}) "
+              f"— 경고와 함께 발행합니다")
+        data["freshness_warning"] = (
+            f"⚠️ 한국 증시 수치가 {exp} 종가가 아니라 {got} 종가입니다 "
+            f"({behind}거래일 지연 · 야후 데이터 지연 추정, 다음 회차에 정상화 예상)"
+        )
+    elif not fresh["ok"]:
+        # 그 밖의 불일치(자산군 내 어긋남 등)도 경고만 남기고 발행한다.
         print(f"  ⚠️ 기준일 불일치가 재시도 후에도 남음: {list(fresh['stale'])}")
         data["freshness_warning"] = (
             "일부 지표가 최신 종가를 반영하지 못했을 수 있습니다 "
