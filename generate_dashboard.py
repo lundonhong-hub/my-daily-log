@@ -179,11 +179,15 @@ SEARCH_SETS = {
 
 
 def slot_of(now: datetime) -> str:
-    """실행 시각(KST)으로 슬롯을 정한다. 스케줄 지연을 감안해 넓게 잡는다."""
+    """실행 시각(KST)으로 슬롯을 정한다.
+
+    예약은 06:20 / 11:40 / 19:00 이지만 GitHub Actions 스케줄은 크게 밀린다.
+    아침 예약분이 3시간 넘게 지연돼도 점심 검색어로 새지 않도록 경계를 넓게 잡는다.
+    """
     h = now.hour
-    if h < 10:
+    if h < 11:
         return "morning"
-    if h < 16:
+    if h < 17:
         return "midday"
     return "evening"
 
@@ -1260,6 +1264,50 @@ def call_llm(prompt: str) -> dict:
 # 5. 메인
 # ========================================================================
 
+SNAPSHOT_PATH = os.path.join(BASE_DIR, "market_snapshot.json")
+
+
+def load_snapshot() -> dict:
+    """직전 실행에서 저장해둔 시세. 없으면 빈 dict."""
+    try:
+        with open(SNAPSHOT_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def save_snapshot(market: dict) -> None:
+    """조회 성공한 종목만 저장한다. 실패분으로 기존 기록을 덮어쓰지 않는다."""
+    keep = {k: v for k, v in market.items() if v.get("ok") and v.get("asof")}
+    if not keep:
+        return
+    try:
+        with open(SNAPSHOT_PATH, "w", encoding="utf-8") as f:
+            json.dump(keep, f, ensure_ascii=False, indent=1)
+    except Exception as e:
+        print(f"  · 스냅샷 저장 실패(무시): {e}")
+
+
+def apply_snapshot(market: dict, snap: dict) -> list:
+    """수집값이 저장본보다 오래됐으면 저장본을 쓴다 — 데이터 역행 방지.
+
+    야후는 이미 제공했던 세션을 다시 감추는 경우가 있다(2026-07-25 에 7/24 종가를
+    정상 수신했는데 7/26·7/27 실행에서 7/23 으로 후퇴). 없는 미래를 만들어내는 게
+    아니라 '전에 실제로 받았던 더 최신 기록'을 되살리는 것이므로 안전하다.
+    """
+    restored = []
+    for k, cur in market.items():
+        old = snap.get(k)
+        if not (cur.get("ok") and cur.get("asof")):
+            continue
+        if not (isinstance(old, dict) and old.get("ok") and old.get("asof")):
+            continue
+        if old["asof"] > cur["asof"]:
+            market[k] = old
+            restored.append(f"{k} {cur['asof']}→{old['asof']}")
+    return restored
+
+
 def main() -> int:
     # 단독 검증 모드: python generate_dashboard.py --validate index.html [data.json]
     if "--validate" in sys.argv:
@@ -1281,6 +1329,13 @@ def main() -> int:
     data = dc.collect_all(now)
     is_sunday = data["meta"]["is_sunday"]
 
+    # 야후가 전에 줬던 세션을 다시 감추는 경우가 있어, 직전 실행분보다
+    # 오래된 값이 오면 저장본으로 되돌린다. 재시도 판정 전에 먼저 적용한다.
+    snap = load_snapshot()
+    restored = apply_snapshot(data["market"], snap)
+    if restored:
+        print(f"  스냅샷 복원(야후 역행 감지): {', '.join(restored)}")
+
     fresh = check_freshness(data, now)
 
     # 뒤처진 지표가 있으면 재수집한다. 야후가 최근 세션을 늦게 채우는 경우가 있어
@@ -1298,7 +1353,11 @@ def main() -> int:
         for k, v in retry_market.items():
             if v.get("ok"):
                 data["market"][k] = v
+        apply_snapshot(data["market"], snap)
         fresh = check_freshness(data, now)
+
+    # 이번 회차에서 확보한 가장 최신 시세를 저장한다(다음 회차 역행 방지용).
+    save_snapshot(data["market"])
 
     data["freshness"] = fresh
     rep = fresh["groups"].get("한국 증시") or fresh["groups"].get("미국 증시")
