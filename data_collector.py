@@ -180,7 +180,47 @@ def collect_market() -> dict:
         except Exception as e:
             out[key] = {"ok": False, "error": str(e), **direction_of(None)}
             print(f"  FAIL {key}: {e}")
+
+    out["JPYKRW"] = _derive_jpykrw(out)
     return out
+
+
+def _derive_jpykrw(market: dict) -> dict:
+    """원/100엔 = (USD/KRW ÷ USD/JPY) × 100.
+
+    야후의 JPYKRW=X 직접 심볼은 거래량이 얕아 결측·이상치가 잦다.
+    이미 받은 두 주요 통화쌍에서 계산하면 기준 시점도 서로 맞아 정합성이 낫다.
+    국내 표기 관행대로 100엔당 원화로 낸다.
+    """
+    kr, jp = market.get("USDKRW", {}), market.get("USDJPY", {})
+    if not (kr.get("ok") and jp.get("ok")):
+        print("  FAIL JPYKRW: USDKRW/USDJPY 미확보로 계산 불가")
+        return {"ok": False, "error": "USDKRW/USDJPY 미확보", **direction_of(None)}
+    try:
+        close = kr["close"] / jp["close"] * 100
+        prev = kr["prev_close"] / jp["prev_close"] * 100
+        change = close - prev
+        change_pct = change / prev * 100 if prev else None
+
+        rec = {
+            "ok": True,
+            "close": _r(close),
+            "prev_close": _r(prev),
+            "change": _r(change),
+            "change_pct": _r(change_pct),
+            # 52주 고저·이동평균은 두 시계열의 일자별 정합을 보장할 수 없어 내지 않는다.
+            "w52_high": None, "w52_low": None, "w52_pos_pct": None,
+            "ma20": None, "ma60": None, "disparity20": None,
+            "asof": min(kr["asof"], jp["asof"]),   # 더 보수적인(오래된) 쪽
+            "derived_from": ["USDKRW", "USDJPY"],
+        }
+        rec.update(direction_of(rec["change_pct"]))
+        print(f"  OK  JPYKRW: {rec['close']} ({rec['change_pct']:+.2f}%) [{rec['asof']}] "
+              f"← USDKRW/USDJPY 계산")
+        return rec
+    except Exception as e:
+        print(f"  FAIL JPYKRW: {e}")
+        return {"ok": False, "error": str(e), **direction_of(None)}
 
 
 # ──────────────────────────────────────────────────────────────

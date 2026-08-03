@@ -138,7 +138,7 @@ def build_card_subs(market: dict) -> None:
 FRESHNESS_GROUPS = {
     "한국 증시":   (["KOSPI", "KOSDAQ"], 0),
     "미국 증시":   (["SP500", "NASDAQ", "VIX"], 0),
-    "환율":        (["USDKRW", "USDJPY"], 1),
+    "환율":        (["USDKRW", "USDJPY", "JPYKRW"], 1),
     "원자재·금리": (["GOLD", "WTI", "TNX"], 1),
 }
 
@@ -1096,7 +1096,7 @@ def build_summary(data: dict, llm: dict) -> str:
     for label, key, unit in (
         ("KOSPI", "KOSPI", ""), ("KOSDAQ", "KOSDAQ", ""),
         ("S&P500", "SP500", ""), ("나스닥100", "NASDAQ", ""),
-        ("VIX", "VIX", ""), ("USD/KRW", "USDKRW", ""),
+        ("VIX", "VIX", ""), ("USD/KRW", "USDKRW", ""), ("원/100엔", "JPYKRW", ""),
         ("금", "GOLD", "$"), ("WTI", "WTI", "$"), ("US 10Y", "TNX", ""),
     ):
         ln = _line_market(label, m.get(key, {}), unit)
