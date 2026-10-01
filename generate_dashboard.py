@@ -36,7 +36,7 @@ from data_collector import THRESHOLDS, fmt_md_weekday
 
 KST = ZoneInfo("Asia/Seoul")
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-haiku-4-5")
-MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "4000"))
+MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "16000"))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
