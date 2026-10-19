@@ -938,11 +938,12 @@ def validate_html(html: str, data: dict | None = None) -> list[str]:
         seen.add((int(m), int(d)))
         p += _check_weekday(int(y), int(m), int(d), w)
 
-    for m, d, w in re.findall(r"(?<!년\s)(\d{1,2})월\s*(\d{1,2})일\s*\((.)\)", text):
+    # (?<!\d): "2026년 10월"의 '10'에서 '1'을 건너뛰고 '0월'로 읽는 오류 방지 (2026-10-19 #456)
+    for m, d, w in re.findall(r"(?<!\d)(?<!년\s)(\d{1,2})월\s*(\d{1,2})일\s*\((.)\)", text):
         m, d = int(m), int(d)
         if (m, d) in seen:
             continue
-        if base is None:
+        if base is None or not 1 <= m <= 12:
             continue
         # 연말연시 경계: 표기 월이 기준월보다 6개월 이상 과거면 내년으로 본다
         y = base.year + 1 if m < base.month - 6 else base.year
